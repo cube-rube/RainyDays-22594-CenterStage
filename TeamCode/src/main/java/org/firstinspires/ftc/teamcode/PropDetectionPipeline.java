@@ -48,19 +48,19 @@ public class PropDetectionPipeline extends OpenCvPipeline {
         if (mx == avgLeft) {
             rectColorLeft = new Scalar(0.0, 255.0, 0.0);
             rectColorCenter = new Scalar(255.0, 0.0, 0.0);
-			rectColorRight = new Scalar(255.0, 0.0, 0.0);
+            rectColorRight = new Scalar(255.0, 0.0, 0.0);
             propPosition = 0;
         }
         else if (mx == avgCenter) {
             rectColorLeft = new Scalar(255.0, 0.0, 0.0);
-			rectColorCenter = new Scalar(0.0, 255.0, 0.0);
+            rectColorCenter = new Scalar(0.0, 255.0, 0.0);
 			rectColorRight = new Scalar(255.0, 0.0, 0.0);
             propPosition = 1;
         }
         else if (mx == avgRight) {
             rectColorLeft = new Scalar(255.0, 0.0, 0.0);
             rectColorCenter = new Scalar(255.0, 0.0, 0.0);
-			rectColorRight = new Scalar(0.0, 255.0, 0.0);
+            rectColorRight = new Scalar(0.0, 255.0, 0.0);
             propPosition = 2;
         }
 		
