@@ -8,17 +8,18 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 public class PropDetectionPipeline extends OpenCvPipeline {
-    public int TEAM = 1;
-    public int PROP_HEIGHT = 0;
-
+	public int TEAM = 1;
+	public int PROP_HEIGHT = 0;
+	
     Mat ybcrcb = new Mat();
     Mat leftCrop, centerCrop, rightCrop;
     double avgLeft, avgCenter, avgRight;
     Mat output = new Mat();
-
+	
     Scalar rectColorLeft = new Scalar(255.0, 0.0, 0.0);
     Scalar rectColorCenter = new Scalar(255.0, 0.0, 0.0);
     Scalar rectColorRight = new Scalar(255.0, 0.0, 0.0);
+    int propPosition;
 
     @Override
     public Mat processFrame(Mat input) {
@@ -41,29 +42,37 @@ public class PropDetectionPipeline extends OpenCvPipeline {
         avgLeft = Core.mean(leftCrop).val[0];
         avgCenter = Core.mean(centerCrop).val[0];
         avgRight = Core.mean(rightCrop).val[0];
-
+		
         double mx = Math.max(avgLeft, Math.max(avgCenter, avgRight));
 
         if (mx == avgLeft) {
             rectColorLeft = new Scalar(0.0, 255.0, 0.0);
             rectColorCenter = new Scalar(255.0, 0.0, 0.0);
-            rectColorRight = new Scalar(255.0, 0.0, 0.0);
+			rectColorRight = new Scalar(255.0, 0.0, 0.0);
+            propPosition = 0;
         }
         else if (mx == avgCenter) {
             rectColorLeft = new Scalar(255.0, 0.0, 0.0);
-            rectColorCenter = new Scalar(0.0, 255.0, 0.0);
-            rectColorRight = new Scalar(255.0, 0.0, 0.0);
+			rectColorCenter = new Scalar(0.0, 255.0, 0.0);
+			rectColorRight = new Scalar(255.0, 0.0, 0.0);
+            propPosition = 1;
         }
         else if (mx == avgRight) {
             rectColorLeft = new Scalar(255.0, 0.0, 0.0);
             rectColorCenter = new Scalar(255.0, 0.0, 0.0);
-            rectColorRight = new Scalar(0.0, 255.0, 0.0);
+			rectColorRight = new Scalar(0.0, 255.0, 0.0);
+            propPosition = 2;
         }
-
+		
+       
         Imgproc.rectangle(output, leftRect, rectColorLeft, 2);
         Imgproc.rectangle(output, centerRect, rectColorCenter, 2);
         Imgproc.rectangle(output, rightRect, rectColorRight, 2);
 
         return output;
+    }
+
+    public int getPropPosition() {
+        return propPosition;
     }
 }
