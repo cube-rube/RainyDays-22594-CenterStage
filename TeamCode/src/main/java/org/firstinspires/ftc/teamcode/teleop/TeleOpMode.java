@@ -26,10 +26,9 @@ public class TeleOpMode extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            basicDrive.tele();
-            lift.easyTele();
+            basicDrive.testing();
             lift.testing();
-            intake.tele();
+            intake.testing();
             deploy.testing();
 
             telemetry.update();

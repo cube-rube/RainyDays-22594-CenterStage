@@ -43,6 +43,6 @@ public class Lift {
     }
 
     public void testing() {
-        telemetry.addData("Lift:", motor.getCurrentPosition());
+        telemetry.addData("Lift_motor:", motor.getCurrentPosition());
     }
 }

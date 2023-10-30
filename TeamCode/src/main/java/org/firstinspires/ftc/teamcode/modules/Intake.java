@@ -37,4 +37,8 @@ public class Intake {
         servo.setPower(gamepad.x? 0.3 : 0);
         motor.setPower(gamepad.x? 1 : 0);
     }
+
+    public void testing() {
+        telemetry.addData("Intake_motor", motor.getCurrentPosition());
+    }
 }

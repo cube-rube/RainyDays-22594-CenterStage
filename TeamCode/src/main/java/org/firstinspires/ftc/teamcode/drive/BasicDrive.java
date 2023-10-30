@@ -210,4 +210,12 @@ public class BasicDrive {
             linearOpMode.sleep(250);   // optional pause after each move.
         }
     }
+
+    public void testing() {
+        telemetry.addData("LeftFrontDrive Encoder: ", leftFrontDrive.getCurrentPosition());
+        telemetry.addData("LeftBackDrive Encoder: ", leftBackDrive.getCurrentPosition());
+        telemetry.addData("RightFrontDrive Encoder: ", rightFrontDrive.getCurrentPosition());
+        telemetry.addData("RightBackDrive Encoder: ", rightBackDrive.getCurrentPosition());
+
+    }
 }
