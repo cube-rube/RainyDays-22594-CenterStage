@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.CRServoImplEx;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -14,6 +16,7 @@ public class Intake {
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private Gamepad gamepad;
+    private CRServo servo;
     private DcMotor motor;
 
     public Intake(LinearOpMode linearOpMode) {
@@ -22,12 +25,16 @@ public class Intake {
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad2;
 
-        motor = hardwareMap.get(DcMotor.class, "conveyor_motor");
-        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        servo = hardwareMap.get(CRServo.class, "conveyor_servo");
+        servo.setDirection(CRServo.Direction.FORWARD);
+        motor = hardwareMap.get(DcMotor.class, "intake_motor");
+
+
+        telemetry.addData("Intake: ", "Initialized");
     }
 
     public void tele() {
-        motor.setPower(gamepad.a? 0.3 : 0);
+        servo.setPower(gamepad.x? 0.3 : 0);
+        motor.setPower(gamepad.x? 1 : 0);
     }
 }

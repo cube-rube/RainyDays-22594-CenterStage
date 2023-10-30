@@ -18,6 +18,7 @@ public class TeleOpMode extends LinearOpMode {
     private Lift lift;
     private Intake intake;
     private Deploy deploy;
+    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -27,16 +28,20 @@ public class TeleOpMode extends LinearOpMode {
         while (opModeIsActive()) {
             basicDrive.tele();
             lift.easyTele();
+            lift.testing();
             intake.tele();
+            deploy.testing();
 
             telemetry.update();
         }
     }
 
     private void initRobot() {
-        basicDrive = new BasicDrive(this);
+        basicDrive = new BasicDrive(this, runtime);
         lift = new Lift(this);
         intake = new Intake(this);
         deploy = new Deploy(this);
+
+        telemetry.update();
     }
 }
