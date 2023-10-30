@@ -10,7 +10,7 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous
+@Autonomous(name = "AutoMode")
 public class AutoMode extends LinearOpMode {
     OpenCvWebcam camProp;
     PropDetectionPipeline propPipeline = new PropDetectionPipeline();
@@ -34,7 +34,6 @@ public class AutoMode extends LinearOpMode {
             {
             }
         });
-        
 
 
     }

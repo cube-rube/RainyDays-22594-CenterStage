@@ -7,8 +7,9 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
+import static org.firstinspires.ftc.teamcode.misc.GameConst.TEAMCOLOR;
+
 public class PropDetectionPipeline extends OpenCvPipeline {
-	public int TEAM = 1;
 	public int PROP_HEIGHT = 0;
 	
     Mat ybcrcb = new Mat();
@@ -35,9 +36,9 @@ public class PropDetectionPipeline extends OpenCvPipeline {
         centerCrop = ybcrcb.submat(centerRect);
         rightCrop = ybcrcb.submat(rightRect);
 
-        Core.extractChannel(leftCrop, leftCrop, TEAM);
-        Core.extractChannel(centerCrop, centerCrop, TEAM);
-        Core.extractChannel(rightCrop, rightCrop, TEAM);
+        Core.extractChannel(leftCrop, leftCrop, TEAMCOLOR);
+        Core.extractChannel(centerCrop, centerCrop, TEAMCOLOR);
+        Core.extractChannel(rightCrop, rightCrop, TEAMCOLOR);
 
         avgLeft = Core.mean(leftCrop).val[0];
         avgCenter = Core.mean(centerCrop).val[0];
