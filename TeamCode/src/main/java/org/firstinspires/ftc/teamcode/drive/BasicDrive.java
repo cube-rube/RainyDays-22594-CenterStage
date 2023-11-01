@@ -19,7 +19,7 @@ public class BasicDrive {
     private DcMotor rightBackDrive;
     private ElapsedTime runtime;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
+    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -34,10 +34,10 @@ public class BasicDrive {
         gamepad = linearOpMode.gamepad1;
         this.runtime = runtime;
 
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        leftFrontDrive = hardwareMap.get(DcMotor.class, "motor_lf");
+        leftBackDrive = hardwareMap.get(DcMotor.class, "motor_lb");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "motor_rf");
+        rightBackDrive = hardwareMap.get(DcMotor.class, "motor_rb");
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -195,7 +195,7 @@ public class BasicDrive {
                 telemetry.update();
             }
 
-            // Stop all motion;
+            // Stop all motion//;
             leftFrontDrive.setPower(0);
             leftBackDrive.setPower(0);
             rightFrontDrive.setPower(0);

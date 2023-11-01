@@ -25,17 +25,28 @@ public class Intake {
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad2;
 
-        servo = hardwareMap.get(CRServo.class, "conveyor_servo");
+        servo = hardwareMap.get(CRServo.class, "intake");
         servo.setDirection(CRServo.Direction.FORWARD);
-        motor = hardwareMap.get(DcMotor.class, "intake_motor");
+        motor = hardwareMap.get(DcMotor.class, "motor_intake");
+        motor.setDirection(DcMotor.Direction.REVERSE);
 
 
         telemetry.addData("Intake: ", "Initialized");
     }
 
     public void tele() {
-        servo.setPower(gamepad.x? 0.3 : 0);
-        motor.setPower(gamepad.x? 1 : 0);
+        if (gamepad.x) {
+            servo.setPower(1);
+            motor.setPower(1);
+        }
+        /* else if (gamepad.y) {
+            servo.setPower(-1);
+            motor.setPower(-1);
+        } */
+        else {
+            servo.setPower(0);
+            motor.setPower(0);
+        }
     }
 
     public void testing() {
