@@ -57,7 +57,7 @@ public class BasicDrive {
         telemetry.addData("BasicDrive:", "Initialized");
     }
 
-    public void tele() {
+    public void driveRobotCentric() {
         double max;
 
         double axial   = -gamepad.left_stick_y;
@@ -83,6 +83,10 @@ public class BasicDrive {
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+    }
+
+    public void driveFieldCentric() {
+
     }
 
     public void encoderDriveY(double speed,

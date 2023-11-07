@@ -15,19 +15,20 @@ import static org.firstinspires.ftc.teamcode.misc.RobotConst.kP;
 import static org.firstinspires.ftc.teamcode.misc.RobotConst.kI;
 import static org.firstinspires.ftc.teamcode.misc.RobotConst.kD;
 import static org.firstinspires.ftc.teamcode.misc.RobotConst.kG;
+import static org.firstinspires.ftc.teamcode.misc.RobotConst.pos;
 
 public class Lift {
     private LinearOpMode linearOpMode;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
     private Gamepad gamepad;
-    private DcMotor motor;
+    private DcMotorEx motor;
     private ElapsedTime runtime;
     private FtcDashboard dashboard;
 
-    private int maxPos = 10000;
-    private int currentPos = 0;
-    private int lastError = 0;
+    private int maxPos = 600;
+    private double currentPos = 0;
+    private double lastError = 0;
     private double integralSum = 0;
 
 
@@ -40,7 +41,7 @@ public class Lift {
         runtime = new ElapsedTime();
         this.dashboard = dashboard;
 
-        motor = hardwareMap.get(DcMotor.class, "lift_motor");
+        motor = hardwareMap.get(DcMotorEx.class, "lift_motor");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -76,14 +77,15 @@ public class Lift {
     }
 
     public void tele() {
-        if (motor.getMode() != DcMotor.RunMode.RUN_WITHOUT_ENCODER) {
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (motor.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
+            motor.setTargetPosition(590);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
-        motor.setPower(-gamepad.left_stick_y);
+        motor.setPower(1);
     }
 
     public void telePID() {
-        currentPos += -gamepad.left_stick_y * runtime.seconds() * 100;
+        currentPos += (-gamepad.left_stick_y) * 5000 * runtime.seconds();
         if (currentPos > maxPos) {
             currentPos = maxPos;
         }
@@ -91,19 +93,27 @@ public class Lift {
             currentPos = 0;
         }
 
-        int encoderPos = motor.getCurrentPosition();
-        int error = Math.abs(encoderPos - currentPos);
-        double derivative = Math.abs(error - lastError) / runtime.seconds();
+        double encoderPos = motor.getCurrentPosition();
+        double error = currentPos - encoderPos;
+        double derivative = (error - lastError) / runtime.seconds();
         integralSum += error * runtime.seconds();
         double out = (kP * error) + (kI * integralSum) + (kD * derivative) + kG;
 
         motor.setPower(out);
 
+        lastError = error;
+
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("reference", currentPos);
         packet.put("encoder", encoderPos);
         packet.put("out", out);
+        telemetry.addData("reference", currentPos);
+        telemetry.addData("encoder", encoderPos);
+        telemetry.addData("out", out);
+        telemetry.addData("error", error);
+        telemetry.addData("delta", runtime.seconds());
         dashboard.sendTelemetryPacket(packet);
+        runtime.reset();
     }
 
     public void runtimeReset() {

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -26,6 +27,7 @@ public class AutoMode extends LinearOpMode {
     private Intake intake;
     private Deploy deploy;
     private ElapsedTime runtime = new ElapsedTime();
+    public FtcDashboard dashboard;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,8 +70,10 @@ public class AutoMode extends LinearOpMode {
     }
 
     private void initRobot() {
-        basicDrive = new BasicDriveNoEncoders(this, runtime);
-        lift = new Lift(this);
+        dashboard = FtcDashboard.getInstance();
+
+        basicDrive = new BasicDriveNoEncoders(this);
+        lift = new Lift(this, dashboard);
         intake = new Intake(this);
         deploy = new Deploy(this);
 

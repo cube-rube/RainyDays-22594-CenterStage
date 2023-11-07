@@ -30,15 +30,22 @@ public class TeleOpMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initRobot();
+        runtime.reset();
         waitForStart();
         lift.runtimeReset();
 
+        while (!gamepad2.a) {
+
+        }
+
         while (opModeIsActive()) {
             basicDrive.tele();
-            intake.tele();
-            lift.easyTele();
-            deploy.easyTele();
-            claw.tele();
+            // intake.tele();
+            lift.telePID();
+            // deploy.easyTele();
+            // claw.tele();
+
+            telemetry.addData("Runtime", runtime.toString());
 
             telemetry.update();
         }
@@ -49,10 +56,10 @@ public class TeleOpMode extends LinearOpMode {
 
         basicDrive = new BasicDriveNoEncoders(this);
         lift = new Lift(this, dashboard);
-        intake = new Intake(this);
-        deploy = new Deploy(this);
-        claw = new Claw(this);
-        launch = new Launch(this);
+        // intake = new Intake(this);
+        // deploy = new Deploy(this);
+        // claw = new Claw(this);
+        // launch = new Launch(this);
 
         telemetry.update();
     }
