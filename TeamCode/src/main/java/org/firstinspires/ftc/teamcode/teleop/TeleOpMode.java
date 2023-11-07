@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -24,11 +25,13 @@ public class TeleOpMode extends LinearOpMode {
     private Claw claw;
     private Launch launch;
     private ElapsedTime runtime = new ElapsedTime();
+    public FtcDashboard dashboard;
 
     @Override
     public void runOpMode() throws InterruptedException {
         initRobot();
         waitForStart();
+        lift.runtimeReset();
 
         while (opModeIsActive()) {
             basicDrive.tele();
@@ -42,8 +45,10 @@ public class TeleOpMode extends LinearOpMode {
     }
 
     private void initRobot() {
-        basicDrive = new BasicDriveNoEncoders(this, runtime);
-        lift = new Lift(this);
+        dashboard = FtcDashboard.getInstance();
+
+        basicDrive = new BasicDriveNoEncoders(this);
+        lift = new Lift(this, dashboard);
         intake = new Intake(this);
         deploy = new Deploy(this);
         claw = new Claw(this);

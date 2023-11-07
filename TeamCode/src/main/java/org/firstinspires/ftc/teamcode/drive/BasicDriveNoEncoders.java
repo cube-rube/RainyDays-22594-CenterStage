@@ -27,12 +27,12 @@ public class BasicDriveNoEncoders {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
-    public BasicDriveNoEncoders(LinearOpMode linearOpMode, ElapsedTime runtime) {
+    public BasicDriveNoEncoders(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
         hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad1;
-        this.runtime = runtime;
+        runtime = new ElapsedTime();
 
         leftFrontDrive = hardwareMap.get(DcMotor.class, "motor_lf");
         leftBackDrive = hardwareMap.get(DcMotor.class, "motor_lb");
