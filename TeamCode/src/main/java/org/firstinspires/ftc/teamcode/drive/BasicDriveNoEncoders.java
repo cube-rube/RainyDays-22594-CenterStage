@@ -40,8 +40,8 @@ public class BasicDriveNoEncoders {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motor_rf");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motor_rb");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 

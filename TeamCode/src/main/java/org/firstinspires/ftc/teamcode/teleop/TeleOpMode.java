@@ -34,16 +34,13 @@ public class TeleOpMode extends LinearOpMode {
         waitForStart();
         lift.runtimeReset();
 
-        while (!gamepad2.a) {
-
-        }
 
         while (opModeIsActive()) {
             basicDrive.tele();
-            // intake.tele();
+            intake.tele();
             lift.telePID();
-            // deploy.easyTele();
-            // claw.tele();
+            deploy.easyTele();
+            claw.tele();
 
             telemetry.addData("Runtime", runtime.toString());
 
@@ -56,10 +53,10 @@ public class TeleOpMode extends LinearOpMode {
 
         basicDrive = new BasicDriveNoEncoders(this);
         lift = new Lift(this, dashboard);
-        // intake = new Intake(this);
-        // deploy = new Deploy(this);
-        // claw = new Claw(this);
-        // launch = new Launch(this);
+        intake = new Intake(this);
+        deploy = new Deploy(this);
+        claw = new Claw(this);
+        launch = new Launch(this);
 
         telemetry.update();
     }
