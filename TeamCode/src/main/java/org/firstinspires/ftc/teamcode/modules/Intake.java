@@ -12,12 +12,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Intake {
-    private LinearOpMode linearOpMode;
-    private HardwareMap hardwareMap;
-    private Telemetry telemetry;
-    private Gamepad gamepad;
-    private CRServo servo;
-    private DcMotor motor;
+    private final LinearOpMode linearOpMode;
+    private final HardwareMap hardwareMap;
+    private final Telemetry telemetry;
+    private final Gamepad gamepad;
+    private final CRServo servo;
+    private final DcMotor motor;
 
     public Intake(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;

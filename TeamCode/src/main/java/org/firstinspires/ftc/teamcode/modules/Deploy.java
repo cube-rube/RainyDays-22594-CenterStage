@@ -8,15 +8,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Deploy {
-    private LinearOpMode linearOpMode;
-    private HardwareMap hardwareMap;
-    private Telemetry telemetry;
-    private Gamepad gamepad;
-    private Servo servo0, servo1;
-    private double takePos = 0;
-    private double deployPos = 1;
-    private double closedPos = 0, closedPos2;
-    private double openPos = 1;
+    private final LinearOpMode linearOpMode;
+    private final HardwareMap hardwareMap;
+    private final Telemetry telemetry;
+    private final Gamepad gamepad;
+    private final Servo servo0;
+    private final Servo servo1;
+    private final double takePos = 0;
+    private final double deployPos = 1;
+    private final double closedPos = 0;
+    private double closedPos2;
+    private final double openPos = 1;
 
     public enum State {
         CLOSED,

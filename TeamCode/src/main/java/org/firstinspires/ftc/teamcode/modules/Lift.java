@@ -18,15 +18,15 @@ import static org.firstinspires.ftc.teamcode.misc.RobotConst.kG;
 import static org.firstinspires.ftc.teamcode.misc.RobotConst.pos;
 
 public class Lift {
-    private LinearOpMode linearOpMode;
-    private HardwareMap hardwareMap;
-    private Telemetry telemetry;
-    private Gamepad gamepad;
-    private DcMotorEx motor;
-    private ElapsedTime runtime;
-    private FtcDashboard dashboard;
+    private final LinearOpMode linearOpMode;
+    private final HardwareMap hardwareMap;
+    private final Telemetry telemetry;
+    private final Gamepad gamepad;
+    private final DcMotorEx motor;
+    private final ElapsedTime runtime;
+    private final FtcDashboard dashboard;
 
-    private int maxPos = 600;
+    private final int maxPos = 600;
     private double currentPos = 0;
     private double lastError = 0;
     private double integralSum = 0;

@@ -11,11 +11,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Launch {
-    private LinearOpMode linearOpMode;
-    private HardwareMap hardwareMap;
-    private Telemetry telemetry;
-    private Gamepad gamepad;
-    private Servo servoHold, servoRaise;
+    private final LinearOpMode linearOpMode;
+    private final HardwareMap hardwareMap;
+    private final Telemetry telemetry;
+    private final Gamepad gamepad;
+    private final Servo servoHold;
+    private final Servo servoRaise;
 
     private float upPos, downPos, holdPos, releasePos;
 
