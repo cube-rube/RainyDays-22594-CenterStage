@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.drive;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.ElapsedTime;
+        import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+        import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.Gamepad;
+        import com.qualcomm.robotcore.hardware.HardwareMap;
+        import com.qualcomm.robotcore.hardware.IMU;
+        import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+        import org.firstinspires.ftc.robotcore.external.Telemetry;
+        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class BasicDrive {
     private final LinearOpMode linearOpMode;
@@ -17,6 +20,7 @@ public class BasicDrive {
     private final DcMotor leftBackDrive;
     private final DcMotor rightFrontDrive;
     private final DcMotor rightBackDrive;
+    private final IMU imu;
     private final ElapsedTime runtime;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;
@@ -38,6 +42,12 @@ public class BasicDrive {
         leftBackDrive = hardwareMap.get(DcMotor.class, "motor_lb");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "motor_rf");
         rightBackDrive = hardwareMap.get(DcMotor.class, "motor_rb");
+
+        imu = hardwareMap.get(IMU.class, "imu");
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+        imu.initialize(parameters);
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -86,12 +96,46 @@ public class BasicDrive {
     }
 
     public void driveFieldCentric() {
+        double max;
+
+        double axial   = -gamepad.left_stick_y;
+        double lateral =  gamepad.left_stick_x;
+        double yaw     =  gamepad.right_stick_x;
+
+        if (gamepad.options) {
+            imu.resetYaw();
+        }
+
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+        double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
+        double rotAxial = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
+
+        double leftFrontPower  = rotAxial + rotLateral + yaw;
+        double rightFrontPower = rotAxial - rotLateral - yaw;
+        double leftBackPower   = rotAxial - rotLateral + yaw;
+        double rightBackPower  = rotAxial + rotLateral - yaw;
+
+        max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower  /= max;
+            rightFrontPower /= max;
+            leftBackPower   /= max;
+            rightBackPower  /= max;
+        }
+        leftFrontDrive.setPower(leftFrontPower);
+        rightFrontDrive.setPower(rightFrontPower);
+        leftBackDrive.setPower(leftBackPower);
+        rightBackDrive.setPower(rightBackPower);
 
     }
 
     public void encoderDriveY(double speed,
-                             double leftInches, double rightInches,
-                             double timeoutS) {
+                              double leftInches, double rightInches,
+                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
 
@@ -119,12 +163,7 @@ public class BasicDrive {
             rightFrontDrive.setPower(Math.abs(speed));
             rightBackDrive.setPower(Math.abs(speed));
 
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+
             while (linearOpMode.opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (leftFrontDrive.isBusy() && rightFrontDrive.isBusy())) {
@@ -182,12 +221,7 @@ public class BasicDrive {
             rightFrontDrive.setPower(Math.abs(speed));
             rightBackDrive.setPower(Math.abs(speed));
 
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+
             while (linearOpMode.opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (leftFrontDrive.isBusy() && rightFrontDrive.isBusy())) {
