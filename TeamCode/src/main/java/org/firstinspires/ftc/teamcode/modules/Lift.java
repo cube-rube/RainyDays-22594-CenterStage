@@ -65,12 +65,7 @@ public class Lift {
             }
         }
         else if (-gamepad.left_stick_y < 0) {
-            if (motor.getCurrentPosition() - 100 >= 0) {
-                motor.setTargetPosition(motor.getCurrentPosition() - 100);
-            }
-            else {
-                motor.setTargetPosition(0);
-            }
+            motor.setTargetPosition(Math.max(motor.getCurrentPosition() - 100, 0));
         }
         // motor.setPower(-gamepad.left_stick_y);
         telemetry.addData("Lift targeting: ", motor.getTargetPosition());
