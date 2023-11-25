@@ -45,8 +45,8 @@ public class BasicDrive {
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT,
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
 
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -71,7 +71,7 @@ public class BasicDrive {
         double max;
 
         double axial   = -gamepad.left_stick_y;
-        double lateral =  gamepad.left_stick_x;
+        double lateral =  gamepad.left_stick_x * 1.1;
         double yaw     =  gamepad.right_stick_x;
 
         double leftFrontPower  = axial + lateral + yaw;
@@ -110,6 +110,8 @@ public class BasicDrive {
 
         double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
         double rotAxial = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
+
+        rotLateral = rotLateral * 1.1;
 
         double leftFrontPower  = rotAxial + rotLateral + yaw;
         double rightFrontPower = rotAxial - rotLateral - yaw;
