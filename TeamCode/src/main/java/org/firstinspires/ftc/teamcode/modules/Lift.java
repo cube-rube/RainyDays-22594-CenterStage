@@ -26,8 +26,8 @@ public class Lift {
     private final ElapsedTime runtime;
     private final FtcDashboard dashboard;
 
-    private final int maxPos = 600;
-    private double currentPos = 0;
+    private final double maxPos = 605, minPos = 5;
+    private double currentPos = 5;
     private double lastError = 0;
     private double integralSum = 0;
 
@@ -67,16 +67,7 @@ public class Lift {
         else if (-gamepad.left_stick_y < 0) {
             motor.setTargetPosition(Math.max(motor.getCurrentPosition() - 100, 0));
         }
-        // motor.setPower(-gamepad.left_stick_y);
         telemetry.addData("Lift targeting: ", motor.getTargetPosition());
-    }
-
-    public void tele() {
-        if (motor.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
-            motor.setTargetPosition(590);
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        motor.setPower(1);
     }
 
     public void telePID() {
@@ -111,11 +102,17 @@ public class Lift {
         runtime.reset();
     }
 
-    public void runtimeReset() {
-        runtime.reset();
+    public void teleWithPos() {
+        if (gamepad.dpad_up) {
+            currentPos = (maxPos - minPos) * 3 / 4;
+        }
+        else if (gamepad.dpad_down) {
+            currentPos = (maxPos - minPos) / 4;
+        }
+        telePID();
     }
 
-    public void testing() {
-        telemetry.addData("Lift_motor:", motor.getCurrentPosition());
+    public void runtimeReset() {
+        runtime.reset();
     }
 }
