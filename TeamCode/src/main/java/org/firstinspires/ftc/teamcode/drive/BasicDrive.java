@@ -30,6 +30,13 @@ public class BasicDrive {
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+    private enum DriveState {
+        ROBOT,
+        FIELD
+    }
+    private boolean buttonPressed;
+
+    private DriveState driveState = DriveState.ROBOT;
 
     public BasicDrive(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
@@ -65,6 +72,22 @@ public class BasicDrive {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         telemetry.addData("BasicDrive:", "Initialized");
+    }
+    public void tele() {
+        switch (driveState) {
+            case FIELD:
+                driveFieldCentric();
+            case ROBOT:
+                driveRobotCentric();
+        }
+        if (gamepad.right_bumper) {
+            switch (driveState) {
+                case FIELD:
+                    driveState = DriveState.ROBOT;
+                case ROBOT:
+                    driveState = DriveState.FIELD;
+            }
+        }
     }
 
     public void driveRobotCentric() {
