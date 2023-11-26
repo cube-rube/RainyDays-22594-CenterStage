@@ -29,7 +29,7 @@ public class Launch {
         servoHold = hardwareMap.get(Servo.class, "servo_hold");
         servoRaise = hardwareMap.get(Servo.class, "servo_raise");
 
-        telemetry.addData("Claw: ", "Initialized");
+        telemetry.addData("Launch: ", "Initialized");
     }
 
     public void tele() {
