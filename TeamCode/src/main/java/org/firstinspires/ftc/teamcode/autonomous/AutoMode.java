@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.BasicDrive;
-import org.firstinspires.ftc.teamcode.drive.BasicDriveNoEncoders;
 import org.firstinspires.ftc.teamcode.modules.Deploy;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
@@ -22,7 +21,7 @@ public class AutoMode extends LinearOpMode {
     OpenCvWebcam camProp;
     PropDetectionPipeline propPipeline = new PropDetectionPipeline();
     int propPos;
-    private BasicDriveNoEncoders basicDrive;
+    private BasicDrive basicDrive;
     private Lift lift;
     private Intake intake;
     private Deploy deploy;
@@ -72,7 +71,7 @@ public class AutoMode extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        basicDrive = new BasicDriveNoEncoders(this);
+        basicDrive = new BasicDrive(this);
         lift = new Lift(this, dashboard);
         intake = new Intake(this);
         deploy = new Deploy(this);
