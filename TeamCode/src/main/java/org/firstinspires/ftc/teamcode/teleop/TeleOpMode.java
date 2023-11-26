@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.drive.BasicDrive;
 import org.firstinspires.ftc.teamcode.drive.BasicDriveNoEncoders;
 import org.firstinspires.ftc.teamcode.modules.PullUp;
 import org.firstinspires.ftc.teamcode.modules.Deploy;
@@ -14,7 +15,7 @@ import org.firstinspires.ftc.teamcode.modules.Lift;
 
 @TeleOp(name = "TeleOpMode")
 public class TeleOpMode extends LinearOpMode {
-    private BasicDriveNoEncoders basicDrive;
+    private BasicDrive basicDrive;
     private Lift lift;
     private Intake intake;
     private Deploy deploy;
@@ -28,15 +29,15 @@ public class TeleOpMode extends LinearOpMode {
         initRobot();
         runtime.reset();
         waitForStart();
-        lift.runtimeReset();
+        // lift.runtimeReset();
 
 
         while (opModeIsActive()) {
-            basicDrive.tele();
-            intake.tele();
-            lift.telePID();
-            deploy.easyTele();
-            claw.tele();
+            basicDrive.driveFieldCentric();
+            // intake.tele();
+            // lift.telePID();
+            // deploy.easyTele();
+            // claw.tele();
 
             telemetry.addData("Runtime", runtime.toString());
 
@@ -47,12 +48,12 @@ public class TeleOpMode extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        basicDrive = new BasicDriveNoEncoders(this);
-        lift = new Lift(this, dashboard);
-        intake = new Intake(this);
-        deploy = new Deploy(this);
-        claw = new PullUp(this);
-        launch = new Launch(this);
+        basicDrive = new BasicDrive(this);
+        // lift = new Lift(this, dashboard);
+        // intake = new Intake(this);
+        // deploy = new Deploy(this);
+        // claw = new PullUp(this);
+        // launch = new Launch(this);
 
         telemetry.update();
     }

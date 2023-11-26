@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+
+// TODO: Переделать
 public class Deploy {
     private final LinearOpMode linearOpMode;
     private final HardwareMap hardwareMap;
