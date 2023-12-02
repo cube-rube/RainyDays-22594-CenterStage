@@ -14,7 +14,6 @@ public class PullUp {
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
-    private CRServo servo;
     private final DcMotor motor;
 
     public PullUp(LinearOpMode linearOpMode) {
@@ -28,7 +27,7 @@ public class PullUp {
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-        telemetry.addData("Claw: ", "Initialized");
+        telemetry.addData("PullUp: ", "Initialized");
     }
 
     public void tele() {

@@ -40,8 +40,7 @@ public class Launch {
         }
         if (gamepad.right_bumper && gamepad.left_bumper) {
             servoHold.setPosition(releasePos);
-        }
-        else {
+        } else {
             servoHold.setPosition(holdPos);
         }
     }

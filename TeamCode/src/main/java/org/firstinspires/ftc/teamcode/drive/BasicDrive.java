@@ -71,6 +71,11 @@ public class BasicDrive {
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         telemetry.addData("BasicDrive:", "Initialized");
     }
     public void tele() {
@@ -156,6 +161,33 @@ public class BasicDrive {
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
 
+    }
+    public void forwardWithIMU() {
+        double axial = -gamepad.left_stick_y;
+        double lateral = 0;
+
+        if (gamepad.options) {
+            imu.resetYaw();
+        }
+
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+        double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
+        double rotAxial = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
+
+        leftFrontDrive.setPower(rotAxial + rotLateral);
+        rightFrontDrive.setPower(rotAxial - rotLateral);
+        leftBackDrive.setPower(rotAxial - rotLateral);
+        rightBackDrive.setPower(rotAxial + rotLateral);
+    }
+
+    public void forward() {
+        double axial = -gamepad.left_stick_y;
+
+        leftFrontDrive.setPower(axial);
+        rightFrontDrive.setPower(axial);
+        leftBackDrive.setPower(axial);
+        rightBackDrive.setPower(axial);
     }
 
     public void encoderDriveY(double speed,

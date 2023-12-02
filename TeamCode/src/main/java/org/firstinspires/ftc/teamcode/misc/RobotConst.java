@@ -6,5 +6,5 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 @Config
 public class RobotConst {
-    public static double kP = 0.01, kI = 0.01, kD = 0.0005, kG = 0.31;
+    public static double kP = 0.01, kI = 0, kD = 0.0005, kG = 0.31;
 }

@@ -25,7 +25,7 @@ public class Lift {
     private final ElapsedTime runtime;
     private final FtcDashboard dashboard;
 
-    private final double maxPos = 605, minPos = 5;
+    private final double maxPos = 605, minPos = 8;
     private double currentPos = 5;
     private double lastError = 0;
     private double integralSum = 0;
@@ -74,8 +74,8 @@ public class Lift {
         if (currentPos > maxPos) {
             currentPos = maxPos;
         }
-        if (currentPos < 0) {
-            currentPos = 0;
+        if (currentPos < minPos) {
+            currentPos = minPos;
         }
 
         double encoderPos = motor.getCurrentPosition();
