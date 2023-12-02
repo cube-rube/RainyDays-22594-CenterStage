@@ -31,7 +31,7 @@ public class PullUp {
         telemetry.addData("Claw: ", "Initialized");
     }
 
-    public void tele(){
-        // motor.setPower(-gamepad.right_stick_y);
+    public void tele() {
+        motor.setPower(-gamepad.right_stick_y);
     }
 }

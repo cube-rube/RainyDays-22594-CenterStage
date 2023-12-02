@@ -18,7 +18,7 @@ public class TeleOpMode extends LinearOpMode {
     private Lift lift;
     private Intake intake;
     private Deploy deploy;
-    private PullUp claw;
+    private PullUp pullUp;
     private Launch launch;
     private ElapsedTime runtime = new ElapsedTime();
     public FtcDashboard dashboard;
@@ -36,7 +36,7 @@ public class TeleOpMode extends LinearOpMode {
             // intake.tele();
             // lift.telePID();
             // deploy.easyTele();
-            // claw.tele();
+            pullUp.tele();
 
             telemetry.addData("Runtime", runtime.toString());
 
@@ -51,7 +51,7 @@ public class TeleOpMode extends LinearOpMode {
         // lift = new Lift(this, dashboard);
         // intake = new Intake(this);
         // deploy = new Deploy(this);
-        // claw = new PullUp(this);
+        pullUp = new PullUp(this);
         // launch = new Launch(this);
 
         telemetry.update();
