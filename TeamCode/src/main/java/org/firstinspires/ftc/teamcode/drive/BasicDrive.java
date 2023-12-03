@@ -34,7 +34,12 @@ public class BasicDrive {
         ROBOT,
         FIELD
     }
-    private boolean buttonPressed;
+    private enum ButtonState {
+        PRESSED,
+        HELD,
+        RELEASED
+    }
+    private ButtonState buttonState = ButtonState.RELEASED;
 
     private DriveState driveState = DriveState.ROBOT;
 
@@ -78,20 +83,36 @@ public class BasicDrive {
 
         telemetry.addData("BasicDrive:", "Initialized");
     }
+
     public void tele() {
+        switch (buttonState) {
+            case PRESSED:
+                switch (driveState) {
+                    case ROBOT:
+                        driveState = DriveState.FIELD;
+                    case FIELD:
+                        driveState = DriveState.ROBOT;
+                }
+                if (gamepad.right_bumper) {
+                    buttonState = ButtonState.HELD;
+                } else {
+                    buttonState = ButtonState.RELEASED;
+                }
+            case HELD:
+                if (!gamepad.right_bumper) {
+                    buttonState = ButtonState.RELEASED;
+                }
+            case RELEASED:
+                if (gamepad.right_bumper) {
+                    buttonState = ButtonState.PRESSED;
+                }
+
+        }
         switch (driveState) {
-            case FIELD:
-                driveFieldCentric();
             case ROBOT:
                 driveRobotCentric();
-        }
-        if (gamepad.right_bumper) {
-            switch (driveState) {
-                case FIELD:
-                    driveState = DriveState.ROBOT;
-                case ROBOT:
-                    driveState = DriveState.FIELD;
-            }
+            case FIELD:
+                driveFieldCentric();
         }
     }
 
@@ -117,6 +138,7 @@ public class BasicDrive {
             leftBackPower   /= max;
             rightBackPower  /= max;
         }
+
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
@@ -137,7 +159,7 @@ public class BasicDrive {
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
-        double rotAxial = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
+        double rotAxial   = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
 
         rotLateral = rotLateral * 1.1;
 
@@ -156,14 +178,15 @@ public class BasicDrive {
             leftBackPower   /= max;
             rightBackPower  /= max;
         }
+
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
-
     }
+
     public void forwardWithIMU() {
-        double axial = -gamepad.left_stick_y;
+        double axial   = -gamepad.left_stick_y;
         double lateral = 0;
 
         if (gamepad.options) {
@@ -173,12 +196,28 @@ public class BasicDrive {
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
-        double rotAxial = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
+        double rotAxial   = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
 
-        leftFrontDrive.setPower(rotAxial + rotLateral);
-        rightFrontDrive.setPower(rotAxial - rotLateral);
-        leftBackDrive.setPower(rotAxial - rotLateral);
-        rightBackDrive.setPower(rotAxial + rotLateral);
+        double leftFrontPower  = rotAxial + rotLateral;
+        double rightFrontPower = rotAxial - rotLateral;
+        double leftBackPower   = rotAxial - rotLateral;
+        double rightBackPower  = rotAxial + rotLateral;
+
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower  /= max;
+            rightFrontPower /= max;
+            leftBackPower   /= max;
+            rightBackPower  /= max;
+        }
+
+        leftFrontDrive.setPower(leftFrontPower);
+        rightFrontDrive.setPower(rightFrontPower);
+        leftBackDrive.setPower(leftBackPower);
+        rightBackDrive.setPower(rightBackPower);
     }
 
     public void forward() {

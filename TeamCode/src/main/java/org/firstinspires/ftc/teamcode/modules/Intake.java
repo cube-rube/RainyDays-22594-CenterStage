@@ -18,7 +18,6 @@ public class Intake {
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
-    private final CRServo servo;
     private final DcMotor motor;
 
     public Intake(LinearOpMode linearOpMode) {
@@ -27,8 +26,6 @@ public class Intake {
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad2;
 
-        servo = hardwareMap.get(CRServo.class, "intake");
-        servo.setDirection(CRServo.Direction.FORWARD);
         motor = hardwareMap.get(DcMotor.class, "motor_intake");
         motor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -38,15 +35,8 @@ public class Intake {
 
     public void tele() {
         if (gamepad.x) {
-            servo.setPower(1);
             motor.setPower(1);
-        }
-        /* else if (gamepad.y) {
-            servo.setPower(-1);
-            motor.setPower(-1);
-        } */
-        else {
-            servo.setPower(0);
+        } else {
             motor.setPower(0);
         }
     }

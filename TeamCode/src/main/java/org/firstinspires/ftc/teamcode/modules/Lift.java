@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,11 +12,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import static org.firstinspires.ftc.teamcode.misc.RobotConst.kP;
-import static org.firstinspires.ftc.teamcode.misc.RobotConst.kI;
-import static org.firstinspires.ftc.teamcode.misc.RobotConst.kD;
-import static org.firstinspires.ftc.teamcode.misc.RobotConst.kG;
 
+@Config
 public class Lift {
     private final LinearOpMode linearOpMode;
     private final HardwareMap hardwareMap;
@@ -25,7 +23,13 @@ public class Lift {
     private final ElapsedTime runtime;
     private final FtcDashboard dashboard;
 
+    public static double kP = 0.01;
+    public static double kI = 0;
+    public static double kD = 0.0005;
+    public static double kG = 0.31;
+
     private final double maxPos = 605, minPos = 8;
+    private final double[] positions = new double[]{minPos, (maxPos - minPos) / 4, (maxPos - minPos) * 3 / 4, maxPos};
     private double currentPos = 5;
     private double lastError = 0;
     private double integralSum = 0;
@@ -100,16 +104,25 @@ public class Lift {
         dashboard.sendTelemetryPacket(packet);
         runtime.reset();
     }
-
+    /*
     public void teleWithPos() {
         if (gamepad.dpad_up) {
-            currentPos = (maxPos - minPos) * 3 / 4;
+            for (int i = 0; i < positions.length - 1; i += 1) {
+                if (motor.getCurrentPosition() < positions[i + 1] && motor.getCurrentPosition() > positions[i]) {
+                    currentPos = positions[i + 1];
+                }
+            }
         }
         else if (gamepad.dpad_down) {
-            currentPos = (maxPos - minPos) / 4;
+            for (int i = 0; i < positions.length - 1; i += 1) {
+                if (motor.getCurrentPosition() < positions[i + 1] && motor.getCurrentPosition() > positions[i]) {
+                    currentPos = positions[i];
+                }
+            }
         }
         telePID();
     }
+    */
 
     public void runtimeReset() {
         runtime.reset();

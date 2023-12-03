@@ -14,12 +14,11 @@ public class Deploy {
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
-    private final Servo servo0;
-    private final Servo servo1;
+    private final Servo servoRotation;
+    private final Servo servoHold;
     private final double takePos = 0;
     private final double deployPos = 1;
     private final double closedPos = 0;
-    private double closedPos2;
     private final double openPos = 1;
 
     public enum State {
@@ -30,6 +29,13 @@ public class Deploy {
         TAKE,
         DEPLOY
     }
+
+    private enum ButtonState {
+        PRESSED,
+        HELD,
+        RELEASED
+    }
+
     public State state = State.CLOSED;
     public StateRotation stateRotation = StateRotation.TAKE;
 
@@ -39,10 +45,10 @@ public class Deploy {
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad2;
 
-        servo0 = hardwareMap.get(Servo.class, "servo_rotation");
-        servo1 = hardwareMap.get(Servo.class, "servo_hold");
-        servo0.setDirection(Servo.Direction.FORWARD);
-        servo1.setDirection(Servo.Direction.FORWARD);
+        servoRotation = hardwareMap.get(Servo.class, "servo_rotation");
+        servoHold = hardwareMap.get(Servo.class, "servo_hold");
+        servoRotation.setDirection(Servo.Direction.FORWARD);
+        servoHold.setDirection(Servo.Direction.FORWARD);
     }
 
     public void tele() {
@@ -50,48 +56,48 @@ public class Deploy {
             switch (state) {
                 case OPEN:
                     state = State.CLOSED;
-                    servo1.setPosition(closedPos);
+                    servoHold.setPosition(closedPos);
                 case CLOSED:
                     state = State.OPEN;
-                    servo1.setPosition(openPos);
+                    servoHold.setPosition(openPos);
             }
         }
         if (gamepad.a) {
             switch (stateRotation) {
                 case TAKE:
-                    servo0.setPosition(deployPos);
+                    servoRotation.setPosition(deployPos);
                     stateRotation = StateRotation.DEPLOY;
                 case DEPLOY:
-                    servo0.setPosition(takePos);
+                    servoRotation.setPosition(takePos);
                     stateRotation = StateRotation.TAKE;
             }
         }
 
-        telemetry.addData("rotation_servo: ", servo0.getPosition());
-        telemetry.addData("hold servo: ", servo1.getPosition());
+        telemetry.addData("rotation_servo: ", servoRotation.getPosition());
+        telemetry.addData("hold servo: ", servoHold.getPosition());
     }
 
     public void easyTele() {
         if (gamepad.dpad_up) {
-            servo1.setPosition(0.38); // Open
+            servoHold.setPosition(0.38); // Open
         }
         if (gamepad.dpad_down) {
-            servo1.setPosition(0.028); // Close
+            servoHold.setPosition(0.028); // Close
         }
         if (gamepad.y) {
-            servo0.setPosition(0);
+            servoRotation.setPosition(0);
         }
         if (gamepad.a) {
-            servo0.setPosition(0.4);
+            servoRotation.setPosition(0.4);
         }
 
 
-        telemetry.addData("rotation_servo: ", servo0.getPosition());
-        telemetry.addData("hold servo: ", servo1.getPosition());
+        telemetry.addData("rotation_servo: ", servoRotation.getPosition());
+        telemetry.addData("hold servo: ", servoHold.getPosition());
     }
 
     public void testing() {
-        telemetry.addData("Deploy: ", "rotation %4.2f", servo0.getPosition());
-        telemetry.addData("Deploy: ", "deploy_servo1  %4.2f", servo1.getPosition());
+        telemetry.addData("Deploy: ", "rotation %4.2f", servoRotation.getPosition());
+        telemetry.addData("Deploy: ", "deploy_servo1  %4.2f", servoHold.getPosition());
     }
 }
