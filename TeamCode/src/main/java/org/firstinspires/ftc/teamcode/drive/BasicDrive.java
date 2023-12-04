@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive;
         import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         import com.qualcomm.robotcore.hardware.DcMotor;
+        import com.qualcomm.robotcore.hardware.DcMotorEx;
         import com.qualcomm.robotcore.hardware.Gamepad;
         import com.qualcomm.robotcore.hardware.HardwareMap;
         import com.qualcomm.robotcore.hardware.IMU;
@@ -16,20 +17,22 @@ public class BasicDrive {
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
-    private final DcMotor leftFrontDrive;
-    private final DcMotor leftBackDrive;
-    private final DcMotor rightFrontDrive;
-    private final DcMotor rightBackDrive;
+    private final DcMotorEx leftFrontDrive;
+    private final DcMotorEx leftBackDrive;
+    private final DcMotorEx rightFrontDrive;
+    private final DcMotorEx rightBackDrive;
     private final IMU imu;
     private final ElapsedTime runtime;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double     COUNTS_PER_MOTOR_REV    = 537.7;
+    static final double     DRIVE_GEAR_REDUCTION    = 0.5;     // No External Gearing.
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+
+    static final double DRIVE_SPEED_TPS = 2153; // 77% of max tps
     private enum DriveState {
         ROBOT,
         FIELD
@@ -50,10 +53,10 @@ public class BasicDrive {
         gamepad = linearOpMode.gamepad1;
         runtime = new ElapsedTime();
 
-        leftFrontDrive = hardwareMap.get(DcMotor.class, "motor_lf");
-        leftBackDrive = hardwareMap.get(DcMotor.class, "motor_lb");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "motor_rf");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "motor_rb");
+        leftFrontDrive = hardwareMap.get(DcMotorEx.class, "motor_lf");
+        leftBackDrive = hardwareMap.get(DcMotorEx.class, "motor_lb");
+        rightFrontDrive = hardwareMap.get(DcMotorEx.class, "motor_rf");
+        rightBackDrive = hardwareMap.get(DcMotorEx.class, "motor_rb");
 
         imu = hardwareMap.get(IMU.class, "imu");
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
@@ -114,6 +117,35 @@ public class BasicDrive {
             case FIELD:
                 driveFieldCentric();
         }
+    }
+
+    public void driveRobotCentricEncoder() {
+        double max;
+
+        double axial   = -gamepad.left_stick_y;
+        double lateral =  gamepad.left_stick_x * 1.1;
+        double yaw     =  gamepad.right_stick_x;
+
+        double leftFrontPower  = axial + lateral + yaw;
+        double rightFrontPower = axial - lateral - yaw;
+        double leftBackPower   = axial - lateral + yaw;
+        double rightBackPower  = axial + lateral - yaw;
+
+        max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower  /= max;
+            rightFrontPower /= max;
+            leftBackPower   /= max;
+            rightBackPower  /= max;
+        }
+
+        leftFrontDrive.setVelocity(leftFrontPower * DRIVE_SPEED_TPS);
+        rightFrontDrive.setVelocity(rightFrontPower * DRIVE_SPEED_TPS);
+        leftBackDrive.setVelocity(leftBackPower * DRIVE_SPEED_TPS);
+        rightBackDrive.setVelocity(rightBackPower * DRIVE_SPEED_TPS);
     }
 
     public void driveRobotCentric() {

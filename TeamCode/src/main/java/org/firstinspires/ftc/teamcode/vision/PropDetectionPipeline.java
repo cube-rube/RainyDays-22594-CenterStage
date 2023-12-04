@@ -20,7 +20,12 @@ public class PropDetectionPipeline extends OpenCvPipeline {
     Scalar rectColorLeft = new Scalar(255.0, 0.0, 0.0);
     Scalar rectColorCenter = new Scalar(255.0, 0.0, 0.0);
     Scalar rectColorRight = new Scalar(255.0, 0.0, 0.0);
-    int propPosition;
+    public enum PropPosition {
+        LEFT,
+        CENTER,
+        RIGHT
+    }
+    public volatile PropPosition position = PropPosition.LEFT;
 
     @Override
     public Mat processFrame(Mat input) {
@@ -36,9 +41,16 @@ public class PropDetectionPipeline extends OpenCvPipeline {
         centerCrop = ybcrcb.submat(centerRect);
         rightCrop = ybcrcb.submat(rightRect);
 
-        Core.extractChannel(leftCrop, leftCrop, ALLIANCECOLOR);
-        Core.extractChannel(centerCrop, centerCrop, ALLIANCECOLOR);
-        Core.extractChannel(rightCrop, rightCrop, ALLIANCECOLOR);
+        switch (ALLIANCECOLOR) {
+            case RED:
+                Core.extractChannel(leftCrop, leftCrop, 1);
+                Core.extractChannel(centerCrop, centerCrop, 1);
+                Core.extractChannel(rightCrop, rightCrop, 1);
+            case BLUE:
+                Core.extractChannel(leftCrop, leftCrop, 2);
+                Core.extractChannel(centerCrop, centerCrop, 2);
+                Core.extractChannel(rightCrop, rightCrop, 2);
+        }
 
         avgLeft = Core.mean(leftCrop).val[0];
         avgCenter = Core.mean(centerCrop).val[0];
@@ -50,19 +62,19 @@ public class PropDetectionPipeline extends OpenCvPipeline {
             rectColorLeft = new Scalar(0.0, 255.0, 0.0);
             rectColorCenter = new Scalar(255.0, 0.0, 0.0);
             rectColorRight = new Scalar(255.0, 0.0, 0.0);
-            propPosition = 0;
+            position = PropPosition.LEFT;
         }
         else if (mx == avgCenter) {
             rectColorLeft = new Scalar(255.0, 0.0, 0.0);
             rectColorCenter = new Scalar(0.0, 255.0, 0.0);
             rectColorRight = new Scalar(255.0, 0.0, 0.0);
-            propPosition = 1;
+            position = PropPosition.CENTER;
         }
         else if (mx == avgRight) {
             rectColorLeft = new Scalar(255.0, 0.0, 0.0);
             rectColorCenter = new Scalar(255.0, 0.0, 0.0);
             rectColorRight = new Scalar(0.0, 255.0, 0.0);
-            propPosition = 2;
+            position = PropPosition.RIGHT;
         }
 		
        
@@ -73,7 +85,7 @@ public class PropDetectionPipeline extends OpenCvPipeline {
         return output;
     }
 
-    public int getPropPosition() {
-        return propPosition;
+    public PropPosition getPropPosition() {
+        return position;
     }
 }

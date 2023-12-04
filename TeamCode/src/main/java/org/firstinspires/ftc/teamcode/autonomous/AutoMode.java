@@ -14,13 +14,17 @@ import org.firstinspires.ftc.teamcode.modules.Lift;
 import org.firstinspires.ftc.teamcode.vision.PropDetectionPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
+
+import static org.firstinspires.ftc.teamcode.misc.GameConst.ALLIANCECOLOR;
+import static org.firstinspires.ftc.teamcode.misc.GameConst.STARTPOS;
 
 @Autonomous(name = "AutoMode")
 public class AutoMode extends LinearOpMode {
     OpenCvWebcam camProp;
     PropDetectionPipeline propPipeline = new PropDetectionPipeline();
-    int propPos;
+    PropDetectionPipeline.PropPosition propPosition = PropDetectionPipeline.PropPosition.LEFT;
     private BasicDrive basicDrive;
     private Lift lift;
     private Intake intake;
@@ -30,31 +34,25 @@ public class AutoMode extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        initCamera();
         initRobot();
-
-        waitForStart();
+        initCamera();
 
         camProp.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
-            public void onOpened()
-            {
-                propPos = propPipeline.getPropPosition();
+            public void onOpened() {
+                camProp.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
             }
             @Override
             public void onError(int errorCode) {
             }
         });
-        if (propPos == 0) {
 
-        }
-        else if (propPos == 1) {
+        waitForStart();
+        propPosition = propPipeline.getPropPosition();
 
-        }
-        else if (propPos == 2) {
-
-        }
+        telemetry.addData("Snapshot post-START analysis", propPipeline);
+        telemetry.update();
     }
 
     private void initCamera() {
@@ -64,6 +62,7 @@ public class AutoMode extends LinearOpMode {
                 hardwareMap.get(WebcamName.class, "Camera1"), cameraMonitorViewId);
 
         camProp.setPipeline(propPipeline);
+        camProp.setMillisecondsPermissionTimeout(5000);
 
         telemetry.addData("Camera: ", "Initialized");
     }
