@@ -7,7 +7,7 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-import static org.firstinspires.ftc.teamcode.misc.GameConst.ALLIANCECOLOR;
+import static org.firstinspires.ftc.teamcode.misc.GameConstants.ALLIANCECOLOR;
 
 public class PropDetectionPipeline extends OpenCvPipeline {
 	public int PROP_HEIGHT = 0;

@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.misc;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class GameConst {
+public class GameConstants {
     public enum StartPos {
         NEAR_BACKDROP,
         NOT_NEAR_BACKDROP

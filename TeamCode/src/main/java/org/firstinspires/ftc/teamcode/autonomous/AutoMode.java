@@ -17,9 +17,6 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-import static org.firstinspires.ftc.teamcode.misc.GameConst.ALLIANCECOLOR;
-import static org.firstinspires.ftc.teamcode.misc.GameConst.STARTPOS;
-
 @Autonomous(name = "AutoMode")
 public class AutoMode extends LinearOpMode {
     OpenCvWebcam camProp;
