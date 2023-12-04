@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
-// TODO: Переделать
+@Config
 public class Deploy {
     private final LinearOpMode linearOpMode;
     private final HardwareMap hardwareMap;
@@ -16,28 +17,28 @@ public class Deploy {
     private final Gamepad gamepad;
     private final Servo servoRotation;
     private final Servo servoHold;
-    private final double takePos = 0;
-    private final double deployPos = 1;
-    private final double closedPos = 0;
-    private final double openPos = 1;
 
-    public enum State {
-        CLOSED,
-        OPEN
+    public enum HolderState {
+        HOLD,
+        RELEASE
     }
-    public enum StateRotation {
+    private final static double holdPos = 0;
+    private final static double releasePos = 1;
+    public enum RotationState {
         TAKE,
         DEPLOY
     }
-
+    private final static double takePos = 0;
+    private final static double deployPos = 1;
     private enum ButtonState {
         PRESSED,
         HELD,
         RELEASED
     }
-
-    public State state = State.CLOSED;
-    public StateRotation stateRotation = StateRotation.TAKE;
+    private ButtonState aState = ButtonState.RELEASED;
+    private ButtonState yState = ButtonState.RELEASED;
+    public HolderState holderState = HolderState.RELEASE;
+    public RotationState rotationState = RotationState.TAKE;
 
     public Deploy(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
@@ -52,29 +53,62 @@ public class Deploy {
     }
 
     public void tele() {
-        if (gamepad.b) {
-            switch (state) {
-                case OPEN:
-                    state = State.CLOSED;
-                    servoHold.setPosition(closedPos);
-                case CLOSED:
-                    state = State.OPEN;
-                    servoHold.setPosition(openPos);
-            }
+        switch (aState) {
+            case PRESSED:
+                switch (holderState) {
+                    case RELEASE:
+                        holderState = HolderState.HOLD;
+                    case HOLD:
+                        holderState = HolderState.RELEASE;
+                }
+                if (gamepad.a) {
+                    aState = ButtonState.HELD;
+                } else {
+                    aState = ButtonState.RELEASED;
+                }
+            case HELD:
+                if (!gamepad.a) {
+                    aState = ButtonState.RELEASED;
+                }
+            case RELEASED:
+                if (gamepad.a) {
+                    aState = ButtonState.PRESSED;
+                }
         }
-        if (gamepad.a) {
-            switch (stateRotation) {
-                case TAKE:
-                    servoRotation.setPosition(deployPos);
-                    stateRotation = StateRotation.DEPLOY;
-                case DEPLOY:
-                    servoRotation.setPosition(takePos);
-                    stateRotation = StateRotation.TAKE;
-            }
+        switch (yState) {
+            case PRESSED:
+                switch (rotationState) {
+                    case TAKE:
+                        rotationState = RotationState.DEPLOY;
+                    case DEPLOY:
+                        rotationState = RotationState.TAKE;
+                }
+                if (gamepad.a) {
+                    yState = ButtonState.HELD;
+                } else {
+                    yState = ButtonState.RELEASED;
+                }
+            case HELD:
+                if (!gamepad.a) {
+                    yState = ButtonState.RELEASED;
+                }
+            case RELEASED:
+                if (gamepad.a) {
+                    yState = ButtonState.PRESSED;
+                }
         }
-
-        telemetry.addData("rotation_servo: ", servoRotation.getPosition());
-        telemetry.addData("hold servo: ", servoHold.getPosition());
+        switch (holderState) {
+            case HOLD:
+                servoHold.setPosition(holdPos);
+            case RELEASE:
+                servoHold.setPosition(releasePos);
+        }
+        switch (rotationState) {
+            case TAKE:
+                servoRotation.setPosition(takePos);
+            case DEPLOY:
+                servoRotation.setPosition(deployPos);
+        }
     }
 
     public void easyTele() {

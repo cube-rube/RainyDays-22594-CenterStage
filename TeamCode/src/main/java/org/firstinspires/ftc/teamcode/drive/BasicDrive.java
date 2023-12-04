@@ -124,7 +124,7 @@ public class BasicDrive {
 
         double axial   = -gamepad.left_stick_y;
         double lateral =  gamepad.left_stick_x * 1.1;
-        double yaw     =  gamepad.right_stick_x;
+        double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
 
         double leftFrontPower  = axial + lateral + yaw;
         double rightFrontPower = axial - lateral - yaw;
@@ -153,7 +153,7 @@ public class BasicDrive {
 
         double axial   = -gamepad.left_stick_y;
         double lateral =  gamepad.left_stick_x * 1.1;
-        double yaw     =  gamepad.right_stick_x;
+        double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
 
         double leftFrontPower  = axial + lateral + yaw;
         double rightFrontPower = axial - lateral - yaw;
@@ -182,7 +182,7 @@ public class BasicDrive {
 
         double axial   = -gamepad.left_stick_y;
         double lateral =  gamepad.left_stick_x;
-        double yaw     =  gamepad.right_stick_x;
+        double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
 
         if (gamepad.options) {
             imu.resetYaw();
@@ -382,6 +382,5 @@ public class BasicDrive {
         telemetry.addData("LeftBackDrive Encoder: ", leftBackDrive.getCurrentPosition());
         telemetry.addData("RightFrontDrive Encoder: ", rightFrontDrive.getCurrentPosition());
         telemetry.addData("RightBackDrive Encoder: ", rightBackDrive.getCurrentPosition());
-
     }
 }
