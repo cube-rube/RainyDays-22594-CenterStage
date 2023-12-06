@@ -171,10 +171,10 @@ public class BasicDrive {
             rightBackPower  /= max;
         }
 
-        leftFrontDrive.setVelocity(leftFrontPower * DRIVE_SPEED_TPS);
-        rightFrontDrive.setVelocity(rightFrontPower * DRIVE_SPEED_TPS);
-        leftBackDrive.setVelocity(leftBackPower * DRIVE_SPEED_TPS);
-        rightBackDrive.setVelocity(rightBackPower * DRIVE_SPEED_TPS);
+        leftFrontDrive.setPower(leftFrontPower);
+        rightFrontDrive.setPower(rightFrontPower);
+        leftBackDrive.setPower(leftBackPower);
+        rightBackDrive.setPower(rightBackPower);
     }
 
     public void driveFieldCentricEncoder() {
@@ -211,10 +211,10 @@ public class BasicDrive {
             rightBackPower  /= max;
         }
 
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
+        leftFrontDrive.setVelocity(leftFrontPower * DRIVE_SPEED_TPS);
+        rightFrontDrive.setVelocity(rightFrontPower * DRIVE_SPEED_TPS);
+        leftBackDrive.setVelocity(leftBackPower * DRIVE_SPEED_TPS);
+        rightBackDrive.setVelocity(rightBackPower * DRIVE_SPEED_TPS);
     }
 
     public void driveFieldCentric() {
