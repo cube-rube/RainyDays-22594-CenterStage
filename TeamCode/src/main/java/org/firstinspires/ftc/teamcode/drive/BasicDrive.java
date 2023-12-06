@@ -171,6 +171,46 @@ public class BasicDrive {
             rightBackPower  /= max;
         }
 
+        leftFrontDrive.setVelocity(leftFrontPower * DRIVE_SPEED_TPS);
+        rightFrontDrive.setVelocity(rightFrontPower * DRIVE_SPEED_TPS);
+        leftBackDrive.setVelocity(leftBackPower * DRIVE_SPEED_TPS);
+        rightBackDrive.setVelocity(rightBackPower * DRIVE_SPEED_TPS);
+    }
+
+    public void driveFieldCentricEncoder() {
+        double max;
+
+        double axial   = -gamepad.left_stick_y;
+        double lateral =  gamepad.left_stick_x;
+        double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
+
+        if (gamepad.options) {
+            imu.resetYaw();
+        }
+
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+        double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
+        double rotAxial   = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
+
+        rotLateral = rotLateral * 1.1;
+
+        double leftFrontPower  = rotAxial + rotLateral + yaw;
+        double rightFrontPower = rotAxial - rotLateral - yaw;
+        double leftBackPower   = rotAxial - rotLateral + yaw;
+        double rightBackPower  = rotAxial + rotLateral - yaw;
+
+        max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower  /= max;
+            rightFrontPower /= max;
+            leftBackPower   /= max;
+            rightBackPower  /= max;
+        }
+
         leftFrontDrive.setPower(leftFrontPower);
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
