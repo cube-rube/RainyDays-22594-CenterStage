@@ -15,7 +15,11 @@ public class Deploy {
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
+    private final Servo servoRotationBox;
     private final Servo servoRotation;
+    private final Servo servoHoldUpper;
+    private final Servo servoHoldLower;
+
     private final Servo servoHold;
 
     public enum HolderState {

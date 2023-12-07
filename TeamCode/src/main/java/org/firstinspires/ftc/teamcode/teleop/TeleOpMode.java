@@ -29,6 +29,7 @@ public class TeleOpMode extends LinearOpMode {
         runtime.reset();
         waitForStart();
         // lift.runtimeReset();
+        basicDrive.runtimeReset();
 
 
         while (opModeIsActive()) {
@@ -48,7 +49,7 @@ public class TeleOpMode extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        basicDrive = new BasicDrive(this);
+        basicDrive = new BasicDrive(this, dashboard);
         // lift = new Lift(this, dashboard);
         // intake = new Intake(this);
         // deploy = new Deploy(this);

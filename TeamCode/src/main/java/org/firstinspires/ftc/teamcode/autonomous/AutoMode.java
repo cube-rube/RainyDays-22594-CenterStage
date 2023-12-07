@@ -50,6 +50,27 @@ public class AutoMode extends LinearOpMode {
 
         telemetry.addData("Snapshot post-START analysis", propPipeline);
         telemetry.update();
+
+        switch (propPosition) {
+            case LEFT:
+                leftPixelPush();
+            case RIGHT:
+                rightPixelPush();
+            case CENTER:
+                centerPixelPush();
+        }
+    }
+
+    private void leftPixelPush() {
+
+    }
+
+    private void centerPixelPush() {
+
+    }
+
+    private void rightPixelPush() {
+
     }
 
     private void initCamera() {
@@ -67,7 +88,7 @@ public class AutoMode extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        basicDrive = new BasicDrive(this);
+        basicDrive = new BasicDrive(this, dashboard);
         lift = new Lift(this, dashboard);
         intake = new Intake(this);
         deploy = new Deploy(this);

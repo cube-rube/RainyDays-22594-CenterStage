@@ -34,8 +34,6 @@ public class Lift {
     private double lastError = 0;
     private double integralSum = 0;
 
-
-
     public Lift(LinearOpMode linearOpMode, FtcDashboard dashboard) {
         this.linearOpMode = linearOpMode;
         hardwareMap = linearOpMode.hardwareMap;
@@ -104,11 +102,16 @@ public class Lift {
         dashboard.sendTelemetryPacket(packet);
         runtime.reset();
     }
-    /*
+
     public void teleWithPos() {
         if (gamepad.dpad_up) {
             for (int i = 0; i < positions.length - 1; i += 1) {
                 if (motor.getCurrentPosition() < positions[i + 1] && motor.getCurrentPosition() > positions[i]) {
+                    if (currentPos == positions[i + 1] &&
+                            Math.abs(motor.getCurrentPosition() - positions[i + 1]) <= 6 &&
+                            positions.length > i + 2) {
+                        currentPos = positions[i + 2];
+                    }
                     currentPos = positions[i + 1];
                 }
             }
@@ -116,13 +119,17 @@ public class Lift {
         else if (gamepad.dpad_down) {
             for (int i = 0; i < positions.length - 1; i += 1) {
                 if (motor.getCurrentPosition() < positions[i + 1] && motor.getCurrentPosition() > positions[i]) {
+                    if (currentPos == positions[i] &&
+                            Math.abs(motor.getCurrentPosition() - positions[i]) <= 6 &&
+                            0 <= i - 1) {
+                        currentPos = positions[i - 1];
+                    }
                     currentPos = positions[i];
                 }
             }
         }
         telePID();
     }
-    */
 
     public void runtimeReset() {
         runtime.reset();

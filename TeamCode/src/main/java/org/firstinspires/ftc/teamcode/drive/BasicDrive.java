@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive;
 
+        import com.acmerobotics.dashboard.FtcDashboard;
+        import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
         import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
         import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
         import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,6 +25,7 @@ public class BasicDrive {
     private final DcMotorEx rightBackDrive;
     private final IMU imu;
     private final ElapsedTime runtime;
+    private final FtcDashboard dashboard;
 
     static final double     COUNTS_PER_MOTOR_REV    = 537.7;
     static final double     DRIVE_GEAR_REDUCTION    = 0.5;     // No External Gearing.
@@ -46,12 +49,13 @@ public class BasicDrive {
 
     private DriveState driveState = DriveState.ROBOT;
 
-    public BasicDrive(LinearOpMode linearOpMode) {
+    public BasicDrive(LinearOpMode linearOpMode, FtcDashboard dashboard) {
         this.linearOpMode = linearOpMode;
         hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad1;
         runtime = new ElapsedTime();
+        this.dashboard = dashboard;
 
         leftFrontDrive = hardwareMap.get(DcMotorEx.class, "motor_lf");
         leftBackDrive = hardwareMap.get(DcMotorEx.class, "motor_lb");
@@ -211,10 +215,32 @@ public class BasicDrive {
             rightBackPower  /= max;
         }
 
-        leftFrontDrive.setVelocity(leftFrontPower * DRIVE_SPEED_TPS);
-        rightFrontDrive.setVelocity(rightFrontPower * DRIVE_SPEED_TPS);
-        leftBackDrive.setVelocity(leftBackPower * DRIVE_SPEED_TPS);
-        rightBackDrive.setVelocity(rightBackPower * DRIVE_SPEED_TPS);
+        double leftFrontSpeed = leftFrontDrive.getVelocity();
+        double rightFrontSpeed = rightFrontDrive.getVelocity();
+        double leftBackSpeed = leftBackDrive.getVelocity();
+        double rightBackSpeed = rightBackDrive.getVelocity();
+
+        double leftFrontError = leftFrontDrive.getVelocity() - leftFrontPower * DRIVE_SPEED_TPS;
+        double rightFrontError = rightFrontDrive.getVelocity() - rightFrontPower * DRIVE_SPEED_TPS;
+        double leftBackError = leftBackDrive.getVelocity() - leftBackPower * DRIVE_SPEED_TPS;
+        double rightBackError = rightBackDrive.getVelocity() - rightBackPower * DRIVE_SPEED_TPS;
+        double kP = 0.0001;
+
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.put("reference_lf", leftFrontPower * DRIVE_SPEED_TPS);
+        packet.put("encoder_lf", leftFrontSpeed);
+        packet.put("reference_rf", rightFrontPower * DRIVE_SPEED_TPS);
+        packet.put("encoder_rf", rightFrontSpeed);
+        packet.put("reference_lb", leftBackPower * DRIVE_SPEED_TPS);
+        packet.put("encoder_lb", leftBackSpeed);
+        packet.put("reference_rb", rightBackPower * DRIVE_SPEED_TPS);
+        packet.put("encoder_rb", rightBackSpeed);
+        dashboard.sendTelemetryPacket(packet);
+
+        leftFrontDrive.setPower(leftFrontPower + kP * leftFrontError);
+        rightFrontDrive.setPower(rightFrontPower + kP * rightFrontError);
+        leftBackDrive.setPower(leftBackPower + kP * leftBackError);
+        rightBackDrive.setPower(rightBackPower + kP * rightBackError);
     }
 
     public void driveFieldCentric() {
@@ -422,5 +448,9 @@ public class BasicDrive {
         telemetry.addData("LeftBackDrive Encoder: ", leftBackDrive.getCurrentPosition());
         telemetry.addData("RightFrontDrive Encoder: ", rightFrontDrive.getCurrentPosition());
         telemetry.addData("RightBackDrive Encoder: ", rightBackDrive.getCurrentPosition());
+    }
+
+    public void runtimeReset() {
+        runtime.reset();
     }
 }
