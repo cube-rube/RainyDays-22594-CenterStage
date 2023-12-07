@@ -69,6 +69,7 @@ public class Deploy {
                 switch (holderLowerState) {
                     case RELEASE:
                         holderLowerState = HolderState.HOLD;
+                        break;
                     case HOLD:
                         holderLowerState = HolderState.RELEASE;
                 }
@@ -91,6 +92,7 @@ public class Deploy {
                 switch (holderUpperState) {
                     case RELEASE:
                         holderUpperState = HolderState.HOLD;
+                        break;
                     case HOLD:
                         holderUpperState = HolderState.RELEASE;
                 }
@@ -113,6 +115,7 @@ public class Deploy {
                 switch (rotationBoxState) {
                     case TAKE:
                         rotationBoxState = RotationState.DEPLOY;
+                        break;
                     case DEPLOY:
                         rotationBoxState = RotationState.TAKE;
                 }
@@ -135,6 +138,7 @@ public class Deploy {
                 switch (rotationBeamState) {
                     case TAKE:
                         rotationBeamState = RotationState.DEPLOY;
+                        break;
                     case DEPLOY:
                         rotationBeamState = RotationState.TAKE;
                 }
