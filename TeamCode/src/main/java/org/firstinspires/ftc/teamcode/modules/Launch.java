@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -18,7 +15,12 @@ public class Launch {
     private final Servo servoHold;
     private final Servo servoRaise;
 
-    private float upPos, downPos, holdPos, releasePos;
+    private float upPos;
+    private float downPos;
+    private double holdPos;
+    private double releasePos;
+
+
 
     public Launch(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
@@ -30,9 +32,12 @@ public class Launch {
         servoRaise = hardwareMap.get(Servo.class, "servo_raise");
 
         telemetry.addData("Launch: ", "Initialized");
+
+        holdPos = 0;
+        releasePos = 1;
     }
 
-    public void tele() {
+    /*public void tele() {
         if (gamepad.right_trigger > 0) {
             servoRaise.setPosition(upPos);
         } else if (gamepad.left_trigger > 0) {
@@ -41,6 +46,16 @@ public class Launch {
         if (gamepad.right_bumper && gamepad.left_bumper) {
             servoHold.setPosition(releasePos);
         } else {
+            servoHold.setPosition(holdPos);
+        }
+    }*/
+
+    public void  tele() {
+        servoRaise.setPosition(gamepad.right_stick_y);
+        if (gamepad.b) {
+            servoHold.setPosition(releasePos);
+        }
+        else {
             servoHold.setPosition(holdPos);
         }
     }

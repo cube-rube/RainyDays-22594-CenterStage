@@ -15,34 +15,41 @@ public class Deploy {
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
-    private final Servo servoRotationBox;
-    private final Servo servoRotation;
-    private final Servo servoHoldUpper;
-    private final Servo servoHoldLower;
-
-    private final Servo servoHold;
+    private final Servo servoRotationBox; // Вращение коробки на X
+    private final Servo servoRotationBeam; // Вращение балки на Y
+    private final Servo servoHoldUpper; // Держалка нижнего пикселя в коробке на A
+    private final Servo servoHoldLower; // Держалка верхнего пикселя в коробке на B
 
     public enum HolderState {
         HOLD,
         RELEASE
     }
-    private final static double holdPos = 0;
-    private final static double releasePos = 1;
+    private final static double holdUpperPos = 0;
+    private final static double releaseUpperPos = 1;
+    private final static double holdLowerPos = 0;
+    private final static double releaseLowerPos = 1;
+
+    public HolderState holderUpperState = HolderState.RELEASE;
+    public HolderState holderLowerState = HolderState.RELEASE;
     public enum RotationState {
         TAKE,
         DEPLOY
     }
-    private final static double takePos = 0;
-    private final static double deployPos = 1;
+    private final static double takeBoxPos = 0;
+    private final static double deployBoxPos = 1;
+    private final static double takeBeamPos = 0;
+    private final static double deployBeamPos = 1;
+    public RotationState rotationBoxState = RotationState.TAKE;
+    public RotationState rotationBeamState = RotationState.TAKE;
     private enum ButtonState {
         PRESSED,
         HELD,
         RELEASED
     }
     private ButtonState aState = ButtonState.RELEASED;
+    private ButtonState bState = ButtonState.RELEASED;
+    private ButtonState xState = ButtonState.RELEASED;
     private ButtonState yState = ButtonState.RELEASED;
-    public HolderState holderState = HolderState.RELEASE;
-    public RotationState rotationState = RotationState.TAKE;
 
     public Deploy(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
@@ -50,20 +57,20 @@ public class Deploy {
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad2;
 
-        servoRotation = hardwareMap.get(Servo.class, "servo_rotation");
-        servoHold = hardwareMap.get(Servo.class, "servo_hold");
-        servoRotation.setDirection(Servo.Direction.FORWARD);
-        servoHold.setDirection(Servo.Direction.FORWARD);
+        servoRotationBox = hardwareMap.get(Servo.class, "servo_rotation_box");
+        servoRotationBeam = hardwareMap.get(Servo.class, "servo_rotation_beam");
+        servoHoldUpper = hardwareMap.get(Servo.class, "servo_hold_upper");
+        servoHoldLower = hardwareMap.get(Servo.class, "servo_hold_lower");
     }
 
     public void tele() {
         switch (aState) {
             case PRESSED:
-                switch (holderState) {
+                switch (holderLowerState) {
                     case RELEASE:
-                        holderState = HolderState.HOLD;
+                        holderLowerState = HolderState.HOLD;
                     case HOLD:
-                        holderState = HolderState.RELEASE;
+                        holderLowerState = HolderState.RELEASE;
                 }
                 if (gamepad.a) {
                     aState = ButtonState.HELD;
@@ -79,63 +86,102 @@ public class Deploy {
                     aState = ButtonState.PRESSED;
                 }
         }
+        switch (bState) {
+            case PRESSED:
+                switch (holderUpperState) {
+                    case RELEASE:
+                        holderUpperState = HolderState.HOLD;
+                    case HOLD:
+                        holderUpperState = HolderState.RELEASE;
+                }
+                if (gamepad.b) {
+                    bState = ButtonState.HELD;
+                } else {
+                    bState = ButtonState.RELEASED;
+                }
+            case HELD:
+                if (!gamepad.b) {
+                    bState = ButtonState.RELEASED;
+                }
+            case RELEASED:
+                if (gamepad.b) {
+                    bState = ButtonState.PRESSED;
+                }
+        }
+        switch (xState) {
+            case PRESSED:
+                switch (rotationBoxState) {
+                    case TAKE:
+                        rotationBoxState = RotationState.DEPLOY;
+                    case DEPLOY:
+                        rotationBoxState = RotationState.TAKE;
+                }
+                if (gamepad.x) {
+                    xState = ButtonState.HELD;
+                } else {
+                    xState = ButtonState.RELEASED;
+                }
+            case HELD:
+                if (!gamepad.x) {
+                    xState = ButtonState.RELEASED;
+                }
+            case RELEASED:
+                if (gamepad.x) {
+                    xState = ButtonState.PRESSED;
+                }
+        }
         switch (yState) {
             case PRESSED:
-                switch (rotationState) {
+                switch (rotationBeamState) {
                     case TAKE:
-                        rotationState = RotationState.DEPLOY;
+                        rotationBeamState = RotationState.DEPLOY;
                     case DEPLOY:
-                        rotationState = RotationState.TAKE;
+                        rotationBeamState = RotationState.TAKE;
                 }
-                if (gamepad.a) {
+                if (gamepad.y) {
                     yState = ButtonState.HELD;
                 } else {
                     yState = ButtonState.RELEASED;
                 }
             case HELD:
-                if (!gamepad.a) {
+                if (!gamepad.y) {
                     yState = ButtonState.RELEASED;
                 }
             case RELEASED:
-                if (gamepad.a) {
+                if (gamepad.y) {
                     yState = ButtonState.PRESSED;
                 }
         }
-        switch (holderState) {
+        switch (holderLowerState) {
             case HOLD:
-                servoHold.setPosition(holdPos);
+                servoHoldLower.setPosition(holdLowerPos);
             case RELEASE:
-                servoHold.setPosition(releasePos);
+                servoHoldLower.setPosition(releaseLowerPos);
         }
-        switch (rotationState) {
+        switch (holderUpperState) {
+            case HOLD:
+                servoHoldUpper.setPosition(holdUpperPos);
+            case RELEASE:
+                servoHoldUpper.setPosition(releaseUpperPos);
+        }
+        switch (rotationBoxState) {
             case TAKE:
-                servoRotation.setPosition(takePos);
+                servoRotationBox.setPosition(takeBoxPos);
             case DEPLOY:
-                servoRotation.setPosition(deployPos);
+                servoRotationBox.setPosition(deployBoxPos);
         }
-    }
-
-    public void easyTele() {
-        if (gamepad.dpad_up) {
-            servoHold.setPosition(0.38); // Open
+        switch (rotationBeamState) {
+            case TAKE:
+                servoRotationBeam.setPosition(takeBeamPos);
+            case DEPLOY:
+                servoRotationBeam.setPosition(deployBeamPos);
         }
-        if (gamepad.dpad_down) {
-            servoHold.setPosition(0.028); // Close
-        }
-        if (gamepad.y) {
-            servoRotation.setPosition(0);
-        }
-        if (gamepad.a) {
-            servoRotation.setPosition(0.4);
-        }
-
-
-        telemetry.addData("rotation_servo: ", servoRotation.getPosition());
-        telemetry.addData("hold servo: ", servoHold.getPosition());
     }
 
     public void testing() {
-        telemetry.addData("Deploy: ", "rotation %4.2f", servoRotation.getPosition());
-        telemetry.addData("Deploy: ", "deploy_servo1  %4.2f", servoHold.getPosition());
+        telemetry.addData("Deploy: ", "rotation_beam %4.2f", servoRotationBox.getPosition());
+        telemetry.addData("Deploy: ", "rotation_box %4.2f", servoRotationBox.getPosition());
+        telemetry.addData("Deploy: ", "hold_upper  %4.2f", servoHoldUpper.getPosition());
+        telemetry.addData("Deploy: ", "hold_lower  %4.2f", servoHoldLower.getPosition());
     }
 }

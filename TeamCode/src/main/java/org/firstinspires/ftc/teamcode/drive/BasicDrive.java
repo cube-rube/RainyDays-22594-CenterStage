@@ -35,7 +35,7 @@ public class BasicDrive {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
-    static final double DRIVE_SPEED_TPS = 2153; // 77% of max tps
+    static final double DRIVE_SPEED_TPS = 2153; // 77% of max tps?????????
     private enum DriveState {
         ROBOT,
         FIELD
@@ -95,10 +95,10 @@ public class BasicDrive {
         switch (buttonState) {
             case PRESSED:
                 switch (driveState) {
+                    case FIELD:
+                        driveState = DriveState.ROBOT; //видимо в самой функции до задавания значения второго кейса
                     case ROBOT:
                         driveState = DriveState.FIELD;
-                    case FIELD:
-                        driveState = DriveState.ROBOT;
                 }
                 if (gamepad.right_bumper) {
                     buttonState = ButtonState.HELD;
@@ -117,7 +117,8 @@ public class BasicDrive {
         }
         switch (driveState) {
             case ROBOT:
-                driveRobotCentric();
+                //driveRobotCentric();
+                driveRobotCentricEncoder();
             case FIELD:
                 driveFieldCentric();
         }
@@ -150,6 +151,12 @@ public class BasicDrive {
         rightFrontDrive.setVelocity(rightFrontPower * DRIVE_SPEED_TPS);
         leftBackDrive.setVelocity(leftBackPower * DRIVE_SPEED_TPS);
         rightBackDrive.setVelocity(rightBackPower * DRIVE_SPEED_TPS);
+
+        /*leftFrontDrive.setPower(leftFrontPower * DRIVE_SPEED_TPS);
+        rightFrontDrive.setPower(rightFrontPower * DRIVE_SPEED_TPS);
+        leftBackDrive.setPower(leftBackPower * DRIVE_SPEED_TPS);
+        rightBackDrive.setPower(rightBackPower * DRIVE_SPEED_TPS);*/
+
     }
 
     public void driveRobotCentric() {
@@ -448,6 +455,8 @@ public class BasicDrive {
         telemetry.addData("LeftBackDrive Encoder: ", leftBackDrive.getCurrentPosition());
         telemetry.addData("RightFrontDrive Encoder: ", rightFrontDrive.getCurrentPosition());
         telemetry.addData("RightBackDrive Encoder: ", rightBackDrive.getCurrentPosition());
+        telemetry.addData("LeftStickY", -gamepad.left_stick_y);
+        telemetry.addData("LeftStickX", gamepad.left_stick_x);
     }
 
     public void runtimeReset() {
