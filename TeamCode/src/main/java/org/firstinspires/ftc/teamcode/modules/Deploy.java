@@ -24,10 +24,10 @@ public class Deploy {
         HOLD,
         RELEASE
     }
-    private final static double holdUpperPos = 0;
-    private final static double releaseUpperPos = 1;
-    private final static double holdLowerPos = 0;
-    private final static double releaseLowerPos = 1;
+    private final static double holdUpperPos = 0; // TODO: Надо поменять
+    private final static double releaseUpperPos = 1; // TODO: Надо поменять
+    private final static double holdLowerPos = 0; // TODO: Надо поменять
+    private final static double releaseLowerPos = 1; // TODO: Надо поменять
 
     public HolderState holderUpperState = HolderState.RELEASE;
     public HolderState holderLowerState = HolderState.RELEASE;
@@ -35,10 +35,10 @@ public class Deploy {
         TAKE,
         DEPLOY
     }
-    private final static double takeBoxPos = 0;
-    private final static double deployBoxPos = 1;
-    private final static double takeBeamPos = 0;
-    private final static double deployBeamPos = 1;
+    private final static double takeBoxPos = 1; // не очень
+    private final static double deployBoxPos = 0.39; // норм вроде
+    private final static double takeBeamPos = 0.895; // Вроде норм
+    private final static double deployBeamPos = 0; // TODO: Надо поменять (побольше)
     public RotationState rotationBoxState = RotationState.TAKE;
     public RotationState rotationBeamState = RotationState.TAKE;
     public RotationState rotationState = RotationState.TAKE;
@@ -183,7 +183,7 @@ public class Deploy {
         }
     }
 
-    // Вот эту функцию надо редачить, вращение коробки и балки на Y, верхняя держалка пикселя на B, нижняя на A
+    // Вот эту функцию надо редачить, вращение коробки и балки на кнопку Y, верхняя держалка пикселя на B, нижняя на A
     public void teleOneButtonRotation() {
         switch (yState) {
             case PRESSED:
@@ -277,9 +277,6 @@ public class Deploy {
     }
 
     public void testing() {
-        telemetry.addData("Deploy: ", "rotation_beam %4.2f", servoRotationBox.getPosition());
-        telemetry.addData("Deploy: ", "rotation_box %4.2f", servoRotationBox.getPosition());
-        telemetry.addData("Deploy: ", "hold_upper  %4.2f", servoHoldUpper.getPosition());
-        telemetry.addData("Deploy: ", "hold_lower  %4.2f", servoHoldLower.getPosition());
+        servoRotationBeam.setPosition(0.895);
     }
 }

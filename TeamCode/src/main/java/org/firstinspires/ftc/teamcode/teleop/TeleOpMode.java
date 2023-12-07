@@ -39,8 +39,8 @@ public class TeleOpMode extends LinearOpMode {
             basicDrive.driveFieldCentricEncoder();
             //basicDrive.tele();
             //intake.tele();
-            //lift.telePID();
-            //deploy.
+            lift.telePID();
+            deploy.testing();
             pullUp.tele();
             //launch.tele();
 
