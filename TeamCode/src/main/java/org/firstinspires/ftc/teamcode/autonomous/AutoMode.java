@@ -17,6 +17,9 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+import static org.firstinspires.ftc.teamcode.misc.GameConstants.STARTPOS;
+import static org.firstinspires.ftc.teamcode.misc.GameConstants.ALLIANCECOLOR;
+
 @Autonomous(name = "AutoMode")
 public class AutoMode extends LinearOpMode {
     OpenCvWebcam camProp;
@@ -58,6 +61,18 @@ public class AutoMode extends LinearOpMode {
                 rightPixelPush();
             case CENTER:
                 centerPixelPush();
+        }
+        switch (STARTPOS) {
+            case NOT_NEAR_BACKDROP:
+                switch (ALLIANCECOLOR) {
+                    case BLUE:
+                    case RED:
+                }
+            case NEAR_BACKDROP:
+                switch (ALLIANCECOLOR) {
+                    case BLUE:
+                    case RED:
+                }
         }
     }
 

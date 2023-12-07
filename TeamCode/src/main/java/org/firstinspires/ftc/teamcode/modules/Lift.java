@@ -28,7 +28,7 @@ public class Lift {
     public static double kD = 0.0005;
     public static double kG = 0.31;
 
-    private final double maxPos = 605, minPos = 8;
+    private final double maxPos = 605, minPos = 60;
     private final double[] positions = new double[]{minPos, (maxPos - minPos) / 4, (maxPos - minPos) * 3 / 4, maxPos};
     private double currentPos = 5;
     private double lastError = 0;
@@ -108,7 +108,7 @@ public class Lift {
             for (int i = 0; i < positions.length - 1; i += 1) {
                 if (motor.getCurrentPosition() < positions[i + 1] && motor.getCurrentPosition() > positions[i]) {
                     if (currentPos == positions[i + 1] &&
-                            Math.abs(motor.getCurrentPosition() - positions[i + 1]) <= 6 &&
+                            Math.abs(motor.getCurrentPosition() - positions[i + 1]) <= 40 &&
                             positions.length > i + 2) {
                         currentPos = positions[i + 2];
                     } else {
@@ -121,7 +121,7 @@ public class Lift {
             for (int i = 0; i < positions.length - 1; i += 1) {
                 if (motor.getCurrentPosition() < positions[i + 1] && motor.getCurrentPosition() > positions[i]) {
                     if (currentPos == positions[i] &&
-                            Math.abs(motor.getCurrentPosition() - positions[i]) <= 6 &&
+                            Math.abs(motor.getCurrentPosition() - positions[i]) <= 40 &&
                             0 <= i - 1) {
                         currentPos = positions[i - 1];
                     } else {
@@ -135,5 +135,8 @@ public class Lift {
 
     public void runtimeReset() {
         runtime.reset();
+    }
+    public void testing() {
+        telemetry.addData("Lift_encoder: ", motor.getCurrentPosition());
     }
 }

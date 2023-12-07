@@ -97,7 +97,7 @@ public class BasicDrive {
                 switch (driveState) {
                     case FIELD:
                         driveState = DriveState.ROBOT;
-                        break;//видимо в самой функции до задавания значения второго кейса
+                        break;
                     case ROBOT:
                         driveState = DriveState.FIELD;
                 }

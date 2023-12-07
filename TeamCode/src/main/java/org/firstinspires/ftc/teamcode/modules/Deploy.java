@@ -15,10 +15,10 @@ public class Deploy {
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
-    private final Servo servoRotationBox; // Вращение коробки на X
-    private final Servo servoRotationBeam; // Вращение балки на Y
-    private final Servo servoHoldUpper; // Держалка нижнего пикселя в коробке на A
-    private final Servo servoHoldLower; // Держалка верхнего пикселя в коробке на B
+    private final Servo servoRotationBox;
+    private final Servo servoRotationBeam;
+    private final Servo servoHoldUpper;
+    private final Servo servoHoldLower;
 
     public enum HolderState {
         HOLD,
@@ -41,6 +41,7 @@ public class Deploy {
     private final static double deployBeamPos = 1;
     public RotationState rotationBoxState = RotationState.TAKE;
     public RotationState rotationBeamState = RotationState.TAKE;
+    public RotationState rotationState = RotationState.TAKE;
     private enum ButtonState {
         PRESSED,
         HELD,
@@ -178,6 +179,99 @@ public class Deploy {
             case TAKE:
                 servoRotationBeam.setPosition(takeBeamPos);
             case DEPLOY:
+                servoRotationBeam.setPosition(deployBeamPos);
+        }
+    }
+
+    // Вот эту функцию надо редачить, вращение коробки и балки на Y, верхняя держалка пикселя на B, нижняя на A
+    public void teleOneButtonRotation() {
+        switch (yState) {
+            case PRESSED:
+                switch (rotationState) {
+                    case TAKE:
+                        rotationState = RotationState.DEPLOY;
+                        break;
+                    case DEPLOY:
+                        rotationState = RotationState.TAKE;
+                }
+                if (gamepad.y) {
+                    yState = ButtonState.HELD;
+                } else {
+                    yState = ButtonState.RELEASED;
+                }
+            case HELD:
+                if (!gamepad.y) {
+                    yState = ButtonState.RELEASED;
+                }
+            case RELEASED:
+                if (gamepad.y) {
+                    yState = ButtonState.PRESSED;
+                }
+        }
+        switch (aState) {
+            case PRESSED:
+                switch (holderLowerState) {
+                    case RELEASE:
+                        holderLowerState = HolderState.HOLD;
+                        break;
+                    case HOLD:
+                        holderLowerState = HolderState.RELEASE;
+                }
+                if (gamepad.a) {
+                    aState = ButtonState.HELD;
+                } else {
+                    aState = ButtonState.RELEASED;
+                }
+            case HELD:
+                if (!gamepad.a) {
+                    aState = ButtonState.RELEASED;
+                }
+            case RELEASED:
+                if (gamepad.a) {
+                    aState = ButtonState.PRESSED;
+                }
+        }
+        switch (bState) {
+            case PRESSED:
+                switch (holderUpperState) {
+                    case RELEASE:
+                        holderUpperState = HolderState.HOLD;
+                        break;
+                    case HOLD:
+                        holderUpperState = HolderState.RELEASE;
+                }
+                if (gamepad.b) {
+                    bState = ButtonState.HELD;
+                } else {
+                    bState = ButtonState.RELEASED;
+                }
+            case HELD:
+                if (!gamepad.b) {
+                    bState = ButtonState.RELEASED;
+                }
+            case RELEASED:
+                if (gamepad.b) {
+                    bState = ButtonState.PRESSED;
+                }
+        }
+        switch (holderLowerState) {
+            case HOLD:
+                servoHoldLower.setPosition(holdLowerPos);
+            case RELEASE:
+                servoHoldLower.setPosition(releaseLowerPos);
+        }
+        switch (holderUpperState) {
+            case HOLD:
+                servoHoldUpper.setPosition(holdUpperPos);
+            case RELEASE:
+                servoHoldUpper.setPosition(releaseUpperPos);
+        }
+        switch (rotationState) {
+            case TAKE:
+                servoRotationBox.setPosition(takeBoxPos);
+                servoRotationBeam.setPosition(takeBeamPos);
+            case DEPLOY:
+                servoRotationBox.setPosition(deployBoxPos);
                 servoRotationBeam.setPosition(deployBeamPos);
         }
     }

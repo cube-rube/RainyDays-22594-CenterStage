@@ -33,17 +33,16 @@ public class TeleOpMode extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-             basicDrive.testing();
             //basicDrive.forwardWithIMU();
             //basicDrive.driveRobotCentricEncoder();
             //basicDrive.driveFieldCentric();
             basicDrive.driveFieldCentricEncoder();
             //basicDrive.tele();
-            intake.tele();
-             lift.telePID();
-            //deploy.easyTele();
+            //intake.tele();
+            //lift.telePID();
+            //deploy.
             pullUp.tele();
-             //launch.tele();
+            //launch.tele();
 
             telemetry.addData("Runtime", runtime.toString());
 
@@ -56,10 +55,10 @@ public class TeleOpMode extends LinearOpMode {
 
         basicDrive = new BasicDrive(this, dashboard);
         lift = new Lift(this, dashboard);
-        intake = new Intake(this);
-         //deploy = new Deploy(this);
+        //intake = new Intake(this);
+        deploy = new Deploy(this);
         pullUp = new PullUp(this);
-         //launch = new Launch(this);
+        //launch = new Launch(this);
 
 
         telemetry.update();
