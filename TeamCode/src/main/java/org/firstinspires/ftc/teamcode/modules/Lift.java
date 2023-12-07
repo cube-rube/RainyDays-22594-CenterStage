@@ -111,8 +111,9 @@ public class Lift {
                             Math.abs(motor.getCurrentPosition() - positions[i + 1]) <= 6 &&
                             positions.length > i + 2) {
                         currentPos = positions[i + 2];
+                    } else {
+                        currentPos = positions[i + 1];
                     }
-                    currentPos = positions[i + 1];
                 }
             }
         }
@@ -123,8 +124,9 @@ public class Lift {
                             Math.abs(motor.getCurrentPosition() - positions[i]) <= 6 &&
                             0 <= i - 1) {
                         currentPos = positions[i - 1];
+                    } else {
+                        currentPos = positions[i];
                     }
-                    currentPos = positions[i];
                 }
             }
         }
