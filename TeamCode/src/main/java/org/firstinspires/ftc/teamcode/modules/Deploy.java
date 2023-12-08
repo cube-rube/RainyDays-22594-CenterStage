@@ -24,10 +24,10 @@ public class Deploy {
         HOLD,
         RELEASE
     }
-    private final static double holdUpperPos = 0; // TODO: Надо поменять
-    private final static double releaseUpperPos = 1; // TODO: Надо поменять
-    private final static double holdLowerPos = 0; // TODO: Надо поменять
-    private final static double releaseLowerPos = 1; // TODO: Надо поменять
+    public final static double holdUpperPos = 0; // TODO: Надо поменять
+    public final static double releaseUpperPos = 1; // TODO: Надо поменять
+    public final static double holdLowerPos = 0; // TODO: Надо поменять
+    public final static double releaseLowerPos = 1; // TODO: Надо поменять
 
     public HolderState holderUpperState = HolderState.RELEASE;
     public HolderState holderLowerState = HolderState.RELEASE;
@@ -35,10 +35,10 @@ public class Deploy {
         TAKE,
         DEPLOY
     }
-    private final static double takeBoxPos = 1; // не очень
-    private final static double deployBoxPos = 0.39; // норм вроде
-    private final static double takeBeamPos = 0.895; // Вроде норм
-    private final static double deployBeamPos = 0; // TODO: Надо поменять (побольше)
+    public final static double takeBoxPos = 1; // не очень
+    public final static double deployBoxPos = 0.39; // норм вроде
+    public final static double takeBeamPos = 0.895; // Вроде норм
+    public final static double deployBeamPos = 0.2; // TODO: Надо поменять (побольше)
     public RotationState rotationBoxState = RotationState.TAKE;
     public RotationState rotationBeamState = RotationState.TAKE;
     public RotationState rotationState = RotationState.TAKE;
@@ -277,6 +277,6 @@ public class Deploy {
     }
 
     public void testing() {
-        servoRotationBeam.setPosition(0.895);
+        servoRotationBeam.setPosition(deployBeamPos);
     }
 }

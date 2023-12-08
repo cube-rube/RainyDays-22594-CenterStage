@@ -24,6 +24,7 @@ public class Intake {
         this.linearOpMode = linearOpMode;
         hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
+        //gamepad = linearOpMode.gamepad2;
         gamepad = linearOpMode.gamepad2;
 
         motor = hardwareMap.get(DcMotor.class, "motor_intake");
@@ -39,6 +40,8 @@ public class Intake {
         } else {
             motor.setPower(0);
         }
+        /*double axial = -gamepad.right_stick_y;
+        motor.setPower(axial*0.5);*/
     }
 
     public void testing() {

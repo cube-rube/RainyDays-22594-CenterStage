@@ -20,7 +20,7 @@ public class PullUp {
         this.linearOpMode = linearOpMode;
         hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
-        gamepad = linearOpMode.gamepad2;
+        gamepad = linearOpMode.gamepad1;
 
         motor = hardwareMap.get(DcMotor.class, "motor_up");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);

@@ -37,8 +37,9 @@ public class TeleOpMode extends LinearOpMode {
             //basicDrive.driveRobotCentricEncoder();
             //basicDrive.driveFieldCentric();
             basicDrive.driveFieldCentricEncoder();
+            basicDrive.testing();
             //basicDrive.tele();
-            //intake.tele();
+            intake.tele();
             lift.telePID();
             deploy.testing();
             pullUp.tele();
@@ -55,7 +56,7 @@ public class TeleOpMode extends LinearOpMode {
 
         basicDrive = new BasicDrive(this, dashboard);
         lift = new Lift(this, dashboard);
-        //intake = new Intake(this);
+        intake = new Intake(this);
         deploy = new Deploy(this);
         pullUp = new PullUp(this);
         //launch = new Launch(this);
