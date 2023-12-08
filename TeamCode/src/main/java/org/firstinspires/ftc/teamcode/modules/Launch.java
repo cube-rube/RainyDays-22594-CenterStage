@@ -37,7 +37,7 @@ public class Launch {
         releasePos = 1;
     }
 
-    /*public void tele() {
+    public void tele() {
         if (gamepad.right_trigger > 0) {
             servoRaise.setPosition(upPos);
         } else if (gamepad.left_trigger > 0) {
@@ -48,9 +48,9 @@ public class Launch {
         } else {
             servoHold.setPosition(holdPos);
         }
-    }*/
+    }
 
-    public void  tele() {
+    public void teleWithPos() {
         servoRaise.setPosition(gamepad.right_stick_y);
         if (gamepad.b) {
             servoHold.setPosition(releasePos);

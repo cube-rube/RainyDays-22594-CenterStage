@@ -36,6 +36,7 @@ public class BasicDrive {
     static final double     TURN_SPEED              = 0.5;
 
     static final double DRIVE_SPEED_TPS = 2153; // 77% of max tps?????????
+    public static double kP = 0.0001;
     private enum DriveState {
         ROBOT,
         FIELD
@@ -228,11 +229,10 @@ public class BasicDrive {
         double leftBackSpeed = leftBackDrive.getVelocity();
         double rightBackSpeed = rightBackDrive.getVelocity();
 
-        double leftFrontError = leftFrontDrive.getVelocity() - leftFrontPower * DRIVE_SPEED_TPS;
-        double rightFrontError = rightFrontDrive.getVelocity() - rightFrontPower * DRIVE_SPEED_TPS;
-        double leftBackError = leftBackDrive.getVelocity() - leftBackPower * DRIVE_SPEED_TPS;
-        double rightBackError = rightBackDrive.getVelocity() - rightBackPower * DRIVE_SPEED_TPS;
-        double kP = 0.0001;
+        double leftFrontError = leftFrontPower * DRIVE_SPEED_TPS - leftFrontDrive.getVelocity();
+        double rightFrontError = rightFrontPower * DRIVE_SPEED_TPS - rightFrontDrive.getVelocity();
+        double leftBackError = leftBackPower * DRIVE_SPEED_TPS - leftBackDrive.getVelocity();
+        double rightBackError = rightBackPower * DRIVE_SPEED_TPS - rightBackDrive.getVelocity();
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("reference_lf", leftFrontPower * DRIVE_SPEED_TPS);
@@ -258,7 +258,7 @@ public class BasicDrive {
         double lateral =  gamepad.left_stick_x;
         double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
 
-        if (gamepad.options) {
+        if (gamepad.start) {
             imu.resetYaw();
         }
 

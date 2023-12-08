@@ -72,7 +72,7 @@ public class Lift {
     }
 
     public void telePID() {
-        currentPos += (-gamepad.left_stick_y) * 5000 * runtime.seconds();
+        currentPos += (-gamepad.left_stick_y) * 4600 * runtime.seconds();
         if (currentPos > maxPos) {
             currentPos = maxPos;
         }

@@ -14,12 +14,12 @@ import org.firstinspires.ftc.teamcode.modules.Lift;
 
 @TeleOp(name = "TeleOpMode")
 public class TeleOpMode extends LinearOpMode {
-    private BasicDrive basicDrive;
-    private Lift lift;
-    private Intake intake;
-    private Deploy deploy;
-    private PullUp pullUp;
-    private Launch launch;
+    public BasicDrive basicDrive;
+    public Lift lift;
+    public Intake intake;
+    public Deploy deploy;
+    public PullUp pullUp;
+    public Launch launch;
     private ElapsedTime runtime = new ElapsedTime();
     public FtcDashboard dashboard;
 
@@ -33,15 +33,13 @@ public class TeleOpMode extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            //basicDrive.forwardWithIMU();
-            //basicDrive.driveRobotCentricEncoder();
-            //basicDrive.driveFieldCentric();
-            basicDrive.driveFieldCentricEncoder();
-            basicDrive.testing();
-            //basicDrive.tele();
-            intake.tele();
+            if (deploy.getDriveState()) {
+                basicDrive.driveFieldCentric();
+                basicDrive.testing();
+            }
             lift.telePID();
-            deploy.testing();
+            intake.tele();
+            deploy.rotationPositions();
             pullUp.tele();
             //launch.tele();
 

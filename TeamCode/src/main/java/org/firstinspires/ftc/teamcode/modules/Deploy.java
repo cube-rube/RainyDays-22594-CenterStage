@@ -24,23 +24,26 @@ public class Deploy {
         HOLD,
         RELEASE
     }
-    public final static double holdUpperPos = 0; // TODO: Надо поменять
-    public final static double releaseUpperPos = 1; // TODO: Надо поменять
-    public final static double holdLowerPos = 0; // TODO: Надо поменять
-    public final static double releaseLowerPos = 1; // TODO: Надо поменять
+    public static double holdUpperPos = 0.9;
+    public static double releaseUpperPos = 0.5;
+    public static double holdLowerPos = 0.99;
+    public static double releaseLowerPos = 0.7;
 
     public HolderState holderUpperState = HolderState.RELEASE;
     public HolderState holderLowerState = HolderState.RELEASE;
     public enum RotationState {
         TAKE,
+        TRANSPORT,
         DEPLOY
     }
-    public final static double takeBoxPos = 1; // не очень
-    public final static double deployBoxPos = 0.39; // норм вроде
-    public final static double takeBeamPos = 0.895; // Вроде норм
-    public final static double deployBeamPos = 0.2; // TODO: Надо поменять (побольше)
-    public RotationState rotationBoxState = RotationState.TAKE;
-    public RotationState rotationBeamState = RotationState.TAKE;
+    public static double takeBoxPos = 0.94;
+    public static double deployBoxPos = 0.415;
+    public static double takeBeamPos = 0.895;
+    public static double deployBeamPos = 0.33;
+    public static double transportBeamPos = 0.67;
+
+    public RotationState rotationBoxState;
+    public RotationState rotationBeamState;
     public RotationState rotationState = RotationState.TAKE;
     private enum ButtonState {
         PRESSED,
@@ -51,6 +54,13 @@ public class Deploy {
     private ButtonState bState = ButtonState.RELEASED;
     private ButtonState xState = ButtonState.RELEASED;
     private ButtonState yState = ButtonState.RELEASED;
+    private ButtonState dpadDownState = ButtonState.RELEASED;
+    private ButtonState dpadUpState = ButtonState.RELEASED;
+    public enum DriveState {
+        ENABLED,
+        DISABLED
+    }
+    public DriveState driveState = DriveState.ENABLED;
 
     public Deploy(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
@@ -62,6 +72,9 @@ public class Deploy {
         servoRotationBeam = hardwareMap.get(Servo.class, "servo_rotation_beam");
         servoHoldUpper = hardwareMap.get(Servo.class, "servo_hold_upper");
         servoHoldLower = hardwareMap.get(Servo.class, "servo_hold_lower");
+
+        rotationBoxState = RotationState.TAKE;
+        rotationBeamState = RotationState.TRANSPORT;
     }
 
     public void tele() {
@@ -275,8 +288,126 @@ public class Deploy {
                 servoRotationBeam.setPosition(deployBeamPos);
         }
     }
+    public void rotationPositions() {
+        if (gamepad.a) { // Intake
+            rotationBeamState = RotationState.TAKE;
+            rotationBoxState = RotationState.TAKE;
+            holderLowerState = HolderState.RELEASE;
+            driveState = DriveState.DISABLED;
+        }
+        if (gamepad.b) { // Transport
+            rotationBeamState = RotationState.TRANSPORT;
+            rotationBoxState = RotationState.TAKE;
+            driveState = DriveState.ENABLED;
+        }
+        if (gamepad.y && holderLowerState == HolderState.HOLD) {
+            rotationBeamState = RotationState.DEPLOY;
+            rotationBoxState = RotationState.DEPLOY;
+            driveState = DriveState.ENABLED;
+        }
+        switch (dpadDownState) {
+            case PRESSED:
+                switch (holderLowerState) {
+                    case RELEASE:
+                        holderLowerState = HolderState.HOLD;
+                        break;
+                    case HOLD:
+                        holderLowerState = HolderState.RELEASE;
+                }
+                if (gamepad.dpad_down) {
+                    dpadDownState = ButtonState.HELD;
+                } else {
+                    dpadDownState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (!gamepad.dpad_down) {
+                    dpadDownState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (gamepad.dpad_down) {
+                    dpadDownState = ButtonState.PRESSED;
+                }
+                break;
+        }
+        switch (dpadUpState) {
+            case PRESSED:
+                switch (holderUpperState) {
+                    case RELEASE:
+                        holderUpperState = HolderState.HOLD;
+                        break;
+                    case HOLD:
+                        holderUpperState = HolderState.RELEASE;
+                }
+                if (gamepad.dpad_up) {
+                    dpadUpState = ButtonState.HELD;
+                } else {
+                    dpadUpState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (!gamepad.dpad_up) {
+                    dpadUpState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (gamepad.dpad_up) {
+                    dpadUpState = ButtonState.PRESSED;
+                }
+                break;
+        }
+        if (rotationBoxState == RotationState.TAKE) {
+            servoRotationBox.setPosition(takeBoxPos);
+        } else if (rotationBoxState == RotationState.DEPLOY) {
+            servoRotationBox.setPosition(deployBoxPos);
+        }
+        if (rotationBeamState == RotationState.TAKE) {
+            servoRotationBeam.setPosition(takeBeamPos);
+        } else if (rotationBeamState == RotationState.DEPLOY) {
+            servoRotationBeam.setPosition(deployBeamPos);
+        } else if (rotationBeamState == RotationState.TRANSPORT) {
+            servoRotationBeam.setPosition(transportBeamPos);
+        }
+        if (holderLowerState == HolderState.HOLD) {
+            servoHoldLower.setPosition(holdLowerPos);
+        } else if (holderLowerState == HolderState.RELEASE) {
+            servoHoldLower.setPosition(releaseLowerPos);
+        }
+        if (holderUpperState == HolderState.HOLD) {
+            servoHoldUpper.setPosition(holdUpperPos);
+        } else if (holderUpperState == HolderState.RELEASE) {
+            servoHoldUpper.setPosition(releaseUpperPos);
+        }
+        /*
+        switch (rotationBoxState) {
+            case TAKE:
+                servoRotationBox.setPosition(takeBoxPos);
+            case DEPLOY:
+                servoRotationBox.setPosition(deployBoxPos);
+        }
+
+        switch (rotationBeamState) {
+            case TAKE:
+                servoRotationBeam.setPosition(takeBeamPos);
+            case DEPLOY:
+                servoRotationBeam.setPosition(deployBeamPos);
+            case TRANSPORT:
+                servoRotationBeam.setPosition(transportBeamPos);
+        }
+        */
+        telemetry.addData("DpadUp_state: ", dpadUpState);
+        telemetry.addData("HolderUpper_state: ", holderUpperState);
+    }
+
+    public boolean getDriveState() {
+        return driveState == DriveState.ENABLED;
+    }
 
     public void testing() {
         servoRotationBeam.setPosition(deployBeamPos);
+        servoRotationBox.setPosition(deployBoxPos);
+        servoHoldLower.setPosition(holdLowerPos);
+        servoHoldUpper.setPosition(holdUpperPos);
     }
 }
