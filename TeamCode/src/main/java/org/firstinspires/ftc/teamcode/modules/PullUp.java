@@ -15,6 +15,7 @@ public class PullUp {
     private final Telemetry telemetry;
     private final Gamepad gamepad;
     private final DcMotor motor;
+    private double tempPower = 0;
 
     public PullUp(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
@@ -32,5 +33,11 @@ public class PullUp {
 
     public void tele() {
         motor.setPower(-gamepad.right_stick_y);
+        if (tempPower != 0) {
+            motor.setPower(tempPower);
+        }
+        if (gamepad.a) {
+            tempPower = -gamepad.right_stick_y;
+        }
     }
 }

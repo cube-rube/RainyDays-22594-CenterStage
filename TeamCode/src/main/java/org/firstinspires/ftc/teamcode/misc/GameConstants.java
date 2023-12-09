@@ -14,5 +14,5 @@ public class GameConstants {
         RED,
         BLUE
     }
-    public static AllianceColor ALLIANCECOLOR = AllianceColor.RED; // 1 - red, 2 - blue
+    public static AllianceColor ALLIANCECOLOR = AllianceColor.BLUE; // 1 - red, 2 - blue
 }

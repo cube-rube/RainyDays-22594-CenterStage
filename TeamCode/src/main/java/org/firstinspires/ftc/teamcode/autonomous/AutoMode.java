@@ -55,7 +55,13 @@ public class AutoMode extends LinearOpMode {
 
         telemetry.addData("Snapshot post-START analysis", propPipeline);
         telemetry.update();
-
+        switch (ALLIANCECOLOR) {
+            case RED:
+                parking_red();
+            case BLUE:
+                parking_blue();
+        }
+        /*
         switch (propPosition) {
             case LEFT:
                 leftPixelPush();
@@ -64,6 +70,7 @@ public class AutoMode extends LinearOpMode {
             case CENTER:
                 centerPixelPush();
         }
+         */
         /*
         switch (STARTPOS) {
             case NOT_NEAR_BACKDROP:
@@ -97,6 +104,16 @@ public class AutoMode extends LinearOpMode {
         // СТРЕЙФ НАПРАВО ДО ЦЕНТРА Spike Mark
         // ВПЕРЕД
         // ВЫПЛЕВЫВАЕМ ПИКСЕЛЬ
+    }
+
+    private void parking_blue() {
+        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 10, 10, 2); // Вперед
+        basicDrive.encoderDriveX(BasicDrive.DRIVE_SPEED, -10, -10, 5); // Влево
+    }
+
+    private void parking_red() {
+        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 10, 10, 2); // Вперед
+        basicDrive.encoderDriveX(BasicDrive.DRIVE_SPEED, 10, 10, 5); // Направо
     }
 
     private void initCamera() {
