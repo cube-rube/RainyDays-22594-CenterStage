@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.BasicDrive;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.modules.Deploy;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
@@ -26,6 +27,7 @@ public class AutoMode extends LinearOpMode {
     PropDetectionPipeline propPipeline = new PropDetectionPipeline();
     PropDetectionPipeline.PropPosition propPosition = PropDetectionPipeline.PropPosition.LEFT;
     private BasicDrive basicDrive;
+    private SampleMecanumDrive mecanumDrive;
     private Lift lift;
     private Intake intake;
     private Deploy deploy;
@@ -104,6 +106,7 @@ public class AutoMode extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
 
         basicDrive = new BasicDrive(this, dashboard);
+        mecanumDrive = new SampleMecanumDrive(hardwareMap);
         lift = new Lift(this, dashboard);
         intake = new Intake(this);
         deploy = new Deploy(this);
