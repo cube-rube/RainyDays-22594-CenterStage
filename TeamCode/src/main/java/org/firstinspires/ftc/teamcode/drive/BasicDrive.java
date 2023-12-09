@@ -29,13 +29,13 @@ public class BasicDrive {
     private final ElapsedTime runtime;
     private final FtcDashboard dashboard;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 537.7;
-    static final double     DRIVE_GEAR_REDUCTION    = 0.5;     // No External Gearing.
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    public static final double     COUNTS_PER_MOTOR_REV    = 537.7;
+    public static final double     DRIVE_GEAR_REDUCTION    = 0.5;     // No External Gearing.
+    public static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
+    public static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
+    public static final double     DRIVE_SPEED             = 0.6;
+    public static final double     TURN_SPEED              = 0.5;
 
     static final double DRIVE_SPEED_TPS = 2153; // 77% of max tps?????????
     public static double kP = 0.0001;

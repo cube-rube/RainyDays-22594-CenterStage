@@ -26,7 +26,7 @@ public class Deploy {
     }
     public static double holdUpperPos = 0.9;
     public static double releaseUpperPos = 0.5;
-    public static double holdLowerPos = 0.99;
+    public static double holdLowerPos = 1;
     public static double releaseLowerPos = 0.7;
 
     public HolderState holderUpperState = HolderState.RELEASE;
@@ -40,7 +40,7 @@ public class Deploy {
     public static double deployBoxPos = 0.415;
     public static double takeBeamPos = 0.895;
     public static double deployBeamPos = 0.33;
-    public static double transportBeamPos = 0.67;
+    public static double transportBeamPos = 0.69;
 
     public RotationState rotationBoxState;
     public RotationState rotationBeamState;

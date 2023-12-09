@@ -64,6 +64,7 @@ public class AutoMode extends LinearOpMode {
             case CENTER:
                 centerPixelPush();
         }
+        /*
         switch (STARTPOS) {
             case NOT_NEAR_BACKDROP:
                 switch (ALLIANCECOLOR) {
@@ -76,18 +77,26 @@ public class AutoMode extends LinearOpMode {
                     case RED:
                 }
         }
+        */
     }
 
     private void leftPixelPush() {
-
+        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 28, 28, 2); // ВПЕРЕД
+        // СТРЕЙФ НАЛЕВО ДО ЦЕНТРА Spike Mark
+        // ВПЕРЕД
+        // ВЫПЛЕВЫВАЕМ ПИКСЕЛЬ
     }
 
     private void centerPixelPush() {
-
+        // ВПЕРЕД
+        // ВЫПЛЕВЫВАЕМ ПИКСЕЛЬ
     }
 
     private void rightPixelPush() {
-
+        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 28, 28, 2); // ВПЕРЕД
+        // СТРЕЙФ НАПРАВО ДО ЦЕНТРА Spike Mark
+        // ВПЕРЕД
+        // ВЫПЛЕВЫВАЕМ ПИКСЕЛЬ
     }
 
     private void initCamera() {

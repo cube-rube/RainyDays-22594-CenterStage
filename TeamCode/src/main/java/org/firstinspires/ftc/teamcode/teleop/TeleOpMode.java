@@ -34,7 +34,7 @@ public class TeleOpMode extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (deploy.getDriveState()) {
-                basicDrive.driveFieldCentric();
+                basicDrive.driveFieldCentricEncoder();
                 basicDrive.testing();
             }
             lift.telePID();
