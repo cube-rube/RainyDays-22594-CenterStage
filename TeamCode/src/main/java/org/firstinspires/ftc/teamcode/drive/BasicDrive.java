@@ -1,19 +1,21 @@
 package org.firstinspires.ftc.teamcode.drive;
 
-        import com.acmerobotics.dashboard.FtcDashboard;
-        import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-        import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-        import com.qualcomm.robotcore.hardware.DcMotor;
-        import com.qualcomm.robotcore.hardware.DcMotorEx;
-        import com.qualcomm.robotcore.hardware.Gamepad;
-        import com.qualcomm.robotcore.hardware.HardwareMap;
-        import com.qualcomm.robotcore.hardware.IMU;
-        import com.qualcomm.robotcore.util.ElapsedTime;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-        import org.firstinspires.ftc.robotcore.external.Telemetry;
-        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+@Config
 public class BasicDrive {
     private final LinearOpMode linearOpMode;
     private final HardwareMap hardwareMap;
@@ -107,15 +109,17 @@ public class BasicDrive {
                 } else {
                     buttonState = ButtonState.RELEASED;
                 }
+                break;
             case HELD:
                 if (!gamepad.right_bumper) {
                     buttonState = ButtonState.RELEASED;
                 }
+                break;
             case RELEASED:
                 if (gamepad.right_bumper) {
                     buttonState = ButtonState.PRESSED;
                 }
-
+                break;
         }
         switch (driveState) {
             case ROBOT:
@@ -124,6 +128,7 @@ public class BasicDrive {
             case FIELD:
                 driveFieldCentric();
         }
+        telemetry.addData("Drive_State: ", driveState);
     }
 
     public void driveRobotCentricEncoder() {
@@ -153,12 +158,6 @@ public class BasicDrive {
         rightFrontDrive.setVelocity(rightFrontPower * DRIVE_SPEED_TPS);
         leftBackDrive.setVelocity(leftBackPower * DRIVE_SPEED_TPS);
         rightBackDrive.setVelocity(rightBackPower * DRIVE_SPEED_TPS);
-
-        /*leftFrontDrive.setPower(leftFrontPower * DRIVE_SPEED_TPS);
-        rightFrontDrive.setPower(rightFrontPower * DRIVE_SPEED_TPS);
-        leftBackDrive.setPower(leftBackPower * DRIVE_SPEED_TPS);
-        rightBackDrive.setPower(rightBackPower * DRIVE_SPEED_TPS);*/
-
     }
 
     public void driveRobotCentric() {

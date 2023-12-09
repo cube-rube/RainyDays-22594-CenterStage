@@ -196,7 +196,6 @@ public class Deploy {
         }
     }
 
-    // Вот эту функцию надо редачить, вращение коробки и балки на кнопку Y, верхняя держалка пикселя на B, нижняя на A
     public void teleOneButtonRotation() {
         switch (yState) {
             case PRESSED:
@@ -288,6 +287,7 @@ public class Deploy {
                 servoRotationBeam.setPosition(deployBeamPos);
         }
     }
+
     public void rotationPositions() {
         if (gamepad.a) { // Intake
             rotationBeamState = RotationState.TAKE;
@@ -300,7 +300,7 @@ public class Deploy {
             rotationBoxState = RotationState.TAKE;
             driveState = DriveState.ENABLED;
         }
-        if (gamepad.y && holderLowerState == HolderState.HOLD) {
+        if (gamepad.y && holderLowerState == HolderState.HOLD) { // Deploy
             rotationBeamState = RotationState.DEPLOY;
             rotationBoxState = RotationState.DEPLOY;
             driveState = DriveState.ENABLED;
@@ -396,8 +396,6 @@ public class Deploy {
                 servoRotationBeam.setPosition(transportBeamPos);
         }
         */
-        telemetry.addData("DpadUp_state: ", dpadUpState);
-        telemetry.addData("HolderUpper_state: ", holderUpperState);
     }
 
     public boolean getDriveState() {
