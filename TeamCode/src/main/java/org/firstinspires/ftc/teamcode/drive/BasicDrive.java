@@ -39,6 +39,7 @@ public class BasicDrive {
 
     static final double DRIVE_SPEED_TPS = 2153; // 77% of max tps?????????
     public static double kP = 0.00055;
+
     /*
     public static double kI = 0;
 
@@ -241,6 +242,13 @@ public class BasicDrive {
             rightBackPower  /= max;
         }
 
+        /*
+        leftFrontPower  = driveFunc(leftFrontPower);
+        rightFrontPower = driveFunc(leftFrontPower);
+        leftBackPower   = driveFunc(leftFrontPower);
+        rightBackPower  = driveFunc(leftFrontPower);
+         */
+
         double leftFrontSpeed = leftFrontDrive.getVelocity();
         double rightFrontSpeed = rightFrontDrive.getVelocity();
         double leftBackSpeed = leftBackDrive.getVelocity();
@@ -378,6 +386,16 @@ public class BasicDrive {
         rightFrontDrive.setPower(axial);
         leftBackDrive.setPower(axial);
         rightBackDrive.setPower(axial);
+    }
+
+    public double driveFunc(double x) {
+        // double a = 0.17082039325;
+        double a = (-5 + 3 * Math.sqrt(5)) / 10;
+        if (x >= 0) {
+            return -(0.2 / (x - a - 1)) - a;
+        } else {
+            return 0.2 / (-x - a - 1) + a;
+        }
     }
 
     public void encoderDriveY(double speed,
