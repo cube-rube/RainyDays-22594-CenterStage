@@ -382,12 +382,14 @@ public class BasicDrive {
     }
 
     public double driveFunc(double x) {
-        // double a = 0.17082039325;
-        double a = (-5 + 3 * Math.sqrt(5)) / 10;
-        if (x >= 0) {
+        double a = 0.17082039325;
+        // double a = (-5 + 3 * Math.sqrt(5)) / 10;
+        if (x > 0) {
             return -(0.2 / (x - a - 1)) - a;
-        } else {
+        } else if (x < 0) {
             return 0.2 / (-x - a - 1) + a;
+        } else {
+            return 0;
         }
     }
 
