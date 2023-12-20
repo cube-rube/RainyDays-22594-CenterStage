@@ -37,7 +37,7 @@ public class BasicDrive {
     public static final double     DRIVE_SPEED             = 0.7;
     public static final double     TURN_SPEED              = 0.5;
 
-    static final double DRIVE_SPEED_TPS = 2153; // 77% of max tps?????????
+    static final double DRIVE_SPEED_TPS = 2796 * 0.77; // 77% of max tps?????????
     public static double kP = 0.00055;
 
     /*
