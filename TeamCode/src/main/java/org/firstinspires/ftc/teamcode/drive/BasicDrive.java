@@ -39,8 +39,8 @@ public class BasicDrive {
 
     static final double DRIVE_SPEED_TPS = 2153; // 77% of max tps?????????
     public static double kP = 0.00055;
-
-    /*public static double kI = 0;
+    /*
+    public static double kI = 0;
 
     public static double kD = 0;
 
@@ -53,7 +53,8 @@ public class BasicDrive {
     private double lastErRf;
     private double lastErRb;
     private double lastErLf;
-    private double lastErLb;*/
+    private double lastErLb;
+    */
 
     private enum DriveState {
         ROBOT,
@@ -250,7 +251,8 @@ public class BasicDrive {
         double leftBackError = (leftBackPower * DRIVE_SPEED_TPS) * 0.75 - leftBackSpeed;
         double rightBackError = (rightBackPower * DRIVE_SPEED_TPS) * 0.75 - rightBackSpeed;
 
-        /*intengalSumLf += leftFrontError * timer.seconds();;
+        /*
+        intengalSumLf += leftFrontError * timer.seconds();;
         double derivativeLf = (leftFrontError - lastErLf) / timer.seconds();
         lastErLf = leftFrontError;
 
@@ -265,8 +267,10 @@ public class BasicDrive {
         intengalSumRb += rightBackError * timer.seconds();;
         double derivativeRb = (rightBackError - lastErRb) / timer.seconds();
         lastErRb = rightBackError;
+        */
 
-        /*TelemetryPacket packet = new TelemetryPacket();
+        /*
+        TelemetryPacket packet = new TelemetryPacket();
         packet.put("reference_lf", leftFrontPower * DRIVE_SPEED_TPS * 0.75);
         packet.put("encoder_lf", leftFrontSpeed);
         packet.put("reference_rf", rightFrontPower * DRIVE_SPEED_TPS * 0.75);
@@ -275,13 +279,15 @@ public class BasicDrive {
         packet.put("encoder_lb", leftBackSpeed);
         packet.put("reference_rb", rightBackPower * DRIVE_SPEED_TPS * 0.75);
         packet.put("encoder_rb", rightBackSpeed);
-        dashboard.sendTelemetryPacket(packet);*/
+        dashboard.sendTelemetryPacket(packet);
+        */
 
-        /*leftFrontDrive.setPower((leftFrontPower * 0.75 + kP * leftFrontError + kI * intengalSumLf + derivativeLf * kD));
+        /*
+        leftFrontDrive.setPower((leftFrontPower * 0.75 + kP * leftFrontError + kI * intengalSumLf + derivativeLf * kD));
         rightFrontDrive.setPower((rightFrontPower * 0.75 + kP * rightFrontError + kI * intengalSumRf + derivativeRf * kD));
         leftBackDrive.setPower((leftBackPower * 0.75 + kP * leftBackError + kI * intengalSumLb + derivativeLb * kD));
-        rightBackDrive.setPower((rightBackPower * 0.75 + kP * rightBackError + kI * intengalSumR
-        99b + derivativeRb * kD));*/
+        rightBackDrive.setPower((rightBackPower * 0.75 + kP * rightBackError + kI * intengalSumRb + derivativeRb * kD));
+        */
 
         leftFrontDrive.setPower((leftFrontPower * 0.75 + kP * leftFrontError));
         rightFrontDrive.setPower((rightFrontPower * 0.75 + kP * rightFrontError));
