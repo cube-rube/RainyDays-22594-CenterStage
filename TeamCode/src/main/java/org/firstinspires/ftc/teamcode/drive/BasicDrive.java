@@ -243,11 +243,18 @@ public class BasicDrive {
         }
 
         /*
+        leftFrontPower  = driveSimpleFunc(leftFrontPower);
+        rightFrontPower = driveSimpleFunc(leftFrontPower);
+        leftBackPower   = driveSimpleFunc(leftFrontPower);
+        rightBackPower  = driveSimpleFunc(leftFrontPower);
+        */
+
+        /*
         leftFrontPower  = driveFunc(leftFrontPower);
         rightFrontPower = driveFunc(leftFrontPower);
         leftBackPower   = driveFunc(leftFrontPower);
         rightBackPower  = driveFunc(leftFrontPower);
-         */
+        */
 
         double leftFrontSpeed = leftFrontDrive.getVelocity();
         double rightFrontSpeed = rightFrontDrive.getVelocity();
@@ -388,6 +395,7 @@ public class BasicDrive {
         rightBackDrive.setPower(axial);
     }
 
+    // https://www.desmos.com/calculator/xvnaxukpug?lang=ru
     public double driveFunc(double x) {
         // double a = 0.17082039325;
         double a = (-5 + 3 * Math.sqrt(5)) / 10;
@@ -396,6 +404,11 @@ public class BasicDrive {
         } else {
             return 0.2 / (-x - a - 1) + a;
         }
+    }
+
+    // https://www.desmos.com/calculator/xvnaxukpug?lang=ru
+    public double driveSimpleFunc(double x) {
+        return x * x * x;
     }
 
     public void encoderDriveY(double speed,
