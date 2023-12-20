@@ -213,6 +213,12 @@ public class BasicDrive {
         double lateral =  gamepad.left_stick_x;
         double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
 
+        /*
+        axial = driveFunc(axial);
+        lateral = driveFunc(lateral);
+        yaw = driveFunc(yaw);
+        */
+
         if (gamepad.options) {
             imu.resetYaw();
         }
