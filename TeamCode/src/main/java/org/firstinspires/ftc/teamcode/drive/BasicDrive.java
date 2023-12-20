@@ -34,11 +34,27 @@ public class BasicDrive {
     public static final double     WHEEL_DIAMETER_INCHES   = 4.0;     // For figuring circumference
     public static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    public static final double     DRIVE_SPEED             = 0.6;
+    public static final double     DRIVE_SPEED             = 0.7;
     public static final double     TURN_SPEED              = 0.5;
 
     static final double DRIVE_SPEED_TPS = 2153; // 77% of max tps?????????
-    public static double kP = 0.0001;
+    public static double kP = 0.00055;
+
+    /*public static double kI = 0;
+
+    public static double kD = 0;
+
+    double intengalSumRf = 0;
+    double intengalSumRb = 0;
+    double intengalSumLf = 0;
+    double intengalSumLb = 0;
+
+    ElapsedTime timer = new ElapsedTime();
+    private double lastErRf;
+    private double lastErRb;
+    private double lastErLf;
+    private double lastErLb;*/
+
     private enum DriveState {
         ROBOT,
         FIELD
@@ -137,7 +153,6 @@ public class BasicDrive {
         double axial   = -gamepad.left_stick_y;
         double lateral =  gamepad.left_stick_x * 1.1;
         double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
-
         double leftFrontPower  = axial + lateral + yaw;
         double rightFrontPower = axial - lateral - yaw;
         double leftBackPower   = axial - lateral + yaw;
@@ -205,6 +220,7 @@ public class BasicDrive {
         double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
         double rotAxial   = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
 
+
         rotLateral = rotLateral * 1.1;
 
         double leftFrontPower  = rotAxial + rotLateral + yaw;
@@ -215,6 +231,7 @@ public class BasicDrive {
         max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
         max = Math.max(max, Math.abs(leftBackPower));
         max = Math.max(max, Math.abs(rightBackPower));
+
 
         if (max > 1.0) {
             leftFrontPower  /= max;
@@ -228,26 +245,48 @@ public class BasicDrive {
         double leftBackSpeed = leftBackDrive.getVelocity();
         double rightBackSpeed = rightBackDrive.getVelocity();
 
-        double leftFrontError = leftFrontPower * DRIVE_SPEED_TPS - leftFrontDrive.getVelocity();
-        double rightFrontError = rightFrontPower * DRIVE_SPEED_TPS - rightFrontDrive.getVelocity();
-        double leftBackError = leftBackPower * DRIVE_SPEED_TPS - leftBackDrive.getVelocity();
-        double rightBackError = rightBackPower * DRIVE_SPEED_TPS - rightBackDrive.getVelocity();
+        double leftFrontError = (leftFrontPower * DRIVE_SPEED_TPS) * 0.75 - leftFrontSpeed;
+        double rightFrontError = (rightFrontPower * DRIVE_SPEED_TPS) * 0.75 - rightFrontSpeed;
+        double leftBackError = (leftBackPower * DRIVE_SPEED_TPS) * 0.75 - leftBackSpeed;
+        double rightBackError = (rightBackPower * DRIVE_SPEED_TPS) * 0.75 - rightBackSpeed;
 
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("reference_lf", leftFrontPower * DRIVE_SPEED_TPS);
+        /*intengalSumLf += leftFrontError * timer.seconds();;
+        double derivativeLf = (leftFrontError - lastErLf) / timer.seconds();
+        lastErLf = leftFrontError;
+
+        intengalSumLb += leftBackError * timer.seconds();;
+        double derivativeLb = (leftBackError - lastErLb) / timer.seconds();
+        lastErLb = leftBackError;
+
+        intengalSumRf += rightFrontError * timer.seconds();;
+        double derivativeRf = (rightFrontError - lastErRf) / timer.seconds();
+        lastErRf = rightFrontError;
+
+        intengalSumRb += rightBackError * timer.seconds();;
+        double derivativeRb = (rightBackError - lastErRb) / timer.seconds();
+        lastErRb = rightBackError;
+
+        /*TelemetryPacket packet = new TelemetryPacket();
+        packet.put("reference_lf", leftFrontPower * DRIVE_SPEED_TPS * 0.75);
         packet.put("encoder_lf", leftFrontSpeed);
-        packet.put("reference_rf", rightFrontPower * DRIVE_SPEED_TPS);
+        packet.put("reference_rf", rightFrontPower * DRIVE_SPEED_TPS * 0.75);
         packet.put("encoder_rf", rightFrontSpeed);
-        packet.put("reference_lb", leftBackPower * DRIVE_SPEED_TPS);
+        packet.put("reference_lb", leftBackPower * DRIVE_SPEED_TPS * 0.75);
         packet.put("encoder_lb", leftBackSpeed);
-        packet.put("reference_rb", rightBackPower * DRIVE_SPEED_TPS);
+        packet.put("reference_rb", rightBackPower * DRIVE_SPEED_TPS * 0.75);
         packet.put("encoder_rb", rightBackSpeed);
-        dashboard.sendTelemetryPacket(packet);
+        dashboard.sendTelemetryPacket(packet);*/
 
-        leftFrontDrive.setPower(leftFrontPower + kP * leftFrontError);
-        rightFrontDrive.setPower(rightFrontPower + kP * rightFrontError);
-        leftBackDrive.setPower(leftBackPower + kP * leftBackError);
-        rightBackDrive.setPower(rightBackPower + kP * rightBackError);
+        /*leftFrontDrive.setPower((leftFrontPower * 0.75 + kP * leftFrontError + kI * intengalSumLf + derivativeLf * kD));
+        rightFrontDrive.setPower((rightFrontPower * 0.75 + kP * rightFrontError + kI * intengalSumRf + derivativeRf * kD));
+        leftBackDrive.setPower((leftBackPower * 0.75 + kP * leftBackError + kI * intengalSumLb + derivativeLb * kD));
+        rightBackDrive.setPower((rightBackPower * 0.75 + kP * rightBackError + kI * intengalSumR
+        99b + derivativeRb * kD));*/
+
+        leftFrontDrive.setPower((leftFrontPower * 0.75 + kP * leftFrontError));
+        rightFrontDrive.setPower((rightFrontPower * 0.75 + kP * rightFrontError));
+        leftBackDrive.setPower((leftBackPower * 0.75 + kP * leftBackError));
+        rightBackDrive.setPower((rightBackPower * 0.75 + kP * rightBackError));
     }
 
     public void driveFieldCentric() {
@@ -265,6 +304,7 @@ public class BasicDrive {
 
         double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
         double rotAxial   = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
+
 
         rotLateral = rotLateral * 1.1;
 

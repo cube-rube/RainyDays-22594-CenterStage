@@ -20,15 +20,16 @@ public class Lift {
     private final Telemetry telemetry;
     private final Gamepad gamepad;
     private final DcMotorEx motor;
-    private final ElapsedTime runtime;
+    public final ElapsedTime runtime;
     private final FtcDashboard dashboard;
 
     public static double kP = 0.01;
     public static double kI = 0;
-    public static double kD = 0.0005;
+    public static double kD = 0.00055;
     public static double kG = 0.31;
 
-    private final double maxPos = 605, minPos = 50;
+    public static double maxPos = 490, minPos = 30;
+    public static double speed = 2000;
     private final double[] positions = new double[]{minPos, (maxPos - minPos) / 4, (maxPos - minPos) * 3 / 4, maxPos};
     private double currentPos = 5;
     private double lastError = 0;
@@ -72,7 +73,7 @@ public class Lift {
     }
 
     public void telePID() {
-        currentPos += (-gamepad.left_stick_y) * 4600 * runtime.seconds();
+        currentPos += (-gamepad.left_stick_y) * speed * runtime.seconds();
         if (currentPos > maxPos) {
             currentPos = maxPos;
         }
@@ -100,6 +101,22 @@ public class Lift {
         telemetry.addData("error", error);
         telemetry.addData("delta", runtime.seconds());
         dashboard.sendTelemetryPacket(packet);
+        runtime.reset();
+    }
+
+    public void auto() {
+        currentPos = minPos;
+
+        double encoderPos = motor.getCurrentPosition();
+        double error = currentPos - encoderPos;
+        double derivative = (error - lastError) / runtime.seconds();
+        integralSum += error * runtime.seconds();
+        double out = (kP * error) + (kI * integralSum) + (kD * derivative) + kG;
+
+        motor.setPower(out);
+
+        lastError = error;
+
         runtime.reset();
     }
 

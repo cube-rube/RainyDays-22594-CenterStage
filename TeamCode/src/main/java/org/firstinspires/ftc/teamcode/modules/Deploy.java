@@ -34,13 +34,16 @@ public class Deploy {
     public enum RotationState {
         TAKE,
         TRANSPORT,
+        TRANSPORT_DOWN,
         DEPLOY
     }
     public static double takeBoxPos = 0.94;
-    public static double deployBoxPos = 0.415;
-    public static double takeBeamPos = 0.895;
-    public static double deployBeamPos = 0.33;
-    public static double transportBeamPos = 0.69;
+    public static double deployBoxPos = 0.47;
+    public static double takeBeamPos = 0.025;
+    public static double deployBeamPos = 1;
+    public static double transportBeamPos = 0.35;
+    public static double transportDownBeamPos = 0.09;
+    public static double transportDownBoxPos = 0.96;
 
     public RotationState rotationBoxState;
     public RotationState rotationBeamState;
@@ -305,6 +308,11 @@ public class Deploy {
             rotationBoxState = RotationState.DEPLOY;
             driveState = DriveState.ENABLED;
         }
+        if (gamepad.x) {
+            rotationBeamState = RotationState.TRANSPORT_DOWN;
+            rotationBoxState = RotationState.TRANSPORT_DOWN;
+            driveState = DriveState.ENABLED;
+        }
         switch (dpadDownState) {
             case PRESSED:
                 switch (holderLowerState) {
@@ -361,6 +369,8 @@ public class Deploy {
             servoRotationBox.setPosition(takeBoxPos);
         } else if (rotationBoxState == RotationState.DEPLOY) {
             servoRotationBox.setPosition(deployBoxPos);
+        } else if (rotationBoxState == RotationState.TRANSPORT_DOWN) {
+            servoRotationBox.setPosition(transportDownBoxPos);
         }
         if (rotationBeamState == RotationState.TAKE) {
             servoRotationBeam.setPosition(takeBeamPos);
@@ -368,6 +378,8 @@ public class Deploy {
             servoRotationBeam.setPosition(deployBeamPos);
         } else if (rotationBeamState == RotationState.TRANSPORT) {
             servoRotationBeam.setPosition(transportBeamPos);
+        } else if (rotationBeamState == RotationState.TRANSPORT_DOWN) {
+            servoRotationBeam.setPosition(transportDownBeamPos);
         }
         if (holderLowerState == HolderState.HOLD) {
             servoHoldLower.setPosition(holdLowerPos);
@@ -379,6 +391,10 @@ public class Deploy {
         } else if (holderUpperState == HolderState.RELEASE) {
             servoHoldUpper.setPosition(releaseUpperPos);
         }
+        telemetry.addLine("----------------------");
+        telemetry.addData("Upper_Hold: ", holderUpperState);
+        telemetry.addData("Lower_Hold: ", holderLowerState);
+        telemetry.addLine("----------------------");
         /*
         switch (rotationBoxState) {
             case TAKE:
@@ -396,6 +412,10 @@ public class Deploy {
                 servoRotationBeam.setPosition(transportBeamPos);
         }
         */
+    }
+    public void auto() {
+        servoRotationBeam.setPosition(transportBeamPos);
+        servoRotationBox.setPosition(takeBoxPos);
     }
 
     public boolean getDriveState() {

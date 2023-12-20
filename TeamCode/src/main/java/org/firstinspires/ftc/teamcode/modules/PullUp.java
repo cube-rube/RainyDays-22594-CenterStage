@@ -32,12 +32,16 @@ public class PullUp {
     }
 
     public void tele() {
-        motor.setPower(-gamepad.right_stick_y);
         if (tempPower != 0) {
             motor.setPower(tempPower);
+            telemetry.addData("Pull_Up power: ", tempPower);
+        } else {
+            motor.setPower(-gamepad.right_stick_y);
+            telemetry.addData("Pull_Up power: ", -gamepad.right_stick_y);
         }
         if (gamepad.a) {
             tempPower = -gamepad.right_stick_y;
         }
+
     }
 }

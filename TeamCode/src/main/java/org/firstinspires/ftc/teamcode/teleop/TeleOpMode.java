@@ -28,15 +28,15 @@ public class TeleOpMode extends LinearOpMode {
         initRobot();
         runtime.reset();
         waitForStart();
-         lift.runtimeReset();
+        lift.runtimeReset();
         basicDrive.runtimeReset();
 
 
         while (opModeIsActive()) {
             if (deploy.getDriveState()) {
                 basicDrive.driveFieldCentricEncoder();
-                basicDrive.testing();
             }
+            basicDrive.testing();
             lift.telePID();
             intake.tele();
             deploy.rotationPositions();

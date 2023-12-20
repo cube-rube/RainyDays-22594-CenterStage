@@ -37,8 +37,9 @@ public class AutoMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initRobot();
-        initCamera();
+        // initCamera();
 
+        /*
         camProp.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -49,18 +50,26 @@ public class AutoMode extends LinearOpMode {
             public void onError(int errorCode) {
             }
         });
+         */
 
         waitForStart();
-        propPosition = propPipeline.getPropPosition();
+        //propPosition = propPipeline.getPropPosition();
 
-        telemetry.addData("Snapshot post-START analysis", propPipeline);
-        telemetry.update();
-        switch (ALLIANCECOLOR) {
-            case RED:
-                parking_red();
-            case BLUE:
-                parking_blue();
+        //telemetry.addData("Snapshot post-START analysis", propPosition);
+        //telemetry.update();
+
+        lift.runtimeReset();
+        deploy.auto();
+        runtime.reset();
+        while (runtime.seconds() <= 2) {
+            telemetry.addLine("Lift");
+            telemetry.update();
+            lift.auto();
         }
+        telemetry.addLine("Parking");
+        telemetry.update();
+        parking();
+
         /*
         switch (propPosition) {
             case LEFT:
@@ -100,20 +109,23 @@ public class AutoMode extends LinearOpMode {
     }
 
     private void rightPixelPush() {
-        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 28, 28, 2); // ВПЕРЕД
+        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 28, 28, 3);
         // СТРЕЙФ НАПРАВО ДО ЦЕНТРА Spike Mark
         // ВПЕРЕД
         // ВЫПЛЕВЫВАЕМ ПИКСЕЛЬ
     }
 
-    private void parking_blue() {
-        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 10, 10, 2); // Вперед
-        basicDrive.encoderDriveX(BasicDrive.DRIVE_SPEED, -10, -10, 5); // Влево
-    }
-
-    private void parking_red() {
-        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 10, 10, 2); // Вперед
-        basicDrive.encoderDriveX(BasicDrive.DRIVE_SPEED, 10, 10, 5); // Направо
+    private void parking() {
+        basicDrive.encoderDriveY(0, 0, 0, 1);
+        telemetry.addLine("Still");
+        telemetry.update();
+        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 35, 35, 3);
+        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 35, 35, 3);
+        telemetry.addLine("Forward");
+        telemetry.update();
+        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, -2.05, -2.05,2);
+        telemetry.addLine("Back");
+        telemetry.update();
     }
 
     private void initCamera() {
