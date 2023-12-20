@@ -51,10 +51,10 @@ public class BasicDrive {
     double intengalSumLb = 0;
 
     ElapsedTime timer = new ElapsedTime();
-    private double lastErRf;
-    private double lastErRb;
-    private double lastErLf;
-    private double lastErLb;
+    private double lastErRf = 0;
+    private double lastErRb = 0;
+    private double lastErLf = 0;
+    private double lastErLb = 0;
     */
 
     private enum DriveState {
