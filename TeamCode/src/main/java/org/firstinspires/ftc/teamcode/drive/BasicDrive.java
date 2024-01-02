@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -38,12 +37,12 @@ public class BasicDrive {
     public static final double     TURN_SPEED              = 0.5;
 
     static final double DRIVE_SPEED_TPS = 2796 * 0.77; // 77% of max tps?????????
-    public static double kP = 0.00055;
 
-    /*
-    public static double kI = 0;
+    double kP = 0;
 
-    public static double kD = 0;
+    double kI =0;
+
+    double kD = 0;
 
     double intengalSumRf = 0;
     double intengalSumRb = 0;
@@ -55,7 +54,7 @@ public class BasicDrive {
     private double lastErRb = 0;
     private double lastErLf = 0;
     private double lastErLb = 0;
-    */
+
 
     private enum DriveState {
         ROBOT,
@@ -94,7 +93,7 @@ public class BasicDrive {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        /*leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -102,7 +101,12 @@ public class BasicDrive {
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         leftFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -258,7 +262,7 @@ public class BasicDrive {
         double leftBackError = (leftBackPower * DRIVE_SPEED_TPS) * 0.75 - leftBackSpeed;
         double rightBackError = (rightBackPower * DRIVE_SPEED_TPS) * 0.75 - rightBackSpeed;
 
-        /*
+
         intengalSumLf += leftFrontError * timer.seconds();;
         double derivativeLf = (leftFrontError - lastErLf) / timer.seconds();
         lastErLf = leftFrontError;
@@ -274,7 +278,7 @@ public class BasicDrive {
         intengalSumRb += rightBackError * timer.seconds();;
         double derivativeRb = (rightBackError - lastErRb) / timer.seconds();
         lastErRb = rightBackError;
-        */
+
 
         /*
         TelemetryPacket packet = new TelemetryPacket();
@@ -289,17 +293,13 @@ public class BasicDrive {
         dashboard.sendTelemetryPacket(packet);
         */
 
-        /*
+        timer.reset();
+
+
         leftFrontDrive.setPower((leftFrontPower * 0.75 + kP * leftFrontError + kI * intengalSumLf + derivativeLf * kD));
         rightFrontDrive.setPower((rightFrontPower * 0.75 + kP * rightFrontError + kI * intengalSumRf + derivativeRf * kD));
         leftBackDrive.setPower((leftBackPower * 0.75 + kP * leftBackError + kI * intengalSumLb + derivativeLb * kD));
         rightBackDrive.setPower((rightBackPower * 0.75 + kP * rightBackError + kI * intengalSumRb + derivativeRb * kD));
-        */
-
-        leftFrontDrive.setPower((leftFrontPower * 0.75 + kP * leftFrontError));
-        rightFrontDrive.setPower((rightFrontPower * 0.75 + kP * rightFrontError));
-        leftBackDrive.setPower((leftBackPower * 0.75 + kP * leftBackError));
-        rightBackDrive.setPower((rightBackPower * 0.75 + kP * rightBackError));
     }
 
     public void driveFieldCentric() {
@@ -520,12 +520,17 @@ public class BasicDrive {
     }
 
     public void testing() {
+        telemetry.addLine("------BasicDrive-----");
         telemetry.addData("LeftFrontDrive Encoder: ", leftFrontDrive.getCurrentPosition());
         telemetry.addData("LeftBackDrive Encoder: ", leftBackDrive.getCurrentPosition());
         telemetry.addData("RightFrontDrive Encoder: ", rightFrontDrive.getCurrentPosition());
         telemetry.addData("RightBackDrive Encoder: ", rightBackDrive.getCurrentPosition());
         telemetry.addData("LeftStickY", -gamepad.left_stick_y);
         telemetry.addData("LeftStickX", gamepad.left_stick_x);
+        telemetry.addData("Options", gamepad.options);
+        telemetry.addData("Start", gamepad.start);
+        telemetry.addData("Back", gamepad.back);
+        telemetry.addLine("---------------------");
     }
 
     public void runtimeReset() {

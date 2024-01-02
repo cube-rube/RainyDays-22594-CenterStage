@@ -34,13 +34,13 @@ public class TeleOpMode extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (deploy.getDriveState()) {
-                basicDrive.driveFieldCentricEncoder();
+                //basicDrive.driveFieldCentricEncoder();
             }
-            basicDrive.testing();
-            lift.telePID();
-            intake.tele();
-            deploy.rotationPositions();
-            pullUp.tele();
+            //basicDrive.testing();
+            //lift.telePID();
+            //intake.tele();
+            deploy.testDoubleBeamServos();
+            //pullUp.tele();
             //launch.tele();
 
             telemetry.addData("Runtime", runtime.toString());

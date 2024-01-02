@@ -16,7 +16,8 @@ public class Deploy {
     private final Telemetry telemetry;
     private final Gamepad gamepad;
     private final Servo servoRotationBox;
-    private final Servo servoRotationBeam;
+    private final Servo servoRotationBeamLeft;
+    private final Servo servoRotationBeamRight;
     private final Servo servoHoldUpper;
     private final Servo servoHoldLower;
 
@@ -39,9 +40,9 @@ public class Deploy {
     }
     public static double takeBoxPos = 0.94;
     public static double deployBoxPos = 0.47;
-    public static double takeBeamPos = 0.025;
+    public static double takeBeamPos = 0;
     public static double deployBeamPos = 1;
-    public static double transportBeamPos = 0.35;
+    public static double transportBeamPos = 0;
     public static double transportDownBeamPos = 0.09;
     public static double transportDownBoxPos = 0.96;
 
@@ -72,9 +73,11 @@ public class Deploy {
         gamepad = linearOpMode.gamepad2;
 
         servoRotationBox = hardwareMap.get(Servo.class, "servo_rotation_box");
-        servoRotationBeam = hardwareMap.get(Servo.class, "servo_rotation_beam");
+        servoRotationBeamLeft = hardwareMap.get(Servo.class, "servo_rotation_beam1");
+        servoRotationBeamRight = hardwareMap.get(Servo.class, "servo_rotation_beam2");
         servoHoldUpper = hardwareMap.get(Servo.class, "servo_hold_upper");
         servoHoldLower = hardwareMap.get(Servo.class, "servo_hold_lower");
+        servoRotationBeamLeft.setDirection(Servo.Direction.REVERSE);
 
         rotationBoxState = RotationState.TAKE;
         rotationBeamState = RotationState.TRANSPORT;
@@ -193,9 +196,9 @@ public class Deploy {
         }
         switch (rotationBeamState) {
             case TAKE:
-                servoRotationBeam.setPosition(takeBeamPos);
+                servoRotationBeamLeft.setPosition(takeBeamPos);
             case DEPLOY:
-                servoRotationBeam.setPosition(deployBeamPos);
+                servoRotationBeamLeft.setPosition(deployBeamPos);
         }
     }
 
@@ -284,10 +287,10 @@ public class Deploy {
         switch (rotationState) {
             case TAKE:
                 servoRotationBox.setPosition(takeBoxPos);
-                servoRotationBeam.setPosition(takeBeamPos);
+                servoRotationBeamLeft.setPosition(takeBeamPos);
             case DEPLOY:
                 servoRotationBox.setPosition(deployBoxPos);
-                servoRotationBeam.setPosition(deployBeamPos);
+                servoRotationBeamLeft.setPosition(deployBeamPos);
         }
     }
 
@@ -298,21 +301,21 @@ public class Deploy {
             holderLowerState = HolderState.RELEASE;
             driveState = DriveState.DISABLED;
         }
+        /*
         if (gamepad.b) { // Transport
             rotationBeamState = RotationState.TRANSPORT;
             rotationBoxState = RotationState.TAKE;
             driveState = DriveState.ENABLED;
         }
+
+         */
         if (gamepad.y && holderLowerState == HolderState.HOLD) { // Deploy
             rotationBeamState = RotationState.DEPLOY;
             rotationBoxState = RotationState.DEPLOY;
             driveState = DriveState.ENABLED;
         }
-        if (gamepad.x) {
-            rotationBeamState = RotationState.TRANSPORT_DOWN;
-            rotationBoxState = RotationState.TRANSPORT_DOWN;
-            driveState = DriveState.ENABLED;
-        }
+
+        // HoldLower Box Servo switch
         switch (dpadDownState) {
             case PRESSED:
                 switch (holderLowerState) {
@@ -339,6 +342,8 @@ public class Deploy {
                 }
                 break;
         }
+
+        // HoldUpper Box Servo switch
         switch (dpadUpState) {
             case PRESSED:
                 switch (holderUpperState) {
@@ -365,6 +370,18 @@ public class Deploy {
                 }
                 break;
         }
+        /*
+        switch (rotationBoxState) {
+            case TAKE:
+                servoRotationBox.setPosition(takeBoxPos);
+            case DEPLOY:
+                servoRotationBox.setPosition(deployBoxPos);
+            case TRANSPORT_DOWN:
+                servoRotationBox.setPosition(transportDownBoxPos);
+        }
+
+         */
+
         if (rotationBoxState == RotationState.TAKE) {
             servoRotationBox.setPosition(takeBoxPos);
         } else if (rotationBoxState == RotationState.DEPLOY) {
@@ -372,20 +389,63 @@ public class Deploy {
         } else if (rotationBoxState == RotationState.TRANSPORT_DOWN) {
             servoRotationBox.setPosition(transportDownBoxPos);
         }
-        if (rotationBeamState == RotationState.TAKE) {
-            servoRotationBeam.setPosition(takeBeamPos);
-        } else if (rotationBeamState == RotationState.DEPLOY) {
-            servoRotationBeam.setPosition(deployBeamPos);
-        } else if (rotationBeamState == RotationState.TRANSPORT) {
-            servoRotationBeam.setPosition(transportBeamPos);
-        } else if (rotationBeamState == RotationState.TRANSPORT_DOWN) {
-            servoRotationBeam.setPosition(transportDownBeamPos);
+        /*
+        switch (rotationBeamState) {
+            case TAKE:
+                servoRotationBeamLeft.setPosition(takeBeamPos);
+                servoRotationBeamRight.setPosition(takeBeamPos);
+            case DEPLOY:
+                servoRotationBeamLeft.setPosition(deployBeamPos);
+                servoRotationBeamRight.setPosition(deployBeamPos);
+            case TRANSPORT:
+                servoRotationBeamLeft.setPosition(transportBeamPos);
+                servoRotationBeamRight.setPosition(transportBeamPos);
+            case TRANSPORT_DOWN:
+                servoRotationBeamLeft.setPosition(transportDownBeamPos);
+                servoRotationBeamRight.setPosition(transportDownBeamPos);
+
         }
+
+         */
+
+        if (rotationBeamState == RotationState.TAKE) {
+            servoRotationBeamLeft.setPosition(takeBeamPos);
+            servoRotationBeamRight.setPosition(takeBeamPos);
+        } else if (rotationBeamState == RotationState.DEPLOY) {
+            servoRotationBeamLeft.setPosition(deployBeamPos);
+            servoRotationBeamRight.setPosition(deployBeamPos);
+        } else if (rotationBeamState == RotationState.TRANSPORT) {
+            servoRotationBeamLeft.setPosition(transportBeamPos);
+            servoRotationBeamRight.setPosition(transportBeamPos);
+        } else if (rotationBeamState == RotationState.TRANSPORT_DOWN) {
+            servoRotationBeamLeft.setPosition(transportDownBeamPos);
+            servoRotationBeamRight.setPosition(transportDownBeamPos);
+        }
+        /*
+        switch (holderLowerState) {
+            case HOLD:
+                servoHoldLower.setPosition(holdLowerPos);
+            case RELEASE:
+                servoHoldLower.setPosition(releaseLowerPos);
+        }
+
+         */
+
         if (holderLowerState == HolderState.HOLD) {
             servoHoldLower.setPosition(holdLowerPos);
         } else if (holderLowerState == HolderState.RELEASE) {
             servoHoldLower.setPosition(releaseLowerPos);
         }
+        /*
+        switch (holderUpperState) {
+            case HOLD:
+                servoHoldUpper.setPosition(holdUpperPos);
+            case RELEASE:
+                servoHoldUpper.setPosition(releaseUpperPos);
+        }
+
+         */
+
         if (holderUpperState == HolderState.HOLD) {
             servoHoldUpper.setPosition(holdUpperPos);
         } else if (holderUpperState == HolderState.RELEASE) {
@@ -395,27 +455,18 @@ public class Deploy {
         telemetry.addData("Upper_Hold: ", holderUpperState);
         telemetry.addData("Lower_Hold: ", holderLowerState);
         telemetry.addLine("----------------------");
-        /*
-        switch (rotationBoxState) {
-            case TAKE:
-                servoRotationBox.setPosition(takeBoxPos);
-            case DEPLOY:
-                servoRotationBox.setPosition(deployBoxPos);
-        }
-
-        switch (rotationBeamState) {
-            case TAKE:
-                servoRotationBeam.setPosition(takeBeamPos);
-            case DEPLOY:
-                servoRotationBeam.setPosition(deployBeamPos);
-            case TRANSPORT:
-                servoRotationBeam.setPosition(transportBeamPos);
-        }
-        */
     }
+
     public void auto() {
-        servoRotationBeam.setPosition(transportBeamPos);
+        servoRotationBeamLeft.setPosition(transportBeamPos);
         servoRotationBox.setPosition(takeBoxPos);
+    }
+
+    public void testDoubleBeamServos() {
+        if (gamepad.a) {
+            servoRotationBeamLeft.setPosition(takeBeamPos);
+            // servoRotationBeamRight.setPosition(takeBeamPos);
+        }
     }
 
     public boolean getDriveState() {
@@ -423,7 +474,7 @@ public class Deploy {
     }
 
     public void testing() {
-        servoRotationBeam.setPosition(deployBeamPos);
+        servoRotationBeamLeft.setPosition(deployBeamPos);
         servoRotationBox.setPosition(deployBoxPos);
         servoHoldLower.setPosition(holdLowerPos);
         servoHoldUpper.setPosition(holdUpperPos);
