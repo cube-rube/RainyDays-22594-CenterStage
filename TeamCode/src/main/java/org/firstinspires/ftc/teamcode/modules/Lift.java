@@ -28,10 +28,10 @@ public class Lift {
     public static double kD = 0.00055;
     public static double kG = 0.31;
 
-    public static double maxPos = 490, minPos = 30;
-    public static double speed = 2000;
-    private final double[] positions = new double[]{minPos, (maxPos - minPos) / 4, (maxPos - minPos) * 3 / 4, maxPos};
-    private double currentPos = 5;
+    public static double maxPos = 490, minPos = 0;
+    public static double speed = 500;
+    private final double[] positions = {minPos, (maxPos - minPos) / 4, (maxPos - minPos) * 3 / 4, maxPos};
+    private double currentPos = 0;
     private double lastError = 0;
     private double integralSum = 0;
 
@@ -50,26 +50,6 @@ public class Lift {
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         telemetry.addData("Lift: ", "Initialized");
-    }
-
-    public void easyTele() {
-        if (motor.getMode() != DcMotor.RunMode.RUN_TO_POSITION) {
-            motor.setTargetPosition(motor.getCurrentPosition());
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-        motor.setPower(0.5);
-        if (-gamepad.left_stick_y == 0) {
-            motor.setTargetPosition(motor.getCurrentPosition());
-        }
-        else if (-gamepad.left_stick_y > 0) {
-            if (motor.getCurrentPosition() + 100 <= maxPos) {
-                motor.setTargetPosition(motor.getCurrentPosition() + 100);
-            }
-        }
-        else if (-gamepad.left_stick_y < 0) {
-            motor.setTargetPosition(Math.max(motor.getCurrentPosition() - 100, 0));
-        }
-        telemetry.addData("Lift targeting: ", motor.getTargetPosition());
     }
 
     public void telePID() {
@@ -94,12 +74,9 @@ public class Lift {
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("reference", currentPos);
         packet.put("encoder", encoderPos);
-        packet.put("out", out);
-        telemetry.addData("reference", currentPos);
-        telemetry.addData("encoder", encoderPos);
-        telemetry.addData("out", out);
-        telemetry.addData("error", error);
-        telemetry.addData("delta", runtime.seconds());
+        packet.put("error", error);
+        packet.put("power_out", out);
+        packet.put("seconds_per_call", runtime.seconds());
         dashboard.sendTelemetryPacket(packet);
         runtime.reset();
     }
@@ -147,6 +124,8 @@ public class Lift {
                 }
             }
         }
+        telemetry.addData("reference", currentPos);
+        telemetry.addData("encoderPos", motor.getCurrentPosition());
         telePID();
     }
 
