@@ -1,33 +1,28 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.modules.Deploy;
+import org.firstinspires.ftc.teamcode.drive.BasicDrive;
 
-@Config
-@TeleOp(name = "DeployTwoBeamTesting")
-public class DeployTwoBeamTesting extends LinearOpMode {
+@TeleOp(name = "RobotCentricDriveNoPIDTesting")
+public class RobotDriveNoPIDTesting extends LinearOpMode {
+    public BasicDrive basicDrive;
     private final ElapsedTime runtime = new ElapsedTime();
-    private Servo servoRotationBeamLeft;
-    private Servo servoRotationBeamRight;
     public FtcDashboard dashboard;
-    public static double SERVO_POS = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
         initRobot();
         runtime.reset();
         waitForStart();
+        basicDrive.runtimeReset();
 
         while (opModeIsActive()) {
-            if (gamepad2.a) {
-                servoRotationBeamRight.setPosition(SERVO_POS);
-            }
+            basicDrive.driveRobotCentric();
+            basicDrive.testing();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();
@@ -37,7 +32,7 @@ public class DeployTwoBeamTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        servoRotationBeamRight = hardwareMap.get(Servo.class, "servo_rotation_beam_right");
+        basicDrive = new BasicDrive(this, dashboard);
 
         telemetry.update();
     }

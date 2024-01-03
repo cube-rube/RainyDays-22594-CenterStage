@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -88,10 +89,10 @@ public class BasicDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
 
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         /*leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -158,7 +159,7 @@ public class BasicDrive {
 
         double axial   = -gamepad.left_stick_y;
         double lateral =  gamepad.left_stick_x * 1.1;
-        double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
+        double yaw     = -gamepad.right_trigger + gamepad.left_trigger;
         double leftFrontPower  = axial + lateral + yaw;
         double rightFrontPower = axial - lateral - yaw;
         double leftBackPower   = axial - lateral + yaw;
@@ -186,7 +187,7 @@ public class BasicDrive {
 
         double axial   = -gamepad.left_stick_y;
         double lateral =  gamepad.left_stick_x * 1.1;
-        double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
+        double yaw     =  -gamepad.right_trigger + gamepad.left_trigger;
 
         double leftFrontPower  = axial + lateral + yaw;
         double rightFrontPower = axial - lateral - yaw;
@@ -215,7 +216,7 @@ public class BasicDrive {
 
         double axial   = -gamepad.left_stick_y;
         double lateral =  gamepad.left_stick_x;
-        double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
+        double yaw     =  -gamepad.right_trigger + gamepad.left_trigger;
 
         /*
         axial = driveFunc(axial);
@@ -307,7 +308,7 @@ public class BasicDrive {
 
         double axial   = -gamepad.left_stick_y;
         double lateral =  gamepad.left_stick_x;
-        double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
+        double yaw     =  -gamepad.right_trigger + gamepad.left_trigger;
 
         if (gamepad.start) {
             imu.resetYaw();
