@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.vision;
 
+import org.firstinspires.ftc.teamcode.misc.GameConstants;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -7,11 +8,9 @@ import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
-import static org.firstinspires.ftc.teamcode.misc.GameConstants.ALLIANCECOLOR;
-
 public class PropDetectionPipeline extends OpenCvPipeline {
 	public int PROP_HEIGHT = 0;
-	
+	private AllianceColor ALLIANCECOLOR;
     Mat ybcrcb = new Mat();
     Mat leftCrop, centerCrop, rightCrop;
     double avgLeft, avgCenter, avgRight;
@@ -25,7 +24,11 @@ public class PropDetectionPipeline extends OpenCvPipeline {
         CENTER,
         RIGHT
     }
-    public volatile PropPosition position = PropPosition.LEFT;
+    public volatile PropPosition position;
+
+    public PropDetectionPipeline(AllianceColor color) {
+        this.ALLIANCECOLOR = color;
+    }
 
     @Override
     public Mat processFrame(Mat input) {

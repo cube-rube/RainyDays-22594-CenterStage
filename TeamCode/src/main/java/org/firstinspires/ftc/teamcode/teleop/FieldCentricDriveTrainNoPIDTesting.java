@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.drive.BasicDrive;
 
 @TeleOp(name = "FieldCentricDriveNoPIDTesting")
-public class MecanumDriveNoPIDTesting extends LinearOpMode {
+public class FieldCentricDriveTrainNoPIDTesting extends LinearOpMode {
     public BasicDrive basicDrive;
     private final ElapsedTime runtime = new ElapsedTime();
     public FtcDashboard dashboard;

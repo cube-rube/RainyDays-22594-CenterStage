@@ -12,19 +12,18 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.modules.Deploy;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
+import org.firstinspires.ftc.teamcode.vision.AllianceColor;
 import org.firstinspires.ftc.teamcode.vision.PropDetectionPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-import static org.firstinspires.ftc.teamcode.misc.GameConstants.STARTPOS;
-import static org.firstinspires.ftc.teamcode.misc.GameConstants.ALLIANCECOLOR;
 
 @Autonomous(name = "AutoMode")
 public class AutoMode extends LinearOpMode {
     OpenCvWebcam camProp;
-    PropDetectionPipeline propPipeline = new PropDetectionPipeline();
+    PropDetectionPipeline propPipeline = new PropDetectionPipeline(AllianceColor.BLUE);
     PropDetectionPipeline.PropPosition propPosition = PropDetectionPipeline.PropPosition.LEFT;
     private BasicDrive basicDrive;
     private SampleMecanumDrive mecanumDrive;
