@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,31 +17,35 @@ public class PullUp {
     private final Telemetry telemetry;
     private final Gamepad gamepad;
     private final DcMotor motor;
-    private final ElapsedTime timer;
+    public final ElapsedTime timer;
+    private final FtcDashboard dashboard;
     private double tempPower = 0;
     public static double kP = 0;
     public static double kI = 0;
     public static double kD = 0;
     public static double kG = 0;
+    public static double speed = 2000;
     public static double reference = 0;
     private double lastError = 0;
     private double integralSum = 0;
 
-    public PullUp(LinearOpMode linearOpMode) {
+    public PullUp(LinearOpMode linearOpMode, FtcDashboard dashboard) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad1;
+        this.dashboard = dashboard;
         timer = new ElapsedTime();
 
         motor = hardwareMap.get(DcMotor.class, "motor_up");
         motor.setDirection(DcMotorSimple.Direction.FORWARD);
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         telemetry.addData("PullUp: ", "Initialized");
     }
 
-    public void tele() {
+    public void opControl() {
         if (tempPower != 0) {
             motor.setPower(tempPower);
         } else {
@@ -51,7 +57,8 @@ public class PullUp {
         telemetry.addData("Pull_Up power: ", motor.getPower());
     }
 
-    public void movePID() {
+    public void opControlPID() {
+        reference += (-gamepad.left_stick_y) * speed * timer.seconds();
         double encoderPos = motor.getCurrentPosition();
         double error = reference - encoderPos;
         double derivative = (error - lastError) / timer.seconds();
@@ -61,6 +68,14 @@ public class PullUp {
         motor.setPower(out);
 
         lastError = error;
+
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.put("reference", reference);
+        packet.put("encoder", encoderPos);
+        packet.put("error", error);
+        packet.put("power_out", out);
+        packet.put("seconds_per_call", timer.seconds());
+        dashboard.sendTelemetryPacket(packet);
 
         timer.reset();
     }

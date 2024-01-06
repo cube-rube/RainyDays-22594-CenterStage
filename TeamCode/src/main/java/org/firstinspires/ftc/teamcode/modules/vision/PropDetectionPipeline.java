@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode.vision;
+package org.firstinspires.ftc.teamcode.modules.vision;
 
-import org.firstinspires.ftc.teamcode.misc.GameConstants;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;

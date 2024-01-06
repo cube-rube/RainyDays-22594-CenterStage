@@ -20,7 +20,7 @@ public class IntakeTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            intake.tele();
+            intake.testing();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();

@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.misc;
 
-
 import com.acmerobotics.dashboard.config.Config;
 
-import org.firstinspires.ftc.teamcode.vision.AllianceColor;
+import org.firstinspires.ftc.teamcode.modules.vision.AllianceColor;
 
 @Config
 public class GameConstants {

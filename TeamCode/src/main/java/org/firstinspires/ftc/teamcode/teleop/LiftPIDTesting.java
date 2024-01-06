@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.modules.Lift;
 
+@Config
 @TeleOp(name = "LiftPIDTesting")
 public class LiftPIDTesting extends LinearOpMode {
     public Lift lift;
@@ -18,10 +20,10 @@ public class LiftPIDTesting extends LinearOpMode {
         initRobot();
         runtime.reset();
         waitForStart();
-        lift.runtimeReset();
+        lift.timer.reset();
 
         while (opModeIsActive()) {
-            lift.telePID();
+            lift.opControl();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();

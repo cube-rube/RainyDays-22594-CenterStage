@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.modules.Deploy;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
-import org.firstinspires.ftc.teamcode.vision.AllianceColor;
-import org.firstinspires.ftc.teamcode.vision.PropDetectionPipeline;
+import org.firstinspires.ftc.teamcode.modules.vision.AllianceColor;
+import org.firstinspires.ftc.teamcode.modules.vision.PropDetectionPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -36,9 +36,9 @@ public class AutoMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initRobot();
-        // initCamera();
+        initCamera();
 
-        /*
+
         camProp.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
         {
             @Override
@@ -49,13 +49,12 @@ public class AutoMode extends LinearOpMode {
             public void onError(int errorCode) {
             }
         });
-         */
 
         waitForStart();
-        //propPosition = propPipeline.getPropPosition();
+        propPosition = propPipeline.getPropPosition();
 
-        //telemetry.addData("Snapshot post-START analysis", propPosition);
-        //telemetry.update();
+        telemetry.addData("Snapshot post-START analysis", propPosition);
+        telemetry.update();
 
         lift.runtimeReset();
         deploy.auto();
@@ -63,7 +62,7 @@ public class AutoMode extends LinearOpMode {
         while (runtime.seconds() <= 2) {
             telemetry.addLine("Lift");
             telemetry.update();
-            lift.auto();
+            lift.moveToPos(Lift.maxPos);
         }
         telemetry.addLine("Parking");
         telemetry.update();

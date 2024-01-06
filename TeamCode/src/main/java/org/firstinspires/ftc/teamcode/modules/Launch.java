@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+
+// TODO: Сделать
 public class Launch {
     private final LinearOpMode linearOpMode;
     private final HardwareMap hardwareMap;
@@ -15,10 +17,10 @@ public class Launch {
     private final Servo servoHold;
     private final Servo servoRaise;
 
-    private float upPos;
-    private float downPos;
-    private double holdPos;
-    private double releasePos;
+    private float up_pos;
+    private float down_pos;
+    private double hold_pos;
+    private double release_pos;
 
 
 
@@ -33,30 +35,30 @@ public class Launch {
 
         telemetry.addData("Launch: ", "Initialized");
 
-        holdPos = 0;
-        releasePos = 1;
+        hold_pos = 0;
+        release_pos = 1;
     }
 
     public void tele() {
         if (gamepad.right_trigger > 0) {
-            servoRaise.setPosition(upPos);
+            servoRaise.setPosition(up_pos);
         } else if (gamepad.left_trigger > 0) {
-            servoRaise.setPosition(downPos);
+            servoRaise.setPosition(down_pos);
         }
         if (gamepad.right_bumper && gamepad.left_bumper) {
-            servoHold.setPosition(releasePos);
+            servoHold.setPosition(release_pos);
         } else {
-            servoHold.setPosition(holdPos);
+            servoHold.setPosition(hold_pos);
         }
     }
 
     public void teleWithPos() {
         servoRaise.setPosition(gamepad.right_stick_y);
         if (gamepad.b) {
-            servoHold.setPosition(releasePos);
+            servoHold.setPosition(release_pos);
         }
         else {
-            servoHold.setPosition(holdPos);
+            servoHold.setPosition(hold_pos);
         }
     }
 }

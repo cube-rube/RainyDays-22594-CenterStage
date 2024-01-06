@@ -56,7 +56,7 @@ public class TeleOpMode extends LinearOpMode {
         lift = new Lift(this, dashboard);
         intake = new Intake(this);
         deploy = new Deploy(this);
-        pullUp = new PullUp(this);
+        pullUp = new PullUp(this, dashboard);
         //launch = new Launch(this);
 
 

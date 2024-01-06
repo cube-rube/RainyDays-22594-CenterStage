@@ -7,8 +7,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.modules.Deploy;
-
 @Config
 @TeleOp(name = "DeployTwoBeamTesting")
 public class DeployTwoBeamTesting extends LinearOpMode {
@@ -25,9 +23,9 @@ public class DeployTwoBeamTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            if (gamepad2.a) {
-                servoRotationBeamRight.setPosition(SERVO_POS);
-            }
+            servoRotationBeamLeft.setPosition(SERVO_POS - 0.043);
+            servoRotationBeamRight.setPosition(SERVO_POS);
+
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();
@@ -37,7 +35,10 @@ public class DeployTwoBeamTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
+        servoRotationBeamLeft = hardwareMap.get(Servo.class, "servo_rotation_beam_left");
         servoRotationBeamRight = hardwareMap.get(Servo.class, "servo_rotation_beam_right");
+
+        servoRotationBeamLeft.setDirection(Servo.Direction.REVERSE);
 
         telemetry.update();
     }

@@ -40,9 +40,9 @@ public class Deploy {
     }
     public static double takeBoxPos = 0.94;
     public static double deployBoxPos = 0.47;
-    public static double takeBeamPos = 0;
+    public static double takeBeamPos = 0.115;
+    public static double transportBeamPos = 0.5;
     public static double deployBeamPos = 1;
-    public static double transportBeamPos = 0;
     public static double transportDownBeamPos = 0.09;
     public static double transportDownBoxPos = 0.96;
 
@@ -54,10 +54,6 @@ public class Deploy {
         HELD,
         RELEASED
     }
-    private ButtonState aState = ButtonState.RELEASED;
-    private ButtonState bState = ButtonState.RELEASED;
-    private ButtonState xState = ButtonState.RELEASED;
-    private ButtonState yState = ButtonState.RELEASED;
     private ButtonState dpadDownState = ButtonState.RELEASED;
     private ButtonState dpadUpState = ButtonState.RELEASED;
     public enum DriveState {
@@ -65,6 +61,8 @@ public class Deploy {
         DISABLED
     }
     public DriveState driveState = DriveState.ENABLED;
+
+    public final double diff = 0.043;
 
     public Deploy(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
@@ -83,7 +81,7 @@ public class Deploy {
         rotationBeamState = RotationState.TRANSPORT;
     }
 
-    public void rotationPositions() {
+    public void opControl() {
         if (gamepad.a) { // Intake
             rotationBeamState = RotationState.TAKE;
             rotationBoxState = RotationState.TAKE;
@@ -198,16 +196,16 @@ public class Deploy {
          */
 
         if (rotationBeamState == RotationState.TAKE) {
-            servoRotationBeamLeft.setPosition(takeBeamPos);
+            servoRotationBeamLeft.setPosition(takeBeamPos - diff);
             servoRotationBeamRight.setPosition(takeBeamPos);
         } else if (rotationBeamState == RotationState.DEPLOY) {
-            servoRotationBeamLeft.setPosition(deployBeamPos);
+            servoRotationBeamLeft.setPosition(deployBeamPos - diff);
             servoRotationBeamRight.setPosition(deployBeamPos);
         } else if (rotationBeamState == RotationState.TRANSPORT) {
-            servoRotationBeamLeft.setPosition(transportBeamPos);
+            servoRotationBeamLeft.setPosition(transportBeamPos - diff);
             servoRotationBeamRight.setPosition(transportBeamPos);
         } else if (rotationBeamState == RotationState.TRANSPORT_DOWN) {
-            servoRotationBeamLeft.setPosition(transportDownBeamPos);
+            servoRotationBeamLeft.setPosition(transportDownBeamPos - diff);
             servoRotationBeamRight.setPosition(transportDownBeamPos);
         }
         /*
