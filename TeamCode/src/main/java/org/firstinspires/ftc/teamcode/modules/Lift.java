@@ -29,8 +29,8 @@ public class Lift {
     public static double kD = 0.0000055;
     public static double kG = 0.1;
 
-    public static double maxPos = 1170, minPos = 0;
-    public static double speed = 2000;
+    public static double maxPos = 1170, minPos = 40;
+    public static double speed = 16000;
     private final double[] positions = {minPos, (maxPos - minPos) / 4, (maxPos - minPos) * 3 / 4, maxPos};
     private double reference = 0;
     private double lastErrorLeft = 0;

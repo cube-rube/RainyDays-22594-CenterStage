@@ -40,7 +40,7 @@ public class Deploy {
     }
     public static double takeBoxPos = 0.94;
     public static double deployBoxPos = 0.47;
-    public static double takeBeamPos = 0.115;
+    public static double takeBeamPos = 0.09;
     public static double transportBeamPos = 0.5;
     public static double deployBeamPos = 1;
     public static double transportDownBeamPos = 0.09;
