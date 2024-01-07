@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Launch;
 import org.firstinspires.ftc.teamcode.modules.Lift;
 
-@TeleOp(name = "TeleOpMode")
-public class TeleOpMode extends LinearOpMode {
+@TeleOp(name = "MainTeleOp")
+public class MainTeleOp extends LinearOpMode {
     public BasicDrive basicDrive;
     public Lift lift;
     public Intake intake;
