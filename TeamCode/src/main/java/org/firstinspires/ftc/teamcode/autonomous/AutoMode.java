@@ -61,7 +61,7 @@ public class AutoMode extends LinearOpMode {
         while (runtime.seconds() <= 2) {
             telemetry.addLine("Lift");
             telemetry.update();
-            lift.moveToPos(Lift.maxPos);
+            lift.moveToPos(Lift.MAX_POS);
         }
         telemetry.addLine("Parking");
         telemetry.update();

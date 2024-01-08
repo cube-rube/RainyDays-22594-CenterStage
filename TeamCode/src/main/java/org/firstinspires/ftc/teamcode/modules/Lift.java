@@ -27,9 +27,9 @@ public class Lift {
     public static double kD = 0.0000055;
     public static double kG = 0;
 
-    public static double maxPos = 1170, minPos = 0;
-    public static double speed = 2500;
-    private final double[] positions = {minPos, (maxPos - minPos) / 4, (maxPos - minPos) * 3 / 4, maxPos};
+    public static double MAX_POS = 1060, MIN_POS = 0;
+    public static double SPEED = 2000;
+    private final double[] positions = {MIN_POS, (MAX_POS - MIN_POS) / 4, (MAX_POS - MIN_POS) * 3 / 4, MAX_POS};
     private double reference = 0;
     private double lastErrorLeft = 0;
     private double lastErrorRight = 0;
@@ -62,13 +62,12 @@ public class Lift {
     }
 
     public void opControl() {
-        reference += (-gamepad.left_stick_y) * speed * timer.seconds();
-        reference = pos;
-        if (reference > maxPos) {
-            reference = maxPos;
+        reference += (-gamepad.left_stick_y) * SPEED * timer.seconds();
+        if (reference > MAX_POS) {
+            reference = MAX_POS;
         }
-        if (reference < minPos) {
-            reference = minPos;
+        if (reference < MIN_POS) {
+            reference = MIN_POS;
         }
 
         double encoderPosLeft = motorLeft.getCurrentPosition();
