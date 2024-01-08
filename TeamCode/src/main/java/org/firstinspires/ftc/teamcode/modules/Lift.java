@@ -15,8 +15,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 @Config
 public class Lift {
-    private final LinearOpMode linearOpMode;
-    private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
     private final DcMotorEx motorRight;
@@ -27,10 +25,10 @@ public class Lift {
     public static double kP = 0.01;
     public static double kI = 0.005;
     public static double kD = 0.0000055;
-    public static double kG = 0.1;
+    public static double kG = 0;
 
-    public static double maxPos = 1170, minPos = 40;
-    public static double speed = 16000;
+    public static double maxPos = 1170, minPos = 0;
+    public static double speed = 2500;
     private final double[] positions = {minPos, (maxPos - minPos) / 4, (maxPos - minPos) * 3 / 4, maxPos};
     private double reference = 0;
     private double lastErrorLeft = 0;
@@ -40,8 +38,7 @@ public class Lift {
     public static double pos = 0;
 
     public Lift(LinearOpMode linearOpMode, FtcDashboard dashboard) {
-        this.linearOpMode = linearOpMode;
-        hardwareMap = linearOpMode.hardwareMap;
+        HardwareMap hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad2;
         timer = new ElapsedTime();
@@ -53,13 +50,15 @@ public class Lift {
         motorRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        motorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        motorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        telemetry.addData("Lift: ", "Initialized");
+        telemetry.addLine("Lift: Initialized");
     }
 
     public void opControl() {
@@ -92,6 +91,7 @@ public class Lift {
         motorRight.setPower(outRight);
 
         lastErrorLeft = errorLeft;
+        lastErrorRight = errorRight;
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("reference", reference);
@@ -104,9 +104,12 @@ public class Lift {
         packet.put("IntLeft", integralSumLeft);
         packet.put("IntRight", integralSumRight);
         dashboard.sendTelemetryPacket(packet);
-        telemetry.addData("LiftR_encoder: ", motorRight.getCurrentPosition());
-        telemetry.addData("LiftL_encoder: ", motorLeft.getCurrentPosition());
-        telemetry.addData("controller", -gamepad.left_stick_y);
+        telemetry.addLine("---------------");
+        telemetry.addLine("Lift:");
+        telemetry.addData("reference", reference);
+        telemetry.addData("left_encoder", motorLeft.getCurrentPosition());
+        telemetry.addData("right_encoder", motorRight.getCurrentPosition());
+        telemetry.addData("gp2_left_stick_y", -gamepad.left_stick_y);
         timer.reset();
     }
 

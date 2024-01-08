@@ -9,7 +9,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 public class PropDetectionPipeline extends OpenCvPipeline {
 	public int PROP_HEIGHT = 0;
-	private AllianceColor ALLIANCECOLOR;
+	private final AllianceColor ALLIANCECOLOR;
     Mat ybcrcb = new Mat();
     Mat leftCrop, centerCrop, rightCrop;
     double avgLeft, avgCenter, avgRight;
@@ -33,9 +33,9 @@ public class PropDetectionPipeline extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, ybcrcb, Imgproc.COLOR_RGB2YCrCb);
 
-        Rect leftRect = new Rect(0, 120 + PROP_HEIGHT, 80, 100);
-        Rect centerRect = new Rect(280, 115 + PROP_HEIGHT, 80, 80);
-        Rect rightRect = new Rect(560, 120 + PROP_HEIGHT, 80, 100);
+        Rect leftRect = new Rect(0, 120, 80, 100);
+        Rect centerRect = new Rect(280, 115, 80, 80);
+        Rect rightRect = new Rect(560, 120, 80, 100);
 
         input.copyTo(output);
 

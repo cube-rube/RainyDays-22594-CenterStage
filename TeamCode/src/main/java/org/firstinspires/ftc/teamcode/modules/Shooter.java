@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 // TODO: Сделать
-public class Launch {
+public class Shooter {
     private final LinearOpMode linearOpMode;
     private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
@@ -19,12 +19,12 @@ public class Launch {
 
     private float up_pos;
     private float down_pos;
-    private double hold_pos;
-    private double release_pos;
+    public static double hold_pos = 0;
+    public static double release_pos = -1;
 
 
 
-    public Launch(LinearOpMode linearOpMode) {
+    public Shooter(LinearOpMode linearOpMode) {
         this.linearOpMode = linearOpMode;
         hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
@@ -33,10 +33,7 @@ public class Launch {
         servoHold = hardwareMap.get(Servo.class, "servo_hold");
         servoRaise = hardwareMap.get(Servo.class, "servo_raise");
 
-        telemetry.addData("Launch: ", "Initialized");
-
-        hold_pos = 0;
-        release_pos = 1;
+        telemetry.addLine("Shooter: Initialized");
     }
 
     public void tele() {

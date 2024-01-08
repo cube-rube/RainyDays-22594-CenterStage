@@ -6,6 +6,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -17,7 +18,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @Config
 public class BasicDrive {
     private final LinearOpMode linearOpMode;
-    private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
     private final DcMotorEx leftFrontDrive;
@@ -40,7 +40,7 @@ public class BasicDrive {
 
     double kP = 0;
 
-    double kI =0;
+    double kI = 0;
 
     double kD = 0;
 
@@ -71,7 +71,7 @@ public class BasicDrive {
 
     public BasicDrive(LinearOpMode linearOpMode, FtcDashboard dashboard) {
         this.linearOpMode = linearOpMode;
-        hardwareMap = linearOpMode.hardwareMap;
+        HardwareMap hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad1;
         runtime = new ElapsedTime();
@@ -88,20 +88,15 @@ public class BasicDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.UP));
         imu.initialize(parameters);
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
-        /*leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
 
         leftFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -113,7 +108,7 @@ public class BasicDrive {
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        telemetry.addData("BasicDrive:", "Initialized");
+        telemetry.addLine("BasicDrive: Initialized");
     }
 
     public void tele() {
@@ -307,7 +302,7 @@ public class BasicDrive {
 
         double axial   = -gamepad.left_stick_y;
         double lateral =  gamepad.left_stick_x;
-        double yaw     =  -gamepad.right_trigger + gamepad.left_trigger;
+        double yaw     =  gamepad.right_trigger - gamepad.left_trigger;
 
         if (gamepad.start) {
             imu.resetYaw();
@@ -520,17 +515,17 @@ public class BasicDrive {
     }
 
     public void testing() {
-        telemetry.addLine("------BasicDrive-----");
-        telemetry.addData("LeftFrontDrive Encoder: ", leftFrontDrive.getCurrentPosition());
-        telemetry.addData("LeftBackDrive Encoder: ", leftBackDrive.getCurrentPosition());
-        telemetry.addData("RightFrontDrive Encoder: ", rightFrontDrive.getCurrentPosition());
-        telemetry.addData("RightBackDrive Encoder: ", rightBackDrive.getCurrentPosition());
-        telemetry.addData("LeftStickY", -gamepad.left_stick_y);
-        telemetry.addData("LeftStickX", gamepad.left_stick_x);
-        telemetry.addData("Options", gamepad.options);
-        telemetry.addData("Start", gamepad.start);
-        telemetry.addData("Back", gamepad.back);
-        telemetry.addLine("---------------------");
+        telemetry.addLine("---------------");
+        telemetry.addLine("BasicDrive:");
+        telemetry.addData("left_front_encoder", leftFrontDrive.getCurrentPosition());
+        telemetry.addData("left_back_encoder: ", leftBackDrive.getCurrentPosition());
+        telemetry.addData("right_front_encoder: ", rightFrontDrive.getCurrentPosition());
+        telemetry.addData("right_back_encoder: ", rightBackDrive.getCurrentPosition());
+        telemetry.addData("gp1_left_stick_y", -gamepad.left_stick_y);
+        telemetry.addData("gp1_left_stick_x", gamepad.left_stick_x);
+        telemetry.addData("gp1_options", gamepad.options);
+        telemetry.addData("gp1_start", gamepad.start);
+        telemetry.addData("gp1_back", gamepad.back);
     }
 
     public void runtimeReset() {

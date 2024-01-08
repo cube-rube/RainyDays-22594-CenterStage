@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.modules.utility.ButtonState;
 
 @Config
 public class PullUp {
@@ -28,6 +29,9 @@ public class PullUp {
     public static double reference = 0;
     private double lastError = 0;
     private double integralSum = 0;
+    private boolean holding = false;
+    private ButtonState dpadDownState;
+
 
     public PullUp(LinearOpMode linearOpMode, FtcDashboard dashboard) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
@@ -37,24 +41,51 @@ public class PullUp {
         timer = new ElapsedTime();
 
         motor = hardwareMap.get(DcMotor.class, "motor_up");
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        motor.setDirection(DcMotorSimple.Direction.REVERSE);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-        telemetry.addData("PullUp: ", "Initialized");
+        telemetry.addLine("PullUp: Initialized");
     }
 
     public void opControl() {
-        if (tempPower != 0) {
+        if (holding) {
             motor.setPower(tempPower);
         } else {
             motor.setPower(-gamepad.right_stick_y);
         }
-        if (gamepad.a) {
+        if (gamepad.dpad_down) {
             tempPower = -gamepad.right_stick_y;
         }
-        telemetry.addData("Pull_Up power: ", motor.getPower());
+        switch (dpadDownState) {
+            case PRESSED:
+                holding = !holding;
+                if (holding) {
+                    tempPower = -gamepad.right_stick_y;
+                }
+                if (gamepad.dpad_down) {
+                    dpadDownState = ButtonState.HELD;
+                } else {
+                    dpadDownState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (!gamepad.dpad_down) {
+                    dpadDownState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (gamepad.dpad_down) {
+                    dpadDownState = ButtonState.PRESSED;
+                }
+                break;
+        }
+        telemetry.addLine("---------------");
+        telemetry.addLine("PullUp:");
+        telemetry.addData("holding", holding);
+        telemetry.addData("motor_power: ", motor.getPower());
+        telemetry.addData("gp1_right_stick_y", -gamepad.right_stick_y);
     }
 
     public void opControlPID() {

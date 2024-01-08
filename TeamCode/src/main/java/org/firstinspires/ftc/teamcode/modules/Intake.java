@@ -2,12 +2,18 @@ package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.AnalogSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.LightSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.MainTeleOp;
+import org.opencv.core.Mat;
 
 
 @Config
@@ -15,56 +21,90 @@ public class Intake {
     private final Telemetry telemetry;
     private final Gamepad gamepad;
     private final DcMotor motor;
-    private int direction = 0;
-    public static int TPR = 98;
+    private final DigitalChannel sensor;
+    public static double TPR = 292.1212;
+
+    public enum Direction {
+        FORWARD,
+        F_STOP,
+        B_STOP,
+        BACKWARD,
+    }
+    private Direction direction = Direction.F_STOP;
 
     public Intake(LinearOpMode linearOpMode) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad1;
 
+        telemetry.addLine("Intake: initializing motor");
         motor = hardwareMap.get(DcMotor.class, "motor_intake");
-        motor.setDirection(DcMotor.Direction.FORWARD);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motor.setTargetPosition(0);
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        telemetry.addLine("Intake: initializing sensor");
+        sensor = hardwareMap.get(DigitalChannel.class, "light_sensor");
+        sensor.setMode(DigitalChannel.Mode.INPUT);
 
         telemetry.addLine("Intake: Initialized");
     }
 
     public void opControlOld() {
-        if (gamepad.dpad_down) {
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (gamepad.y) {
+            motor.setPower(-0.3);
+        } else if (gamepad.a) {
             motor.setPower(1);
-        } else if (gamepad.dpad_up) {
-            motor.setPower(-1);
         } else {
             motor.setPower(0);
         }
     }
-
-    public void opControl() {
-        if (gamepad.dpad_down) {
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    public void opControlSensor() {
+        if (gamepad.y) {
+            motor.setPower(-0.3);
+            direction = Direction.BACKWARD;
+        } else if (gamepad.a) {
             motor.setPower(1);
-            direction = 1;
-        } else if (gamepad.dpad_up) {
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motor.setPower(-1);
-            direction = -1;
+            direction = Direction.FORWARD;
         } else {
-            int pos = motor.getCurrentPosition();
-            if (direction == 1) {
-                motor.setTargetPosition(pos + TPR - ((pos % TPR) + TPR) % TPR);
-                direction = 0;
-            } else if (direction == -1) {
-                motor.setTargetPosition(pos - ((pos % TPR) + TPR) % TPR);
-                direction = 0;
+            switch (direction) {
+                case FORWARD: motor.setPower(0.2);
+                    break;
+                case BACKWARD: motor.setPower(-0.2);
+                    break;
+                case B_STOP:
+                case F_STOP:
+                    motor.setPower(0);
+                    break;
             }
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if (!sensor.getState()) {
+                switch (direction) {
+                    case FORWARD: direction = Direction.F_STOP;
+                        break;
+                    case BACKWARD: direction = Direction.B_STOP;
+                        break;
+                }
+            } else {
+                switch (direction) {
+                    case B_STOP: direction = Direction.FORWARD;
+                        break;
+                    case F_STOP: direction = Direction.BACKWARD;
+                        break;
+                }
+            }
         }
-        telemetry.addData("intake_motor_pos", motor.getCurrentPosition());
-        telemetry.addData("intake_motor_pos", motor.getTargetPosition());
+        telemetry.addLine("---------------");
+        telemetry.addLine("Intake:");
+        telemetry.addData("intake_pos", motor.getCurrentPosition());
+        telemetry.addData("direction", direction);
+        telemetry.addData("sensor_state", !sensor.getState());
+    }
+    public void testingSensor() {
+        telemetry.addData("state", sensor.getState());
+        telemetry.addData("string", sensor.toString());
+        telemetry.addData("device", sensor.getDeviceName());
+        telemetry.addData("manufacturer", sensor.getManufacturer());
+        telemetry.addData("connection", sensor.getConnectionInfo());
     }
 
     public void testing() {

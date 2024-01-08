@@ -16,11 +16,13 @@ public class IntakeTesting extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initRobot();
-        runtime.reset();
+
         waitForStart();
+        preStart();
 
         while (opModeIsActive()) {
-            intake.opControl();
+            intake.testingSensor();
+            intake.opControlSensor();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();
@@ -33,5 +35,9 @@ public class IntakeTesting extends LinearOpMode {
         intake = new Intake(this);
 
         telemetry.update();
+    }
+
+    private void preStart() {
+        runtime.reset();
     }
 }

@@ -1,48 +1,39 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.BasicDrive;
-import org.firstinspires.ftc.teamcode.modules.PullUp;
-import org.firstinspires.ftc.teamcode.modules.Scorer;
 import org.firstinspires.ftc.teamcode.modules.Intake;
-import org.firstinspires.ftc.teamcode.modules.Shooter;
 import org.firstinspires.ftc.teamcode.modules.Lift;
+import org.firstinspires.ftc.teamcode.modules.Scorer;
 
-@TeleOp(name = "MainTeleOp")
-public class MainTeleOp extends LinearOpMode {
-    public BasicDrive basicDrive;
-    public Lift lift;
-    public Intake intake;
-    public Scorer scorer;
-    public PullUp pullUp;
-    public Shooter shooter;
+@Config
+@TeleOp(name = "ScoringTesting")
+public class ScoringTesting extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
+    private Intake intake;
+    private Lift lift;
+    private Scorer scorer;
     public FtcDashboard dashboard;
+    public static double SERVO_POS = 0.5;
+    public static double SERVO_POS_BOX = 0.5;
+    public static double diff = 0.043;
 
     @Override
     public void runOpMode() throws InterruptedException {
         initRobot();
         runtime.reset();
         waitForStart();
-        lift.timer.reset();
-        pullUp.timer.reset();
-        basicDrive.runtimeReset();
-
 
         while (opModeIsActive()) {
-            basicDrive.driveFieldCentric();
+            intake.opControlOld();
             lift.opControl();
-            intake.opControlSensor();
             scorer.opControl();
-            pullUp.opControl();
-            // launch.tele();
 
             telemetry.addData("Runtime", runtime.toString());
-
             telemetry.update();
         }
     }
@@ -50,13 +41,9 @@ public class MainTeleOp extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        basicDrive = new BasicDrive(this, dashboard);
-        lift = new Lift(this, dashboard);
         intake = new Intake(this);
+        lift = new Lift(this, dashboard);
         scorer = new Scorer(this);
-        pullUp = new PullUp(this, dashboard);
-        //launch = new Launch(this);
-
 
         telemetry.update();
     }

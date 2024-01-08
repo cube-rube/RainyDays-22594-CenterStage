@@ -7,20 +7,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.modules.Lift;
-
 @Config
-@TeleOp(name = "DeployTwoBeamTesting")
-public class DeployTwoBeamTesting extends LinearOpMode {
+@TeleOp(name = "ServoBeamRightTesting")
+public class ServoBoxTesting extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
-    private Servo servoRotationBeamLeft;
-    private Servo servoRotationBeamRight;
     private Servo servoRotationBox;
-    private Lift lift;
     public FtcDashboard dashboard;
     public static double SERVO_POS = 0.5;
-    public static double SERVO_POS_BOX = 0.5;
-    public static double diff = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -29,10 +22,8 @@ public class DeployTwoBeamTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            lift.opControl();
-            servoRotationBeamLeft.setPosition(SERVO_POS);
-            servoRotationBeamRight.setPosition(SERVO_POS);
-            servoRotationBox.setPosition(SERVO_POS_BOX);
+            servoRotationBox.setPosition(SERVO_POS);
+
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();
@@ -42,13 +33,7 @@ public class DeployTwoBeamTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        servoRotationBeamLeft = hardwareMap.get(Servo.class, "servo_rotation_beam_left");
-        servoRotationBeamRight = hardwareMap.get(Servo.class, "servo_rotation_beam_right");
         servoRotationBox = hardwareMap.get(Servo.class, "servo_rotation_box");
-
-        servoRotationBeamRight.setDirection(Servo.Direction.REVERSE);
-
-        lift = new Lift(this, dashboard);
 
         telemetry.update();
     }

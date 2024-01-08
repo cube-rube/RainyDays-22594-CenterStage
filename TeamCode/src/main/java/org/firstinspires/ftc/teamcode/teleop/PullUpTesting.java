@@ -1,19 +1,17 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Config
-@TeleOp(name = "ServoBeamRightTesting")
-public class ServoBeamRightTesting extends LinearOpMode {
+import org.firstinspires.ftc.teamcode.modules.PullUp;
+
+@TeleOp(name = "PullUpTesting")
+public class PullUpTesting extends LinearOpMode {
+    public PullUp pullUp;
     private final ElapsedTime runtime = new ElapsedTime();
-    private Servo servoRotationBeamRight;
     public FtcDashboard dashboard;
-    public static double SERVO_POS = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -22,8 +20,7 @@ public class ServoBeamRightTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            servoRotationBeamRight.setPosition(SERVO_POS);
-
+            pullUp.opControl();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();
@@ -33,7 +30,7 @@ public class ServoBeamRightTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        servoRotationBeamRight = hardwareMap.get(Servo.class, "servo_rotation_beam_right");
+        pullUp = new PullUp(this, dashboard);
 
         telemetry.update();
     }

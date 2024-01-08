@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.BasicDrive;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.modules.Deploy;
+import org.firstinspires.ftc.teamcode.modules.Scorer;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
 import org.firstinspires.ftc.teamcode.modules.vision.AllianceColor;
@@ -29,7 +29,7 @@ public class AutoMode extends LinearOpMode {
     private SampleMecanumDrive mecanumDrive;
     private Lift lift;
     private Intake intake;
-    private Deploy deploy;
+    private Scorer scorer;
     private ElapsedTime runtime = new ElapsedTime();
     public FtcDashboard dashboard;
 
@@ -57,7 +57,6 @@ public class AutoMode extends LinearOpMode {
         telemetry.update();
 
         lift.runtimeReset();
-        deploy.auto();
         runtime.reset();
         while (runtime.seconds() <= 2) {
             telemetry.addLine("Lift");
@@ -145,7 +144,7 @@ public class AutoMode extends LinearOpMode {
         mecanumDrive = new SampleMecanumDrive(hardwareMap);
         lift = new Lift(this, dashboard);
         intake = new Intake(this);
-        deploy = new Deploy(this);
+        scorer = new Scorer(this);
 
         telemetry.update();
     }
