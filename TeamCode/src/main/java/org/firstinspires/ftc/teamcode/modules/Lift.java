@@ -12,6 +12,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import static org.firstinspires.ftc.teamcode.modules.LiftConstants.MIN_POS;
+import static org.firstinspires.ftc.teamcode.modules.LiftConstants.MAX_POS;
+import static org.firstinspires.ftc.teamcode.modules.LiftConstants.SPEED;
+import static org.firstinspires.ftc.teamcode.modules.LiftConstants.kP;
+import static org.firstinspires.ftc.teamcode.modules.LiftConstants.kI;
+import static org.firstinspires.ftc.teamcode.modules.LiftConstants.kD;
+import static org.firstinspires.ftc.teamcode.modules.LiftConstants.kG;
+
+
 
 @Config
 public class Lift {
@@ -21,21 +30,12 @@ public class Lift {
     private final DcMotorEx motorLeft;
     public final ElapsedTime timer;
     private final FtcDashboard dashboard;
-
-    public static double kP = 0.01;
-    public static double kI = 0.005;
-    public static double kD = 0.0000055;
-    public static double kG = 0;
-
-    public static double MAX_POS = 1060, MIN_POS = 0;
-    public static double SPEED = 2000;
     private final double[] positions = {MIN_POS, (MAX_POS - MIN_POS) / 4, (MAX_POS - MIN_POS) * 3 / 4, MAX_POS};
     private double reference = 0;
     private double lastErrorLeft = 0;
     private double lastErrorRight = 0;
     private double integralSumLeft = 0;
     private double integralSumRight = 0;
-    public static double pos = 0;
 
     public Lift(LinearOpMode linearOpMode, FtcDashboard dashboard) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;

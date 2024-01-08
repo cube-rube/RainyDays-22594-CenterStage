@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.BasicDrive;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.modules.LiftConstants;
 import org.firstinspires.ftc.teamcode.modules.Scorer;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
@@ -61,7 +62,7 @@ public class AutoMode extends LinearOpMode {
         while (runtime.seconds() <= 2) {
             telemetry.addLine("Lift");
             telemetry.update();
-            lift.moveToPos(Lift.MAX_POS);
+            lift.moveToPos(LiftConstants.MAX_POS);
         }
         telemetry.addLine("Parking");
         telemetry.update();
