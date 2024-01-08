@@ -35,11 +35,12 @@ public class MainTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             basicDrive.driveFieldCentric();
+            basicDrive.telemetry();
             lift.opControl();
             intake.opControlSensor();
             scorer.opControl();
             pullUp.opControl();
-            // launch.tele();
+            // shooter.tele();
 
             telemetry.addData("Runtime", runtime.toString());
 
@@ -55,7 +56,7 @@ public class MainTeleOp extends LinearOpMode {
         intake = new Intake(this);
         scorer = new Scorer(this);
         pullUp = new PullUp(this, dashboard);
-        //launch = new Launch(this);
+        // shooter = new Shooter(this);
 
 
         telemetry.update();

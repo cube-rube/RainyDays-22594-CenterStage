@@ -22,7 +22,7 @@ public class RobotCentricDriveTrainTesting extends LinearOpMode {
 
         while (opModeIsActive()) {
             basicDrive.driveRobotCentric();
-            basicDrive.testing();
+            basicDrive.telemetry();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();

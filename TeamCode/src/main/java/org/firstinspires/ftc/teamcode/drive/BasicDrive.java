@@ -514,7 +514,7 @@ public class BasicDrive {
         }
     }
 
-    public void testing() {
+    public void telemetry() {
         telemetry.addLine("---------------");
         telemetry.addLine("BasicDrive:");
         telemetry.addData("left_front_encoder", leftFrontDrive.getCurrentPosition());

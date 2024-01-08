@@ -30,7 +30,7 @@ public class PullUp {
     private double lastError = 0;
     private double integralSum = 0;
     private boolean holding = false;
-    private ButtonState dpadDownState;
+    private ButtonState dpadDownState = ButtonState.RELEASED;
 
 
     public PullUp(LinearOpMode linearOpMode, FtcDashboard dashboard) {
