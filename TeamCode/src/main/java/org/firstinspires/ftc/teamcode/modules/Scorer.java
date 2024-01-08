@@ -48,7 +48,6 @@ public class Scorer {
 
     private ButtonState dpadDownState = ButtonState.RELEASED;
     private ButtonState dpadUpState = ButtonState.RELEASED;
-    public static double diff = 0;
     private int counterUp = -1;
     private int counterDown = -1;
     public static int delayDown = 40;
@@ -158,7 +157,7 @@ public class Scorer {
 
         switch (rotationBeamState) {
             case TAKE:
-                servoRotationBeamLeft.setPosition(takeBeamPos - diff);
+                servoRotationBeamLeft.setPosition(takeBeamPos);
                 servoRotationBeamRight.setPosition(takeBeamPos);
                 break;
             case DEPLOY:
