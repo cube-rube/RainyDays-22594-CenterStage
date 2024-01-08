@@ -210,18 +210,4 @@ public class Scorer {
         telemetry.addData("counter_down", counterDown);
 
     }
-
-    public void testDoubleBeamServos() {
-        if (gamepad.a) {
-            servoRotationBeamLeft.setPosition(takeBeamPos);
-            servoRotationBeamRight.setPosition(takeBeamPos);
-        }
-    }
-
-    public void testing() {
-        servoRotationBeamLeft.setPosition(deployBeamPos);
-        servoRotationBox.setPosition(deployBoxPos);
-        servoHoldLower.setPosition(holdPos);
-        servoHoldUpper.setPosition(holdPos);
-    }
 }
