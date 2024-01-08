@@ -11,4 +11,6 @@ public class LiftConstants {
     public static double kI = 0.005;
     public static double kD = 0.0000055;
     public static double kG = 0;
+    public static double FIRST_LINE_POS = 300; // TODO: Поменять
+    public static double SECOND_LINE_POS = 600; // TODO: Поменять
 }

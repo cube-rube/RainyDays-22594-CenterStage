@@ -36,7 +36,7 @@ public class MainTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             basicDrive.driveFieldCentric();
             basicDrive.telemetry();
-            lift.opControl();
+            // lift.opControlPos();
             intake.opControlSensor();
             scorer.opControl();
             pullUp.opControl();

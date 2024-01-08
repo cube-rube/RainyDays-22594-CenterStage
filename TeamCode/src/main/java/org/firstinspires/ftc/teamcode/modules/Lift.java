@@ -12,8 +12,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import static org.firstinspires.ftc.teamcode.modules.LiftConstants.FIRST_LINE_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.MIN_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.MAX_POS;
+import static org.firstinspires.ftc.teamcode.modules.LiftConstants.SECOND_LINE_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.SPEED;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.kP;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.kI;
@@ -63,6 +66,10 @@ public class Lift {
 
     public void opControl() {
         reference += (-gamepad.left_stick_y) * SPEED * timer.seconds();
+        PIDControl();
+    }
+
+    public void PIDControl() {
         if (reference > MAX_POS) {
             reference = MAX_POS;
         }
@@ -113,11 +120,24 @@ public class Lift {
     }
 
     public void opControlPos() {
+        if (gamepad.dpad_right) {
+            reference = MAX_POS;
+        } else if (gamepad.dpad_up) {
+            reference = SECOND_LINE_POS;
+        } else if (gamepad.dpad_left) {
+            reference = FIRST_LINE_POS;
+        } else if (gamepad.dpad_down) {
+            reference = MIN_POS;
+        }
+        PIDControl();
+    }
+
+    public void opControlPosTB() {
         if (gamepad.dpad_up) {
             for (int i = 0; i < positions.length - 1; i += 1) {
                 if (motorRight.getCurrentPosition() < positions[i + 1] && motorRight.getCurrentPosition() > positions[i]) {
                     if (reference == positions[i + 1] &&
-                            Math.abs(motorRight.getCurrentPosition() - positions[i + 1]) <= 40 &&
+                            Math.abs(motorRight.getCurrentPosition() - positions[i + 1]) <= 10 &&
                             positions.length > i + 2) {
                         reference = positions[i + 2];
                     } else {
@@ -130,7 +150,7 @@ public class Lift {
             for (int i = 0; i < positions.length - 1; i += 1) {
                 if (motorRight.getCurrentPosition() < positions[i + 1] && motorRight.getCurrentPosition() > positions[i]) {
                     if (reference == positions[i] &&
-                            Math.abs(motorRight.getCurrentPosition() - positions[i]) <= 40 &&
+                            Math.abs(motorRight.getCurrentPosition() - positions[i]) <= 10 &&
                             0 <= i - 1) {
                         reference = positions[i - 1];
                     } else {
@@ -139,9 +159,7 @@ public class Lift {
                 }
             }
         }
-        telemetry.addData("reference", reference);
-        telemetry.addData("encoderPos", motorRight.getCurrentPosition());
-        opControl();
+        PIDControl();
     }
 
 

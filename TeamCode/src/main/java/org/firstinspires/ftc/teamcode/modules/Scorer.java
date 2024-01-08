@@ -39,10 +39,10 @@ public class Scorer {
 
     public static double takeBoxPos = 0.75;
     public static double moveBoxPos = 0.839;
-    public static double deployBoxPos = 0.2;
+    public static double deployBoxPos = 0.22;
     public static double takeBeamPos = 0.23;
     public static double moveBeamPos = 0.268;
-    public static double deployBeamPos = 0.79;
+    public static double deployBeamPos = 0.782;
 
 
 
