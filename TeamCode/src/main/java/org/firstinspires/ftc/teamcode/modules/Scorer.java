@@ -37,20 +37,18 @@ public class Scorer {
     public RotationState rotationBoxState;
     public RotationState rotationBeamState;
 
-    public static double takeBoxPos = 0.75;
-    public static double moveBoxPos = 0.839;
+    public static double takeBoxPos = 0.86;
+    public static double moveBoxPos = 0.86;
     public static double deployBoxPos = 0.22;
-    public static double takeBeamPos = 0.23;
-    public static double moveBeamPos = 0.268;
-    public static double deployBeamPos = 0.782;
-
-
+    public static double takeBeamPos = 0.26;
+    public static double moveBeamPos = 0.3;
+    public static double deployBeamPos = 0.78;
 
     private ButtonState dpadDownState = ButtonState.RELEASED;
     private ButtonState dpadUpState = ButtonState.RELEASED;
     private int counterUp = -1;
     private int counterDown = -1;
-    public static int delayDown = 40;
+    public static int delayDown = 25;
     public static int delayUp = 10;
 
     public Scorer(LinearOpMode linearOpMode) {
@@ -78,6 +76,11 @@ public class Scorer {
     }
 
     public void opControl() {
+
+        //servoRotationBeamLeft.setPosition(startBeamPos);
+        //servoRotationBeamRight.setPosition(startBeamPos);
+
+
         if (gamepad.a && rotationBeamState == RotationState.DEPLOY) { // Intake
             rotationBeamState = RotationState.MOVE;
             rotationBoxState = RotationState.MOVE;
@@ -101,19 +104,19 @@ public class Scorer {
                     case HOLD: holderLowerState = HolderState.RELEASE;
                         break;
                 }
-                if (gamepad.dpad_down) {
+                if (gamepad.right_trigger > 0) {
                     dpadDownState = ButtonState.HELD;
                 } else {
                     dpadDownState = ButtonState.RELEASED;
                 }
                 break;
             case HELD:
-                if (!gamepad.dpad_down) {
+                if (gamepad.right_trigger == 0) {
                     dpadDownState = ButtonState.RELEASED;
                 }
                 break;
             case RELEASED:
-                if (gamepad.dpad_down) {
+                if (gamepad.right_trigger > 0) {
                     dpadDownState = ButtonState.PRESSED;
                 }
                 break;
@@ -128,19 +131,19 @@ public class Scorer {
                     case HOLD: holderUpperState = HolderState.RELEASE;
                         break;
                 }
-                if (gamepad.dpad_up) {
+                if (gamepad.right_bumper) {
                     dpadUpState = ButtonState.HELD;
                 } else {
                     dpadUpState = ButtonState.RELEASED;
                 }
                 break;
             case HELD:
-                if (!gamepad.dpad_up) {
+                if (!gamepad.right_bumper) {
                     dpadUpState = ButtonState.RELEASED;
                 }
                 break;
             case RELEASED:
-                if (gamepad.dpad_up) {
+                if (gamepad.right_bumper) {
                     dpadUpState = ButtonState.PRESSED;
                 }
                 break;
