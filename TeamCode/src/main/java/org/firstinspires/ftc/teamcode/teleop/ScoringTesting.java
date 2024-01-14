@@ -43,7 +43,7 @@ public class ScoringTesting extends LinearOpMode {
 
         intake = new Intake(this);
         lift = new Lift(this, dashboard);
-        scorer = new Scorer(this);
+        scorer = new Scorer(this, lift);
 
         telemetry.update();
     }

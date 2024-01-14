@@ -18,8 +18,8 @@ public class DeployTwoBeamTesting extends LinearOpMode {
     private Servo servoRotationBox;
     private Lift lift;
     public FtcDashboard dashboard;
-    public static double SERVO_POS = 0.5;
-    public static double SERVO_POS_BOX = 0.5;
+    public static double SERVO_POS = 0.88;
+    public static double SERVO_POS_BOX = 0.32;
     public static double diff = 0;
 
     @Override

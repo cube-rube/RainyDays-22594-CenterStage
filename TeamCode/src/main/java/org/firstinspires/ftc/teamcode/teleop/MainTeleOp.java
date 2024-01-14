@@ -54,7 +54,7 @@ public class MainTeleOp extends LinearOpMode {
         basicDrive = new BasicDrive(this, dashboard);
         lift = new Lift(this, dashboard);
         intake = new Intake(this);
-        scorer = new Scorer(this);
+        scorer = new Scorer(this, lift);
         pullUp = new PullUp(this, dashboard);
         // shooter = new Shooter(this);
 

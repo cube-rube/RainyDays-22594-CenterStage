@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.modules.utility.ButtonState;
 public class Scorer {
     private final Telemetry telemetry;
     private final Gamepad gamepad;
+    private final Lift lift;
     private final Servo servoRotationBox;
     private final Servo servoRotationBeamLeft;
     private final Servo servoRotationBeamRight;
@@ -37,24 +38,28 @@ public class Scorer {
     public RotationState rotationBoxState;
     public RotationState rotationBeamState;
 
-    public static double takeBoxPos = 0.86;
-    public static double moveBoxPos = 0.86;
-    public static double deployBoxPos = 0.22;
-    public static double takeBeamPos = 0.26;
-    public static double moveBeamPos = 0.3;
-    public static double deployBeamPos = 0.78;
+    public static double takeBoxPos = 0.86; // Позиция коробки при захвате
+    public static double moveBoxPos = 0.86; // Позиция коробки при перекиде
+    public static double deployBoxPos = 0.32; // Позиция коробки при выгрузке
+    public static double takeBeamPos = 0.26; // Позиция перекида при захвате
+    public static double moveBeamPos = 0.3; // Позиция перекида между
+    public static double deployBeamPos = 0.88; // Позиция перекида при выгрузке
 
     private ButtonState dpadDownState = ButtonState.RELEASED;
     private ButtonState dpadUpState = ButtonState.RELEASED;
-    private int counterUp = -1;
+    private int counterClose = -1;
+    private int counterLift = -1;
     private int counterDown = -1;
-    public static int delayDown = 25;
-    public static int delayUp = 10;
+    public static int delayDown = 22;
+    public static int delayClose = 10;
+    public static int delayLift = 20;
+    public static int liftPos = 200;
 
-    public Scorer(LinearOpMode linearOpMode) {
+    public Scorer(LinearOpMode linearOpMode, Lift lift) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad2;
+        this.lift = lift;
 
         servoRotationBox = hardwareMap.get(Servo.class, "servo_rotation_box");
 
@@ -75,24 +80,52 @@ public class Scorer {
         telemetry.addLine("Scorer: Initialized");
     }
 
+    public void close_upper() {
+        servoHoldUpper.setPosition(holdPos);
+    }
+
+    public void open_upper() {
+        servoHoldUpper.setPosition(releasePos);
+    }
+
+    public void close_lower() {
+        servoHoldLower.setPosition(holdPos);
+    }
+
+    public void open_lower() {
+        servoHoldLower.setPosition(releasePos);
+    }
+
+    public void deploy() {
+        servoRotationBox.setPosition(0.38);
+        servoRotationBeamLeft.setPosition(0.915);
+        servoRotationBeamRight.setPosition(0.915);
+    }
+
+    public void move() {
+        servoRotationBox.setPosition(moveBoxPos);
+        servoRotationBeamLeft.setPosition(moveBeamPos);
+        servoRotationBeamRight.setPosition(moveBeamPos);
+    }
+
+    public void take() {
+        servoRotationBox.setPosition(takeBoxPos);
+        servoRotationBeamLeft.setPosition(0.275);
+        servoRotationBeamRight.setPosition(0.275);
+    }
+
     public void opControl() {
-
-        //servoRotationBeamLeft.setPosition(startBeamPos);
-        //servoRotationBeamRight.setPosition(startBeamPos);
-
-
         if (gamepad.a && rotationBeamState == RotationState.DEPLOY) { // Intake
             rotationBeamState = RotationState.MOVE;
             rotationBoxState = RotationState.MOVE;
             holderLowerState = HolderState.HOLD;
             holderUpperState = HolderState.HOLD;
             counterDown = delayDown;
+            lift.setReference(liftPos);
         } else if (gamepad.y && rotationBeamState == RotationState.TAKE) { // Deploy
-            rotationBeamState = RotationState.MOVE;
-            rotationBoxState = RotationState.MOVE;
             holderLowerState = HolderState.HOLD;
             holderUpperState = HolderState.HOLD;
-            counterUp = delayUp;
+            counterClose = delayClose;
         }
 
         // HoldLower Button switch
@@ -187,20 +220,26 @@ public class Scorer {
                 break;
         }
 
-        counterUp -= 1;
-
-        if (counterUp == 0) {
+        counterClose -= 1;
+        if (counterClose == 0) {
             rotationBeamState = RotationState.DEPLOY;
             rotationBoxState = RotationState.DEPLOY;
+            lift.setReference(liftPos);
+            counterLift = delayLift;
+        }
+
+        counterLift -= 1;
+        if (counterLift == 0) {
+            lift.setReference(0);
         }
 
         counterDown -= 1;
-
         if (counterDown == 0) {
             rotationBeamState = RotationState.TAKE;
             rotationBoxState = RotationState.TAKE;
             holderUpperState = HolderState.RELEASE;
             holderLowerState = HolderState.RELEASE;
+            lift.setReference(0);
         }
 
         telemetry.addLine("---------------");
@@ -209,7 +248,7 @@ public class Scorer {
         telemetry.addData("lower_hold", holderLowerState);
         telemetry.addData("beam", rotationBeamState);
         telemetry.addData("box", rotationBoxState);
-        telemetry.addData("counter_up", counterUp);
+        telemetry.addData("counter_up", counterClose);
         telemetry.addData("counter_down", counterDown);
 
     }

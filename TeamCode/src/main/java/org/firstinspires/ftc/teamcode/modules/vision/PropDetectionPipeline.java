@@ -33,9 +33,22 @@ public class PropDetectionPipeline extends OpenCvPipeline {
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, ybcrcb, Imgproc.COLOR_RGB2YCrCb);
 
-        Rect leftRect = new Rect(0, 120, 80, 100);
-        Rect centerRect = new Rect(280, 115, 80, 80);
-        Rect rightRect = new Rect(560, 120, 80, 100);
+        Rect leftRect = null;
+        Rect centerRect = null;
+        Rect rightRect = null;
+
+        switch (ALLIANCECOLOR) {
+            case RED:
+                leftRect = new Rect(50, 140, 120, 120);
+                centerRect = new Rect(260, 120, 100, 100);
+                rightRect = new Rect(480, 140, 120, 120);
+                break;
+            case BLUE:
+                leftRect = new Rect(80, 140, 100, 100);
+                centerRect = new Rect(280, 120, 100, 100);
+                rightRect = new Rect(500, 140, 100, 100);
+                break;
+        }
 
         input.copyTo(output);
 
@@ -48,10 +61,12 @@ public class PropDetectionPipeline extends OpenCvPipeline {
                 Core.extractChannel(leftCrop, leftCrop, 1);
                 Core.extractChannel(centerCrop, centerCrop, 1);
                 Core.extractChannel(rightCrop, rightCrop, 1);
+                break;
             case BLUE:
                 Core.extractChannel(leftCrop, leftCrop, 2);
                 Core.extractChannel(centerCrop, centerCrop, 2);
                 Core.extractChannel(rightCrop, rightCrop, 2);
+                break;
         }
 
         avgLeft = Core.mean(leftCrop).val[0];

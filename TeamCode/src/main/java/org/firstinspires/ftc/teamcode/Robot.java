@@ -24,11 +24,12 @@ public class Robot {
         dashboard = FtcDashboard.getInstance();
         this.linearOpMode = linearOpMode;
         basicDrive = new BasicDrive(linearOpMode, dashboard);
-        scorer = new Scorer(linearOpMode);
+
         intake = new Intake(linearOpMode);
         shooter = new Shooter(linearOpMode);
         lift = new Lift(linearOpMode, dashboard);
         pullUp = new PullUp(linearOpMode, dashboard);
+        scorer = new Scorer(linearOpMode, lift);
     }
 
     public void operatorControl() {

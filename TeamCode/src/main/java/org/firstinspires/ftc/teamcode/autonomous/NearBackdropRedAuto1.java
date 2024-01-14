@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.modules.Camera;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
 import org.firstinspires.ftc.teamcode.modules.Scorer;
@@ -21,7 +20,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
-public class NearBackdropRedAuto extends LinearOpMode {
+public class NearBackdropRedAuto1 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
     private Intake intake;
@@ -41,13 +40,12 @@ public class NearBackdropRedAuto extends LinearOpMode {
                 webcam.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
                 while (opModeInInit()) {
                     telemetry.addLine("camera turned on");
-                    telemetry.addData("prop_pos", pipeline.getPropPosition());
+                    telemetry.addData("pos", pipeline.getPropPosition());
                     telemetry.update();
                 }
             }
             @Override
             public void onError(int errorCode) {
-                telemetry.addLine("camera doesn't turn on");
             }
         });
 
@@ -56,7 +54,7 @@ public class NearBackdropRedAuto extends LinearOpMode {
         position = pipeline.getPropPosition();
         telemetry.addData("prop_pos", position);
         telemetry.update();
-
+        
         Trajectory traj = null;
 
         switch (position) {
@@ -83,9 +81,29 @@ public class NearBackdropRedAuto extends LinearOpMode {
         sleep(700);
         intake.setPower(0);
         Trajectory traj1 = drive.trajectoryBuilder(traj.end(), true)
-                .splineTo(new Vector2d(25.5, -35), Math.toRadians(90))
+                .splineTo(new Vector2d(25.5, 35), Math.toRadians(90))
                 .build();
         drive.followTrajectory(traj1);
+        lift.moveToPos(100);
+        scorer.deploy();
+        Trajectory trajStrafe = null;
+        switch (position) {
+            case LEFT:
+                trajStrafe = drive.trajectoryBuilder(traj1.end(), false)
+                        .strafeRight(4)
+                        .build();
+                break;
+            case CENTER:
+                trajStrafe = drive.trajectoryBuilder(traj1.end(), false)
+                        .build();
+                break;
+            case RIGHT:
+                trajStrafe = drive.trajectoryBuilder(traj1.end(), false)
+                        .strafeLeft(4)
+                        .build();
+                break;
+        }
+        drive.followTrajectory(trajStrafe);
     }
 
     public void init_robot() {

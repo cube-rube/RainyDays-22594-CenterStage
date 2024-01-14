@@ -40,7 +40,7 @@ public class ScorerTesting extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
 
         lift = new Lift(this, dashboard);
-        scorer = new Scorer(this);
+        scorer = new Scorer(this, lift);
 
         telemetry.update();
     }

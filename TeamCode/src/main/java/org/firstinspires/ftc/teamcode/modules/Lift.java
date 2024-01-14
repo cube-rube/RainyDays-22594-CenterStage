@@ -39,6 +39,7 @@ public class Lift {
     private double lastErrorRight = 0;
     private double integralSumLeft = 0;
     private double integralSumRight = 0;
+    public static double pos = 0;
 
     public Lift(LinearOpMode linearOpMode, FtcDashboard dashboard) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
@@ -66,11 +67,20 @@ public class Lift {
 
     public void opControl() {
         reference += (-gamepad.left_stick_y) * SPEED * timer.seconds();
+        reference = pos;
         PIDControl();
     }
 
+    public void resetEncoders() {
+        motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     public void PIDControl() {
-        if (reference > MAX_POS) {
+       /* if (reference > MAX_POS) {
             reference = MAX_POS;
         }
         if (reference < MIN_POS) {
@@ -97,24 +107,47 @@ public class Lift {
         motorRight.setPower(outRight);
 
         lastErrorLeft = errorLeft;
-        lastErrorRight = errorRight;
+        lastErrorRight = errorRight;*/
+
+        if (reference > MAX_POS) {
+            reference = MAX_POS;
+        }
+        if (reference < MIN_POS) {
+            reference = MIN_POS;
+        }
+
+        double encoderPosLeft = motorLeft.getCurrentPosition();
+
+        double errorLeft = reference - encoderPosLeft;
+
+        double derivativeLeft = (errorLeft - lastErrorLeft) / timer.seconds();
+
+        integralSumLeft += errorLeft * timer.seconds();
+
+        double outLeft = (kP * errorLeft) + (kI * integralSumLeft) + (kD * derivativeLeft) + kG;
+
+        motorLeft.setPower(outLeft);
+        motorRight.setPower(outLeft);
+
+        lastErrorLeft = errorLeft;
+
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("reference", reference);
         packet.put("encoder_left", encoderPosLeft);
-        packet.put("encoder_right", encoderPosRight);
+        //packet.put("encoder_right", encoderPosRight);
         packet.put("errorLeft", errorLeft);
         packet.put("power_out_left", outLeft);
-        packet.put("power_out_right", outRight);
+        //packet.put("power_out_right", outRight);
         packet.put("seconds_per_call", timer.seconds());
         packet.put("IntLeft", integralSumLeft);
-        packet.put("IntRight", integralSumRight);
+        //packet.put("IntRight", integralSumRight);
         dashboard.sendTelemetryPacket(packet);
         telemetry.addLine("---------------");
         telemetry.addLine("Lift:");
         telemetry.addData("reference", reference);
         telemetry.addData("left_encoder", motorLeft.getCurrentPosition());
-        telemetry.addData("right_encoder", motorRight.getCurrentPosition());
+        //telemetry.addData("right_encoder", motorRight.getCurrentPosition());
         telemetry.addData("gp2_left_stick_y", -gamepad.left_stick_y);
         timer.reset();
     }
@@ -129,6 +162,7 @@ public class Lift {
         } else if (gamepad.dpad_down) {
             reference = MIN_POS;
         }
+        reference += (-gamepad.left_stick_y) * SPEED * timer.seconds();
         PIDControl();
     }
 
@@ -164,16 +198,17 @@ public class Lift {
 
 
     public void moveToPos(double pos) {
-        double encoderPos = motorRight.getCurrentPosition();
+        double encoderPos;
         double error;
         double lastError = 0;
         double derivative;
         double integralSum = 0;
         double out;
+        double counter = 350;
 
         timer.reset();
 
-        while (Math.abs(encoderPos - pos) > 40) {
+        while (counter > 0) {
             encoderPos = motorRight.getCurrentPosition();
             error = pos - encoderPos;
             derivative = (error - lastError) / timer.seconds();
@@ -186,7 +221,22 @@ public class Lift {
             lastError = error;
 
             timer.reset();
+            counter -= 1;
         }
+    }
+
+    public void moveToPos2(double pos) {
+        reference = pos;
+        int counter = 150;
+
+        while (counter > 0) {
+            PIDControl();
+            counter -= 1;
+        }
+    }
+
+    public void setReference(double reference) {
+        this.reference = reference;
     }
 
     public void runtimeReset() {

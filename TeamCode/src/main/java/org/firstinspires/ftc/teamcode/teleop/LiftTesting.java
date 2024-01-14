@@ -22,7 +22,7 @@ public class LiftTesting extends LinearOpMode {
         lift.timer.reset();
 
         while (opModeIsActive()) {
-            lift.testing();
+            lift.opControl();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();

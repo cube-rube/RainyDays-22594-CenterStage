@@ -52,7 +52,7 @@ public class Intake {
     public void opControlOld() {
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if (gamepad.y) {
-            motor.setPower(-0.3);
+            motor.setPower(-0.6);
         } else if (gamepad.a) {
             motor.setPower(1);
         } else {
@@ -61,10 +61,10 @@ public class Intake {
     }
     public void opControlSensor() {
         if (gamepad.y) {
-            motor.setPower(-0.3);
+            motor.setPower(0.6);
             direction = Direction.BACKWARD;
         } else if (gamepad.a) {
-            motor.setPower(1);
+            motor.setPower(-1);
             direction = Direction.FORWARD;
         } else {
             switch (direction) {
@@ -99,12 +99,45 @@ public class Intake {
         telemetry.addData("direction", direction);
         telemetry.addData("sensor_state", !sensor.getState());
     }
+
+    public void autoControlSensor() {
+        switch (direction) {
+            case FORWARD: motor.setPower(0.2);
+                break;
+            case BACKWARD: motor.setPower(-0.2);
+                break;
+            case B_STOP:
+            case F_STOP:
+                motor.setPower(0);
+                break;
+        }
+        if (!sensor.getState()) {
+            switch (direction) {
+                case FORWARD: direction = Direction.F_STOP;
+                break;
+                case BACKWARD: direction = Direction.B_STOP;
+                break;
+            }
+        } else {
+            switch (direction) {
+                case B_STOP: direction = Direction.FORWARD;
+                break;
+                case F_STOP: direction = Direction.BACKWARD;
+                break;
+            }
+        }
+    }
+
     public void testingSensor() {
         telemetry.addData("state", sensor.getState());
         telemetry.addData("string", sensor.toString());
         telemetry.addData("device", sensor.getDeviceName());
         telemetry.addData("manufacturer", sensor.getManufacturer());
         telemetry.addData("connection", sensor.getConnectionInfo());
+    }
+
+    public void setPower(double n) {
+        motor.setPower(n);
     }
 
     public void testing() {

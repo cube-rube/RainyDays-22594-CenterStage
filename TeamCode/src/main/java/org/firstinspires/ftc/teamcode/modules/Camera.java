@@ -21,12 +21,10 @@ public class Camera {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(
-                hardwareMap.get(WebcamName.class, "Camera1"), cameraMonitorViewId);
+                hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
         pipeline = new PropDetectionPipeline(color);
         webcam.setPipeline(pipeline);
-        webcam.setMillisecondsPermissionTimeout(5000);
-
         telemetry.addLine("Camera initialized");
     }
 

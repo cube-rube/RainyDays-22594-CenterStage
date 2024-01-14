@@ -1,18 +1,17 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.drive.BasicDrive;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.modules.LiftConstants;
-import org.firstinspires.ftc.teamcode.modules.Scorer;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
+import org.firstinspires.ftc.teamcode.modules.Scorer;
 import org.firstinspires.ftc.teamcode.modules.vision.AllianceColor;
 import org.firstinspires.ftc.teamcode.modules.vision.PropDetectionPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -20,132 +19,101 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-
-@Autonomous(name = "AutoMode")
+@Autonomous
 public class AutoMode extends LinearOpMode {
-    OpenCvWebcam camProp;
-    PropDetectionPipeline propPipeline = new PropDetectionPipeline(AllianceColor.BLUE);
-    PropDetectionPipeline.PropPosition propPosition = PropDetectionPipeline.PropPosition.LEFT;
-    private BasicDrive basicDrive;
-    private SampleMecanumDrive mecanumDrive;
-    private Lift lift;
+    private FtcDashboard dashboard;
+    private SampleMecanumDrive drive;
     private Intake intake;
+    private Lift lift;
     private Scorer scorer;
-    private ElapsedTime runtime = new ElapsedTime();
-    public FtcDashboard dashboard;
-
+    private OpenCvWebcam webcam;
+    private PropDetectionPipeline pipeline;
+    private PropDetectionPipeline.PropPosition position;
+    private boolean sensor = false;
     @Override
     public void runOpMode() throws InterruptedException {
-        initRobot();
-        initCamera();
+        init_robot();
 
 
-        camProp.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened() {
-                camProp.startStreaming(640, 360, OpenCvCameraRotation.UPRIGHT);
-            }
-            @Override
-            public void onError(int errorCode) {
-            }
-        });
 
         waitForStart();
-        propPosition = propPipeline.getPropPosition();
 
-        telemetry.addData("Snapshot post-START analysis", propPosition);
+        position = PropDetectionPipeline.PropPosition.CENTER;
+        telemetry.addData("prop_pos", position);
         telemetry.update();
 
-        lift.runtimeReset();
-        runtime.reset();
-        while (runtime.seconds() <= 2) {
-            telemetry.addLine("Lift");
-            telemetry.update();
-            lift.moveToPos(LiftConstants.MAX_POS);
-        }
-        telemetry.addLine("Parking");
-        telemetry.update();
-        parking();
+        Trajectory traj = null;
 
-        /*
-        switch (propPosition) {
-            case LEFT:
-                leftPixelPush();
+        scorer.close_lower();
+        scorer.take();
+
+        switch (position) {
             case RIGHT:
-                rightPixelPush();
+                traj = drive.trajectoryBuilder(new Pose2d())
+                        .splineTo(new Vector2d(24, -4.5), 5.58)
+                        .build();
+                drive.followTrajectory(traj);
+                break;
             case CENTER:
-                centerPixelPush();
+                traj = drive.trajectoryBuilder(new Pose2d())
+                        .forward(27.5)
+                        .build();
+                drive.followTrajectory(traj);
+                break;
+            case LEFT:
+                traj = drive.trajectoryBuilder(new Pose2d(), false)
+                        .splineTo(new Vector2d(24, 5.5), -5.58)
+                        .build();
+                drive.followTrajectory(traj);
+                break;
         }
-         */
-        /*
-        switch (STARTPOS) {
-            case NOT_NEAR_BACKDROP:
-                switch (ALLIANCECOLOR) {
-                    case BLUE:
-                    case RED:
-                }
-            case NEAR_BACKDROP:
-                switch (ALLIANCECOLOR) {
-                    case BLUE:
-                    case RED:
-                }
+        intake.setPower(0.25);
+        sleep(700);
+        sensor = true;
+        intake.setPower(0);
+        Trajectory traj1 = drive.trajectoryBuilder(traj.end(), true)
+                .splineTo(new Vector2d(26, -36.8), Math.toRadians(-90))
+                .build();
+        drive.followTrajectory(traj1);
+        lift.moveToPos(400);
+        scorer.deploy();
+        sleep(600);
+        lift.moveToPos(0);
+        Trajectory trajStrafe = null;
+        switch (position) {
+            case LEFT:
+                trajStrafe = drive.trajectoryBuilder(traj1.end(), false)
+                        .lineTo(new Vector2d(21.4, -36.8))
+                        .build();
+                drive.followTrajectory(trajStrafe);
+                break;
+            case CENTER:
+                break;
+            case RIGHT:
+                trajStrafe = drive.trajectoryBuilder(traj1.end(), false)
+                        .strafeRight(5.6)
+                        .build();
+                drive.followTrajectory(trajStrafe);
+                sleep(200);
+                break;
         }
-        */
+        sleep(500);
+        scorer.open_lower();
+        sleep(500);
+        lift.moveToPos(300);
+        scorer.take();
+        sleep(2000);
+        lift.moveToPos(0);
+        sleep(1000);
     }
 
-    private void leftPixelPush() {
-        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 28, 28, 2); // ВПЕРЕД
-        // СТРЕЙФ НАЛЕВО ДО ЦЕНТРА Spike Mark
-        // ВПЕРЕД
-        // ВЫПЛЕВЫВАЕМ ПИКСЕЛЬ
-    }
-
-    private void centerPixelPush() {
-        // ВПЕРЕД
-        // ВЫПЛЕВЫВАЕМ ПИКСЕЛЬ
-    }
-
-    private void rightPixelPush() {
-        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 28, 28, 3);
-        // СТРЕЙФ НАПРАВО ДО ЦЕНТРА Spike Mark
-        // ВПЕРЕД
-        // ВЫПЛЕВЫВАЕМ ПИКСЕЛЬ
-    }
-
-    private void parking() {
-        basicDrive.encoderDriveY(0, 0, 0, 1);
-        telemetry.addLine("Still");
-        telemetry.update();
-        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 35, 35, 3);
-        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, 35, 35, 3);
-        telemetry.addLine("Forward");
-        telemetry.update();
-        basicDrive.encoderDriveY(BasicDrive.DRIVE_SPEED, -2.05, -2.05,2);
-        telemetry.addLine("Back");
-        telemetry.update();
-    }
-
-    private void initCamera() {
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        camProp = OpenCvCameraFactory.getInstance().createWebcam(
-                hardwareMap.get(WebcamName.class, "Camera1"), cameraMonitorViewId);
-
-        camProp.setPipeline(propPipeline);
-        camProp.setMillisecondsPermissionTimeout(5000);
-
-        telemetry.addData("Camera: ", "Initialized");
-    }
-
-    private void initRobot() {
+    public void init_robot() {
         dashboard = FtcDashboard.getInstance();
-
-        basicDrive = new BasicDrive(this, dashboard);
-        mecanumDrive = new SampleMecanumDrive(hardwareMap);
-        lift = new Lift(this, dashboard);
+        drive = new SampleMecanumDrive(this.hardwareMap);
+        drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
         intake = new Intake(this);
-        scorer = new Scorer(this);
+        lift = new Lift(this, dashboard);
+        scorer = new Scorer(this, lift);
 
         telemetry.update();
     }
