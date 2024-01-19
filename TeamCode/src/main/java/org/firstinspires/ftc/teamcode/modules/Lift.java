@@ -80,7 +80,7 @@ public class Lift {
     }
 
     public void PIDControl() {
-       /* if (reference > MAX_POS) {
+        if (reference > MAX_POS) {
             reference = MAX_POS;
         }
         if (reference < MIN_POS) {
@@ -107,9 +107,9 @@ public class Lift {
         motorRight.setPower(outRight);
 
         lastErrorLeft = errorLeft;
-        lastErrorRight = errorRight;*/
+        lastErrorRight = errorRight;
 
-        if (reference > MAX_POS) {
+        /*if (reference > MAX_POS) {
             reference = MAX_POS;
         }
         if (reference < MIN_POS) {
@@ -129,25 +129,27 @@ public class Lift {
         motorLeft.setPower(outLeft);
         motorRight.setPower(outLeft);
 
-        lastErrorLeft = errorLeft;
+        lastErrorLeft = errorLeft; */
+
+        // 100% рабочий энкодер - левый
 
 
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("reference", reference);
         packet.put("encoder_left", encoderPosLeft);
-        //packet.put("encoder_right", encoderPosRight);
+        packet.put("encoder_right", encoderPosRight);
         packet.put("errorLeft", errorLeft);
         packet.put("power_out_left", outLeft);
-        //packet.put("power_out_right", outRight);
+        packet.put("power_out_right", outRight);
         packet.put("seconds_per_call", timer.seconds());
         packet.put("IntLeft", integralSumLeft);
-        //packet.put("IntRight", integralSumRight);
+        packet.put("IntRight", integralSumRight);
         dashboard.sendTelemetryPacket(packet);
         telemetry.addLine("---------------");
         telemetry.addLine("Lift:");
         telemetry.addData("reference", reference);
         telemetry.addData("left_encoder", motorLeft.getCurrentPosition());
-        //telemetry.addData("right_encoder", motorRight.getCurrentPosition());
+        telemetry.addData("right_encoder", motorRight.getCurrentPosition());
         telemetry.addData("gp2_left_stick_y", -gamepad.left_stick_y);
         timer.reset();
     }

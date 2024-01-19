@@ -1,5 +1,16 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+
+import static org.firstinspires.ftc.teamcode.modules.PullUpConstants.AIM_POS;
+import static org.firstinspires.ftc.teamcode.modules.PullUpConstants.LIFT_POS;
+import static org.firstinspires.ftc.teamcode.modules.PullUpConstants.MAX_POS;
+import static org.firstinspires.ftc.teamcode.modules.PullUpConstants.MIN_POS;
+import static org.firstinspires.ftc.teamcode.modules.PullUpConstants.SPEED;
+import static org.firstinspires.ftc.teamcode.modules.PullUpConstants.kD;
+import static org.firstinspires.ftc.teamcode.modules.PullUpConstants.kG;
+import static org.firstinspires.ftc.teamcode.modules.PullUpConstants.kI;
+import static org.firstinspires.ftc.teamcode.modules.PullUpConstants.kP;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -21,16 +32,20 @@ public class PullUp {
     public final ElapsedTime timer;
     private final FtcDashboard dashboard;
     private double tempPower = 0;
-    public static double kP = 0;
-    public static double kI = 0;
-    public static double kD = 0;
-    public static double kG = 0;
-    public static double speed = 2000;
     public static double reference = 0;
     private double lastError = 0;
     private double integralSum = 0;
     private boolean holding = false;
     private ButtonState dpadDownState = ButtonState.RELEASED;
+    private ButtonState dpadUpState = ButtonState.RELEASED;
+    private enum PullUpState {
+        DOWN,
+        AIMING,
+        CATCH,
+        LIFT
+    }
+    private PullUpState pullUpState = PullUpState.DOWN;
+    public static int pos = 0;
 
 
     public PullUp(LinearOpMode linearOpMode, FtcDashboard dashboard) {
@@ -88,8 +103,7 @@ public class PullUp {
         telemetry.addData("gp1_right_stick_y", -gamepad.right_stick_y);
     }
 
-    public void opControlPID() {
-        reference += (-gamepad.left_stick_y) * speed * timer.seconds();
+    public void PIDControl() {
         double encoderPos = motor.getCurrentPosition();
         double error = reference - encoderPos;
         double derivative = (error - lastError) / timer.seconds();
@@ -110,4 +124,59 @@ public class PullUp {
 
         timer.reset();
     }
+
+    public void PIDTesting() {
+        reference = pos;
+        PIDControl();
+    }
+
+    public void opControlPos() {
+        switch (dpadUpState) {
+            case PRESSED:
+                switch (pullUpState) {
+                    case DOWN: pullUpState = PullUpState.AIMING;
+                        break;
+                    case AIMING: pullUpState = PullUpState.CATCH;
+                        break;
+                    case CATCH: pullUpState = PullUpState.LIFT;
+                        break;
+                    case LIFT: pullUpState = PullUpState.DOWN;
+                        break;
+                }
+                if (gamepad.dpad_down) {
+                    dpadUpState = ButtonState.HELD;
+                } else {
+                    dpadUpState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (!gamepad.dpad_down) {
+                    dpadUpState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (gamepad.dpad_down) {
+                    dpadUpState = ButtonState.PRESSED;
+                }
+                break;
+        }
+        if (gamepad.dpad_down) {
+            pullUpState = PullUpState.DOWN;
+        }
+
+        switch (pullUpState) {
+            case DOWN: reference = MIN_POS;
+                break;
+            case AIMING: reference = AIM_POS;
+                break;
+            case CATCH: reference = MAX_POS;
+                break;
+            case LIFT: reference = LIFT_POS;
+                break;
+        }
+
+        reference += (-gamepad.left_stick_y) * SPEED * timer.seconds();
+        PIDControl();
+    }
+
 }

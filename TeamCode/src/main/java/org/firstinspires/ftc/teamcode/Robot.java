@@ -37,7 +37,7 @@ public class Robot {
             scorer.opControl();
             intake.opControlSensor();
             lift.opControl();
-            pullUp.opControlPID();
+            pullUp.PIDControl();
 
             timersReset();
         }

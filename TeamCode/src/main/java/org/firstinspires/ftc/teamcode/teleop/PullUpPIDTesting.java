@@ -21,7 +21,7 @@ public class PullUpPIDTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            pullUp.opControl();
+            pullUp.PIDTesting();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();
