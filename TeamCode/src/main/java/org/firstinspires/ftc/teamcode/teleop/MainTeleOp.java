@@ -39,7 +39,7 @@ public class MainTeleOp extends LinearOpMode {
             lift.opControlPos();
             intake.opControlSensor();
             scorer.opControl();
-            pullUp.opControl();
+            pullUp.opControlPos();
             // shooter.tele();
 
             telemetry.addData("Runtime", runtime.toString());

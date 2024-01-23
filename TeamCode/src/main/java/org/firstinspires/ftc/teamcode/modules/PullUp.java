@@ -32,7 +32,7 @@ public class PullUp {
     public final ElapsedTime timer;
     private final FtcDashboard dashboard;
     private double tempPower = 0;
-    public static double reference = 0;
+    private double reference = 0;
     private double lastError = 0;
     private double integralSum = 0;
     private boolean holding = false;
@@ -51,7 +51,7 @@ public class PullUp {
     public PullUp(LinearOpMode linearOpMode, FtcDashboard dashboard) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
-        gamepad = linearOpMode.gamepad1;
+        gamepad = linearOpMode.gamepad2;
         this.dashboard = dashboard;
         timer = new ElapsedTime();
 
@@ -115,7 +115,7 @@ public class PullUp {
         lastError = error;
 
         TelemetryPacket packet = new TelemetryPacket();
-        packet.put("reference", reference);
+        packet.put("reference_pull", reference);
         packet.put("encoder", encoderPos);
         packet.put("error", error);
         packet.put("power_out", out);
@@ -140,28 +140,25 @@ public class PullUp {
                         break;
                     case CATCH: pullUpState = PullUpState.LIFT;
                         break;
-                    case LIFT: pullUpState = PullUpState.DOWN;
+                    case LIFT: pullUpState = PullUpState.CATCH;
                         break;
                 }
-                if (gamepad.dpad_down) {
+                if (gamepad.x) {
                     dpadUpState = ButtonState.HELD;
                 } else {
                     dpadUpState = ButtonState.RELEASED;
                 }
                 break;
             case HELD:
-                if (!gamepad.dpad_down) {
+                if (!gamepad.x) {
                     dpadUpState = ButtonState.RELEASED;
                 }
                 break;
             case RELEASED:
-                if (gamepad.dpad_down) {
+                if (gamepad.x) {
                     dpadUpState = ButtonState.PRESSED;
                 }
                 break;
-        }
-        if (gamepad.dpad_down) {
-            pullUpState = PullUpState.DOWN;
         }
 
         switch (pullUpState) {
@@ -175,7 +172,12 @@ public class PullUp {
                 break;
         }
 
-        reference += (-gamepad.left_stick_y) * SPEED * timer.seconds();
+        telemetry.addData("ButtonUpState", dpadUpState);
+        reference += (-gamepad.right_stick_y) * SPEED * timer.seconds();
+        if (-gamepad.right_stick_y < 0) {
+            pullUpState = PullUpState.DOWN;
+        }
+
         PIDControl();
     }
 

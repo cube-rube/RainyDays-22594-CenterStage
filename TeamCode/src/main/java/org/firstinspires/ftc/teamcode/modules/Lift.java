@@ -18,6 +18,7 @@ import static org.firstinspires.ftc.teamcode.modules.LiftConstants.MIN_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.MAX_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.SECOND_LINE_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.SPEED;
+import static org.firstinspires.ftc.teamcode.modules.LiftConstants.THIRD_LINE_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.kP;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.kI;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.kD;
@@ -80,6 +81,7 @@ public class Lift {
     }
 
     public void PIDControl() {
+        /*
         if (reference > MAX_POS) {
             reference = MAX_POS;
         }
@@ -109,7 +111,9 @@ public class Lift {
         lastErrorLeft = errorLeft;
         lastErrorRight = errorRight;
 
-        /*if (reference > MAX_POS) {
+         */
+
+        if (reference > MAX_POS) {
             reference = MAX_POS;
         }
         if (reference < MIN_POS) {
@@ -129,18 +133,18 @@ public class Lift {
         motorLeft.setPower(outLeft);
         motorRight.setPower(outLeft);
 
-        lastErrorLeft = errorLeft; */
+        lastErrorLeft = errorLeft;
 
         // 100% рабочий энкодер - левый
 
 
         TelemetryPacket packet = new TelemetryPacket();
-        packet.put("reference", reference);
+        packet.put("reference_lift", reference);
         packet.put("encoder_left", encoderPosLeft);
-        packet.put("encoder_right", encoderPosRight);
+        // packet.put("encoder_right", encoderPosRight);
         packet.put("errorLeft", errorLeft);
         packet.put("power_out_left", outLeft);
-        packet.put("power_out_right", outRight);
+        // packet.put("power_out_right", outRight);
         packet.put("seconds_per_call", timer.seconds());
         packet.put("IntLeft", integralSumLeft);
         packet.put("IntRight", integralSumRight);
@@ -156,7 +160,7 @@ public class Lift {
 
     public void opControlPos() {
         if (gamepad.dpad_right) {
-            reference = MAX_POS;
+            reference = THIRD_LINE_POS;
         } else if (gamepad.dpad_up) {
             reference = SECOND_LINE_POS;
         } else if (gamepad.dpad_left) {
@@ -239,6 +243,10 @@ public class Lift {
 
     public void setReference(double reference) {
         this.reference = reference;
+    }
+
+    public double getReference() {
+        return reference;
     }
 
     public void runtimeReset() {

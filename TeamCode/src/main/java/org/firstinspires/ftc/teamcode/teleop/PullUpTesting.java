@@ -20,7 +20,7 @@ public class PullUpTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            pullUp.opControl();
+            pullUp.opControlPos();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();

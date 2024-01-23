@@ -10,7 +10,8 @@ public class LiftConstants {
     public static double kP = 0.01;
     public static double kI = 0;
     public static double kD = 0.0000055;
-    public static double kG = 0.1;
-    public static double FIRST_LINE_POS = 400;
-    public static double SECOND_LINE_POS = 1400;
+    public static double kG = 0.05;
+    public static double FIRST_LINE_POS = 570;
+    public static double SECOND_LINE_POS = 1300;
+    public static double THIRD_LINE_POS = 1700;
 }

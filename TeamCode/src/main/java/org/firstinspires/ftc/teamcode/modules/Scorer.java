@@ -50,7 +50,7 @@ public class Scorer {
     private int counterClose = -1;
     private int counterLift = -1;
     private int counterDown = -1;
-    public static int delayDown = 22;
+    public static int delayDown = 21;
     public static int delayClose = 10;
     public static int delayLift = 20;
     public static int liftPos = 200;
@@ -121,7 +121,7 @@ public class Scorer {
             holderLowerState = HolderState.HOLD;
             holderUpperState = HolderState.HOLD;
             counterDown = delayDown;
-            lift.setReference(liftPos);
+            lift.setReference(0);
         } else if (gamepad.y && rotationBeamState == RotationState.TAKE) { // Deploy
             holderLowerState = HolderState.HOLD;
             holderUpperState = HolderState.HOLD;
@@ -224,13 +224,17 @@ public class Scorer {
         if (counterClose == 0) {
             rotationBeamState = RotationState.DEPLOY;
             rotationBoxState = RotationState.DEPLOY;
-            lift.setReference(liftPos);
+            if (lift.getReference() == 0) {
+                lift.setReference(liftPos);
+            }
             counterLift = delayLift;
         }
 
         counterLift -= 1;
         if (counterLift == 0) {
-            lift.setReference(0);
+            if (lift.getReference() == liftPos) {
+                lift.setReference(0);
+            }
         }
 
         counterDown -= 1;
@@ -239,7 +243,6 @@ public class Scorer {
             rotationBoxState = RotationState.TAKE;
             holderUpperState = HolderState.RELEASE;
             holderLowerState = HolderState.RELEASE;
-            lift.setReference(0);
         }
 
         telemetry.addLine("---------------");

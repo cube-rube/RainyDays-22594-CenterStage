@@ -6,11 +6,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.BasicDrive;
+import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
+import org.firstinspires.ftc.teamcode.modules.Scorer;
 
 @TeleOp(name = "LiftTesting")
 public class LiftTesting extends LinearOpMode {
     public Lift lift;
+    public Scorer scorer;
+    public Intake intake;
     private final ElapsedTime runtime = new ElapsedTime();
     public FtcDashboard dashboard;
 
@@ -22,7 +26,10 @@ public class LiftTesting extends LinearOpMode {
         lift.timer.reset();
 
         while (opModeIsActive()) {
-            lift.opControl();
+            lift.opControlPos();
+            scorer.opControl();
+            intake.opControlSensor();
+
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();
@@ -33,6 +40,8 @@ public class LiftTesting extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
 
         lift = new Lift(this, dashboard);
+        scorer = new Scorer(this, lift);
+        intake = new Intake(this);
 
         telemetry.update();
     }
