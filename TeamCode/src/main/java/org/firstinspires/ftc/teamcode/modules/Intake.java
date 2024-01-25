@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.modules.utility.ButtonState;
 import org.firstinspires.ftc.teamcode.teleop.MainTeleOp;
 import org.opencv.core.Mat;
 
@@ -23,6 +24,8 @@ public class Intake {
     private final DcMotor motor;
     private final DigitalChannel sensor;
     public static double TPR = 292.1212;
+    public int counter = 0;
+    private ButtonState sensorState = ButtonState.RELEASED;
 
     public enum Direction {
         FORWARD,
@@ -134,6 +137,37 @@ public class Intake {
         telemetry.addData("device", sensor.getDeviceName());
         telemetry.addData("manufacturer", sensor.getManufacturer());
         telemetry.addData("connection", sensor.getConnectionInfo());
+    }
+
+    public void stickTesting() {
+        motor.setPower(gamepad.right_stick_y);
+
+        switch (sensorState) {
+            case PRESSED:
+                counter += 1;
+                if (!sensor.getState()) {
+                    sensorState = ButtonState.HELD;
+                } else {
+                    sensorState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (sensor.getState()) {
+                    sensorState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (!sensor.getState()) {
+                    sensorState = ButtonState.PRESSED;
+                }
+                break;
+        }
+
+        telemetry.addLine("---------------");
+        telemetry.addLine("Intake:");
+        telemetry.addData("motor_power", gamepad.right_stick_y);
+        telemetry.addData("sensor_state", sensor.getState());
+        telemetry.addData("pixel_counter", counter);
     }
 
     public void setPower(double n) {
