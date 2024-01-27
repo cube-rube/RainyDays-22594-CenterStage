@@ -6,7 +6,6 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -15,20 +14,18 @@ import org.firstinspires.ftc.teamcode.modules.Lift;
 import org.firstinspires.ftc.teamcode.modules.Scorer;
 import org.firstinspires.ftc.teamcode.modules.vision.AllianceColor;
 import org.firstinspires.ftc.teamcode.modules.vision.PropDetectionPipeline;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
-public class NearBackdropBlueAutoScorer extends LinearOpMode {
+public class NearBackdropBlueAutoScorerOld extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
     private Intake intake;
     private Lift lift;
     private Scorer scorer;
-    private Servo finger;
     private OpenCvWebcam webcam;
     private PropDetectionPipeline pipeline;
     private PropDetectionPipeline.PropPosition position;
@@ -63,11 +60,12 @@ public class NearBackdropBlueAutoScorer extends LinearOpMode {
             public void onClose() {
             }
         });
+        
+        Trajectory traj = null;
 
         scorer.close_lower();
         scorer.take();
         lift.resetEncoders();
-        finger.setPosition(0.58);
 
         switch (position) {
             case RIGHT:
@@ -123,24 +121,38 @@ public class NearBackdropBlueAutoScorer extends LinearOpMode {
     }
 
     private void move_center() {
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(14, 31))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    finger.setPosition(0.1);
-                })
-                .waitSeconds(1)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    lift.moveToPos2(300);
-                    scorer.deploy();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
-                    lift.moveToPos2(0);
-                    scorer.deploy();
-                })
-                .lineToSplineHeading(new Pose2d(44, 35, Math.toRadians(0)))
-                .forward(1)
+        Trajectory traj = drive.trajectoryBuilder(new Pose2d())
+                .lineTo(new Vector2d(26, 1.5))
                 .build();
-        drive.followTrajectorySequence(traj);
+        drive.followTrajectory(traj);
+        intake.setPower(0.25);
+        sleep(700);
+        intake.setPower(0);
+
+        Trajectory traj1 = drive.trajectoryBuilder(traj.end(), true)
+                .splineTo(new Vector2d(26.6, 33.5), Math.toRadians(90))
+                .build();
+        drive.followTrajectory(traj1);
+        lift.moveToPos2(400);
+        scorer.deploy();
+        sleep(600);
+        lift.moveToPos2(0);
+
+        sleep(500);
+        scorer.open_lower();
+        sleep(500);
+        lift.moveToPos2(300);
+        scorer.take();
+        sleep(1500);
+        lift.moveToPos2(0);
+        sleep(400);
+        /*
+        Trajectory tra = drive.trajectoryBuilder(traj1.end())
+                .splineTo(new Vector2d(2, 33.5), Math.toRadians(180))
+                .build();
+        drive.followTrajectory(tra);
+
+         */
     }
 
     private void move_right() {
@@ -187,12 +199,10 @@ public class NearBackdropBlueAutoScorer extends LinearOpMode {
     public void init_robot() {
         dashboard = FtcDashboard.getInstance();
         drive = new SampleMecanumDrive(this.hardwareMap);
-        drive.setPoseEstimate(new Pose2d(14, 60, Math.toRadians(270)));
+        drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
         intake = new Intake(this);
         lift = new Lift(this, dashboard);
         scorer = new Scorer(this, lift);
-
-        finger = hardwareMap.get(Servo.class, "servo_finger");
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
