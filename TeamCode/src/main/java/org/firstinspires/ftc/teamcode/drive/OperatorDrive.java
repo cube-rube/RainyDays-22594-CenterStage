@@ -6,7 +6,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -16,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 @Config
-public class BasicDrive {
+public class OperatorDrive {
     private final LinearOpMode linearOpMode;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
@@ -69,7 +68,7 @@ public class BasicDrive {
 
     private DriveState driveState = DriveState.ROBOT;
 
-    public BasicDrive(LinearOpMode linearOpMode, FtcDashboard dashboard) {
+    public OperatorDrive(LinearOpMode linearOpMode, FtcDashboard dashboard) {
         this.linearOpMode = linearOpMode;
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;

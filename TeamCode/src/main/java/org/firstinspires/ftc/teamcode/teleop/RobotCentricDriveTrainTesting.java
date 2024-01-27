@@ -5,11 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.BasicDrive;
+import org.firstinspires.ftc.teamcode.drive.OperatorDrive;
 
 @TeleOp(name = "RobotCentricDriveNoPIDTesting")
 public class RobotCentricDriveTrainTesting extends LinearOpMode {
-    public BasicDrive basicDrive;
+    public OperatorDrive operatorDrive;
     private final ElapsedTime runtime = new ElapsedTime();
     public FtcDashboard dashboard;
 
@@ -18,11 +18,11 @@ public class RobotCentricDriveTrainTesting extends LinearOpMode {
         initRobot();
         runtime.reset();
         waitForStart();
-        basicDrive.runtimeReset();
+        operatorDrive.runtimeReset();
 
         while (opModeIsActive()) {
-            basicDrive.driveRobotCentric();
-            basicDrive.telemetry();
+            operatorDrive.driveRobotCentric();
+            operatorDrive.telemetry();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();
@@ -32,7 +32,7 @@ public class RobotCentricDriveTrainTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        basicDrive = new BasicDrive(this, dashboard);
+        operatorDrive = new OperatorDrive(this, dashboard);
 
         telemetry.update();
     }
