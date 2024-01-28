@@ -32,6 +32,7 @@ public class NearBackdropBlueAutoScorer extends LinearOpMode {
     private OpenCvWebcam webcam;
     private PropDetectionPipeline pipeline;
     private PropDetectionPipeline.PropPosition position;
+    private final Pose2d startPose = new Pose2d(15, 63, Math.toRadians(270));
     private boolean sensor = false;
     @Override
     public void runOpMode() throws InterruptedException {
@@ -83,115 +84,93 @@ public class NearBackdropBlueAutoScorer extends LinearOpMode {
     }
 
     private void move_left() {
-        Trajectory traj = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(24, 8), Math.toRadians(25))
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(startPose)
+                .lineToSplineHeading(new Pose2d(20, 35, Math.toRadians(290)))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // release pixel
+                })
+                .waitSeconds(1)
+                .lineTo(new Vector2d(20, 42))
+                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+                    // lift up
+                    // rotate scorer
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+                    // lift down
+                })
+                .lineToSplineHeading(new Pose2d(44, 42, Math.toRadians(0)))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // release
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    // take
+                })
+                .waitSeconds(1)
                 .build();
-        drive.followTrajectory(traj);
-        intake.setPower(0.25);
-        sleep(700);
-        intake.setPower(0);
-
-        Trajectory traj1 = drive.trajectoryBuilder(traj.end(), true)
-                .splineTo(new Vector2d(26, 36), Math.toRadians(90))
-                .build();
-        drive.followTrajectory(traj1);
-        lift.moveToPos2(400);
-        scorer.deploy();
-        sleep(600);
-        lift.moveToPos2(0);
-
-        Trajectory trajStrafe = drive.trajectoryBuilder(traj1.end(), false)
-                .lineTo(new Vector2d(20, 38))
-                .build();
-        drive.followTrajectory(trajStrafe);
-        sleep(500);
-        scorer.open_lower();
-        sleep(500);
-        lift.moveToPos2(300);
-        scorer.take();
-        sleep(1500);
-        lift.moveToPos2(0);
-        sleep(400);
-
-        /*
-        Trajectory tra = drive.trajectoryBuilder(traj1.end())
-                .splineTo(new Vector2d(2, 36), Math.toRadians(180))
-                .build();
-        drive.followTrajectory(tra);
-
-         */
+        drive.followTrajectorySequence(traj);
     }
 
     private void move_center() {
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                .lineTo(new Vector2d(14, 31))
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(startPose)
+                .lineTo(new Vector2d(11.7, 31))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     finger.setPosition(0.1);
                 })
                 .waitSeconds(1)
+                .lineTo(new Vector2d(11.7, 35))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     lift.moveToPos2(300);
                     scorer.deploy();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     lift.moveToPos2(0);
-                    scorer.deploy();
                 })
                 .lineToSplineHeading(new Pose2d(44, 35, Math.toRadians(0)))
-                .forward(1)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.open_lower();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    scorer.take();
+                })
+                .waitSeconds(1)
                 .build();
         drive.followTrajectorySequence(traj);
     }
 
     private void move_right() {
-        Trajectory traj = drive.trajectoryBuilder(new Pose2d(), false)
-                .forward(15)
-                .splineTo(new Vector2d(25, -5.2), 5.58)
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(new Pose2d(15, 63, Math.toRadians(270)))
+                .lineToSplineHeading(new Pose2d(5, 35, Math.toRadians(240)))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // release pixel
+                })
+                .waitSeconds(1)
+                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+                    // lift up
+                    // rotate scorer
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+                    // lift down
+                })
+                .lineToSplineHeading(new Pose2d(44, 30, Math.toRadians(0)))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // release
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    // take
+                })
+                .waitSeconds(1)
                 .build();
-        drive.followTrajectory(traj);
-        intake.setPower(0.25);
-        sleep(700);
-        intake.setPower(0);
-
-        Trajectory traj1 = drive.trajectoryBuilder(traj.end(), true)
-                .splineTo(new Vector2d(28, 33), Math.toRadians(90))
-                .build();
-        drive.followTrajectory(traj1);
-        lift.moveToPos2(400);
-        scorer.deploy();
-        sleep(600);
-        lift.moveToPos2(0);
-
-        Trajectory trajStrafe = drive.trajectoryBuilder(traj1.end(), false)
-                .lineTo(new Vector2d(34.4, 36))
-                .build();
-        drive.followTrajectory(trajStrafe);
-        sleep(500);
-        scorer.open_lower();
-        sleep(500);
-        lift.moveToPos2(300);
-        scorer.take();
-        sleep(1500);
-        lift.moveToPos2(0);
-        sleep(400);
-
-        /*
-        Trajectory tra = drive.trajectoryBuilder(traj1.end())
-                .splineTo(new Vector2d(5, 33), Math.toRadians(180))
-                .build();
-        drive.followTrajectory(tra);
-
-         */
+        drive.followTrajectorySequence(traj);
     }
 
     public void init_robot() {
         dashboard = FtcDashboard.getInstance();
+
         drive = new SampleMecanumDrive(this.hardwareMap);
-        drive.setPoseEstimate(new Pose2d(14, 60, Math.toRadians(270)));
+        drive.setPoseEstimate(startPose);
         intake = new Intake(this);
         lift = new Lift(this, dashboard);
         scorer = new Scorer(this, lift);
-
         finger = hardwareMap.get(Servo.class, "servo_finger");
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
