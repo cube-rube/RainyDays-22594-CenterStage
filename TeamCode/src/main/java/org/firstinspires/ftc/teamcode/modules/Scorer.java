@@ -44,6 +44,8 @@ public class Scorer {
     public static double takeBeamPos = 0.26; // Позиция перекида при захвате
     public static double moveBeamPos = 0.3; // Позиция перекида между
     public static double deployBeamPos = 0.88; // Позиция перекида при выгрузке
+    public static double deployBeamAutoPos = 1;
+    public static double deployBoxAutoPos = 0.4;
 
     private ButtonState dpadDownState = ButtonState.RELEASED;
     private ButtonState dpadUpState = ButtonState.RELEASED;
@@ -101,6 +103,11 @@ public class Scorer {
         servoRotationBeamLeft.setPosition(0.915);
         servoRotationBeamRight.setPosition(0.915);
     }
+    public void deployAuto() {
+        servoRotationBox.setPosition(0.4);
+        servoRotationBeamLeft.setPosition(1);
+        servoRotationBeamRight.setPosition(1);
+    }
 
     public void move() {
         servoRotationBox.setPosition(moveBoxPos);
@@ -110,8 +117,8 @@ public class Scorer {
 
     public void take() {
         servoRotationBox.setPosition(takeBoxPos);
-        servoRotationBeamLeft.setPosition(0.275);
-        servoRotationBeamRight.setPosition(0.275);
+        servoRotationBeamLeft.setPosition(takeBeamPos);
+        servoRotationBeamRight.setPosition(takeBeamPos);
     }
 
     public void opControl() {

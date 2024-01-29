@@ -1,9 +1,16 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.NEAR_START_POSE;
+import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.PIXEL_STACK_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.PURPLE_RIGHT_HEADING;
+import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.RIGGING_DOWN_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.RIGGING_UP_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.BACKDROP_RIGHT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.PURPLE_RIGHT_VECTOR;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -22,7 +29,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
-public class NearBackdropBlueAutoScorer extends LinearOpMode {
+public class NearBackdropBlue2_1 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
     private Intake intake;
@@ -138,8 +145,8 @@ public class NearBackdropBlueAutoScorer extends LinearOpMode {
     }
 
     private void move_right() {
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(new Pose2d(15, 63, Math.toRadians(270)))
-                .lineToSplineHeading(new Pose2d(5, 35, Math.toRadians(240)))
+        TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
+                .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_VECTOR, PURPLE_RIGHT_HEADING)) // move to pixel
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     // release pixel
                 })
@@ -151,7 +158,31 @@ public class NearBackdropBlueAutoScorer extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     // lift down
                 })
-                .lineToSplineHeading(new Pose2d(44, 30, Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR, Math.toRadians(0))) // move to backdrop
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // release
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
+                    // take
+                })
+                .waitSeconds(1)
+                .lineToConstantHeading(RIGGING_UP_VECTOR)
+                .lineToConstantHeading(RIGGING_DOWN_VECTOR)
+                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+                    // intake
+                })
+                .lineToConstantHeading(PIXEL_STACK_VECTOR)
+                .waitSeconds(1)
+                .lineToConstantHeading(RIGGING_DOWN_VECTOR) // moving back to backdrop
+                .lineToConstantHeading(RIGGING_UP_VECTOR)
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                    // lift up
+                    // rotate scorer
+                })
+                .UNSTABLE_addTemporalMarkerOffset(1.1, () -> {
+                    // lift down
+                })
+                .lineToConstantHeading(BACKDROP_RIGHT_VECTOR)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     // release
                 })

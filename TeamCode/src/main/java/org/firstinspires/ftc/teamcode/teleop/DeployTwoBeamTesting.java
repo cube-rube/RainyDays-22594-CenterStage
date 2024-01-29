@@ -12,8 +12,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class DeployTwoBeamTesting extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private Servo servoRotationBeamLeft;
+    private Servo servoRotationBeamRight;
+    private Servo servoRotationBox;
+    private Servo servoHoldLower;
     public FtcDashboard dashboard;
-    public static double SERVO_POS = 0.5;
+    public static double SERVO_POS = 0.88;
+    public static double SERVO_BOX_POS = 0.32;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -23,11 +27,15 @@ public class DeployTwoBeamTesting extends LinearOpMode {
 
         while (opModeIsActive()) {
             servoRotationBeamLeft.setPosition(SERVO_POS);
-            servoRotationBeamLeft.getConnectionInfo();
+            servoRotationBeamRight.setPosition(SERVO_POS);
+            servoRotationBox.setPosition(SERVO_BOX_POS);
+            if (gamepad1.a) {
+                servoHoldLower.setPosition(0);
+            } else {
+                servoHoldLower.setPosition(0.5);
+            }
 
             telemetry.addData("Runtime", runtime.toString());
-            telemetry.addData("", servoRotationBeamLeft.getConnectionInfo());
-            telemetry.addData("", servoRotationBeamLeft.getDeviceName());
             telemetry.update();
         }
     }
@@ -35,7 +43,14 @@ public class DeployTwoBeamTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        servoRotationBeamLeft = hardwareMap.get(Servo.class, "servo_finger");
+        servoRotationBox = hardwareMap.get(Servo.class, "servo_rotation_box");
+
+        servoRotationBeamLeft = hardwareMap.get(Servo.class, "servo_rotation_beam_left");
+        servoRotationBeamRight = hardwareMap.get(Servo.class, "servo_rotation_beam_right");
+        servoRotationBeamRight.setDirection(Servo.Direction.REVERSE);
+
+        servoHoldLower = hardwareMap.get(Servo.class, "servo_hold_lower");
+
         telemetry.update();
     }
 }

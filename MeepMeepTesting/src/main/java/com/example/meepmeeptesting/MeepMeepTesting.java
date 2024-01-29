@@ -1,10 +1,16 @@
 package com.example.meepmeeptesting;
 
+import static com.example.meepmeeptesting.PositionConstants.BACKDROP_CENTER_VECTOR;
+import static com.example.meepmeeptesting.PositionConstants.BACKDROP_RIGHT_VECTOR;
+import static com.example.meepmeeptesting.PositionConstants.NEAR_START_POSE;
+import static com.example.meepmeeptesting.PositionConstants.PURPLE_CENTER_VECTOR;
+import static com.example.meepmeeptesting.PositionConstants.PURPLE_RIGHT_HEADING;
+import static com.example.meepmeeptesting.PositionConstants.PURPLE_RIGHT_VECTOR;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
-import com.noahbres.meepmeep.roadrunner.DriveTrainType;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 public class MeepMeepTesting {
@@ -13,28 +19,26 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(35, 60, 5.374996876774024, 5.374996876774024, 4.95)
-                .setDimensions(14, 14)
+                .setConstraints(35, 60, 5.375, 5.375, 4.95)
+                .setDimensions(16.7, 15.6)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(15, 63, Math.toRadians(270)))
-                                .lineToSplineHeading(new Pose2d(5, 35, Math.toRadians(240)))
+                        drive.trajectorySequenceBuilder(NEAR_START_POSE)
+                                .lineTo(PURPLE_CENTER_VECTOR)
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    // release pixel
+                                    //scorer.open_lower();
                                 })
-                                .waitSeconds(1)
-                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                                    // lift up
-                                    // rotate scorer
+                                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                                    //scorer.close_lower();
+                                    //scorer.open_upper();
+                                    //scorer.deploy();
                                 })
-                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
-                                    // lift down
-                                })
-                                .lineToSplineHeading(new Pose2d(44, 30, Math.toRadians(0)))
+                                .waitSeconds(0.1)
+                                .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_VECTOR, Math.toRadians(0)))
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    // release
+                                    //scorer.open_lower();
                                 })
-                                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                                    // take
+                                .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
+                                    //scorer.take();
                                 })
                                 .waitSeconds(1)
                                 .build()
