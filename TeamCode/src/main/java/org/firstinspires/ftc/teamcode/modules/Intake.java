@@ -31,6 +31,12 @@ public class Intake {
         BACKWARD,
     }
     private Direction direction = Direction.F_STOP;
+    private enum IntakeState {
+        EJECT,
+        INTAKE,
+        STOP
+    }
+    private IntakeState intakeState = IntakeState.STOP;
 
     public Intake(LinearOpMode linearOpMode) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
@@ -100,31 +106,56 @@ public class Intake {
         telemetry.addData("sensor_state", !sensor.getState());
     }
 
-    public void autoControlSensor() {
-        switch (direction) {
-            case FORWARD: motor.setPower(0.2);
+    public void take() {
+        intakeState = IntakeState.INTAKE;
+    }
+
+    public void stop() {
+        intakeState = IntakeState.STOP;
+    }
+
+    public void autoControl() {
+        switch (intakeState) {
+            case INTAKE:
+                motor.setPower(-1);
+                direction = Direction.FORWARD;
                 break;
-            case BACKWARD: motor.setPower(-0.2);
+            case EJECT:
+                motor.setPower(0.6);
+                direction = Direction.BACKWARD;
+            case STOP:
+                switch (direction) {
+                    case FORWARD:
+                        motor.setPower(0.2);
+                        break;
+                    case BACKWARD:
+                        motor.setPower(-0.2);
+                        break;
+                    case B_STOP:
+                    case F_STOP:
+                        motor.setPower(0);
+                        break;
+                }
+                if (!sensor.getState()) {
+                    switch (direction) {
+                        case FORWARD:
+                            direction = Direction.F_STOP;
+                            break;
+                        case BACKWARD:
+                            direction = Direction.B_STOP;
+                            break;
+                    }
+                } else {
+                    switch (direction) {
+                        case B_STOP:
+                            direction = Direction.FORWARD;
+                            break;
+                        case F_STOP:
+                            direction = Direction.BACKWARD;
+                            break;
+                    }
+                }
                 break;
-            case B_STOP:
-            case F_STOP:
-                motor.setPower(0);
-                break;
-        }
-        if (!sensor.getState()) {
-            switch (direction) {
-                case FORWARD: direction = Direction.F_STOP;
-                break;
-                case BACKWARD: direction = Direction.B_STOP;
-                break;
-            }
-        } else {
-            switch (direction) {
-                case B_STOP: direction = Direction.FORWARD;
-                break;
-                case F_STOP: direction = Direction.BACKWARD;
-                break;
-            }
         }
     }
 

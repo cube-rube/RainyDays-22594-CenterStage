@@ -31,7 +31,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
-public class NearBackdropBlue2_0 extends LinearOpMode {
+public class BlueNearScorer2_0 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
     private Intake intake;
@@ -88,9 +88,9 @@ public class NearBackdropBlue2_0 extends LinearOpMode {
         });
 
         scorer.close_lower();
-        scorer.take();
+        scorer.close_upper();
+        scorer.deployAuto();
         lift.resetEncoders();
-        finger.setPosition(0.58);
 
         while (opModeIsActive()) {
             lift.PIDControl();
@@ -130,16 +130,14 @@ public class NearBackdropBlue2_0 extends LinearOpMode {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
                 .lineTo(PURPLE_CENTER_VECTOR)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    finger.setPosition(0.1);
+                    scorer.open_lower();
                 })
-                .lineTo(PURPLE_CENTER_VECTOR.plus(new Vector2d(0, 6)))
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    lift.setReference(300);
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    scorer.close_lower();
+                    scorer.open_upper();
                     scorer.deploy();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-                    lift.setReference(0);
-                })
+                .waitSeconds(0.1)
                 .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_LEFT_VECTOR, Math.toRadians(0)))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.open_lower();

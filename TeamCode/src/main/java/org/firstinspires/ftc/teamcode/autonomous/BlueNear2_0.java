@@ -1,14 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_CENTER_LEFT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_POSE;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_CENTER_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_HEADING;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_HEADING;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.BACKDROP_CENTER_LEFT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.BACKDROP_LEFT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.BACKDROP_RIGHT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.NEAR_START_POSE;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.PURPLE_CENTER_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.PURPLE_LEFT_HEADING;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.PURPLE_LEFT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.PURPLE_RIGHT_HEADING;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.PURPLE_RIGHT_VECTOR;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -31,7 +31,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
-public class NearBackdropBlueScorer2_0 extends LinearOpMode {
+public class BlueNear2_0 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
     private Intake intake;
@@ -88,9 +88,9 @@ public class NearBackdropBlueScorer2_0 extends LinearOpMode {
         });
 
         scorer.close_lower();
-        scorer.close_upper();
-        scorer.deployAuto();
+        scorer.take();
         lift.resetEncoders();
+        finger.setPosition(0.58);
 
         while (opModeIsActive()) {
             lift.PIDControl();
@@ -128,16 +128,18 @@ public class NearBackdropBlueScorer2_0 extends LinearOpMode {
 
     private void move_center() {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
-                .lineTo(PURPLE_CENTER_VECTOR)
+                .lineTo(PURPLE_CENTER_VECTOR.plus(new Vector2d()))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    scorer.open_lower();
+                    finger.setPosition(0.1);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    scorer.close_lower();
-                    scorer.open_upper();
+                .lineTo(PURPLE_CENTER_VECTOR.plus(new Vector2d(0, 6)))
+                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+                    lift.setReference(300);
                     scorer.deploy();
                 })
-                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                    lift.setReference(0);
+                })
                 .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_LEFT_VECTOR, Math.toRadians(0)))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.open_lower();
