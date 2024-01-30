@@ -3,9 +3,12 @@ package com.example.meepmeeptesting;
 import static com.example.meepmeeptesting.PositionConstants.BACKDROP_CENTER_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.BACKDROP_RIGHT_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.NEAR_START_POSE;
+import static com.example.meepmeeptesting.PositionConstants.PIXEL_STACK_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.PURPLE_CENTER_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.PURPLE_RIGHT_HEADING;
 import static com.example.meepmeeptesting.PositionConstants.PURPLE_RIGHT_VECTOR;
+import static com.example.meepmeeptesting.PositionConstants.RIGGING_DOWN_VECTOR;
+import static com.example.meepmeeptesting.PositionConstants.RIGGING_UP_VECTOR;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -39,6 +42,29 @@ public class MeepMeepTesting {
                                 })
                                 .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
                                     //scorer.take();
+                                })
+                                .waitSeconds(0.1)
+                                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                                    // intake
+                                })
+                                .lineToConstantHeading(PIXEL_STACK_VECTOR)
+                                .waitSeconds(1)
+                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                                    // intake stop
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                                    // lift up
+                                    // rotate scorer
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(1.1, () -> {
+                                    // lift down
+                                })
+                                .lineToConstantHeading(BACKDROP_CENTER_VECTOR)
+                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                                    // release
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
+                                    // take
                                 })
                                 .waitSeconds(1)
                                 .build()
