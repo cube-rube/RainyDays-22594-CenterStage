@@ -5,8 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.BasicDrive;
-import org.firstinspires.ftc.teamcode.drive.opmode.Gyroscope;
+import org.firstinspires.ftc.teamcode.drive.OperatorDrive;
 import org.firstinspires.ftc.teamcode.modules.PullUp;
 import org.firstinspires.ftc.teamcode.modules.Scorer;
 import org.firstinspires.ftc.teamcode.modules.Intake;
@@ -15,11 +14,10 @@ import org.firstinspires.ftc.teamcode.modules.Lift;
 
 @TeleOp(name = "MainTeleOp")
 public class MainTeleOp extends LinearOpMode {
-    public BasicDrive basicDrive;
+    public OperatorDrive operatorDrive;
     public Lift lift;
     public Intake intake;
     public Scorer scorer;
-    public Gyroscope gyroscope;
     public PullUp pullUp;
     public Shooter shooter;
     private final ElapsedTime runtime = new ElapsedTime();
@@ -32,17 +30,16 @@ public class MainTeleOp extends LinearOpMode {
         waitForStart();
         lift.timer.reset();
         pullUp.timer.reset();
-        basicDrive.runtimeReset();
+        operatorDrive.runtimeReset();
 
 
         while (opModeIsActive()) {
-            basicDrive.driveFieldCentric();
-            basicDrive.telemetry();
+            operatorDrive.driveFieldCentric();
+            operatorDrive.telemetry();
             lift.opControlPos();
             intake.opControlSensor();
             scorer.opControl();
             pullUp.opControlPos();
-            gyroscope.opControl();
             // shooter.tele();
 
             telemetry.addData("Runtime", runtime.toString());
@@ -54,7 +51,7 @@ public class MainTeleOp extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        basicDrive = new BasicDrive(this, dashboard);
+        operatorDrive = new OperatorDrive(this, dashboard);
         lift = new Lift(this, dashboard);
         intake = new Intake(this);
         scorer = new Scorer(this, lift);
