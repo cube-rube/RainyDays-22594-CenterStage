@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.BACKDROP_CENTER_LEFT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.BACKDROP_CENTER_RIGHT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.BACKDROP_LEFT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.BACKDROP_RIGHT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.NEAR_START_POSE;
-import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.PURPLE_CENTER_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.PURPLE_LEFT_HEADING;
-import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.PURPLE_LEFT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.PURPLE_RIGHT_HEADING;
-import static org.firstinspires.ftc.teamcode.autonomous.BluePositionConstants.PURPLE_RIGHT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_CENTER_LEFT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_POSE;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_CENTER_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_HEADING;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_HEADING;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_VECTOR;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;

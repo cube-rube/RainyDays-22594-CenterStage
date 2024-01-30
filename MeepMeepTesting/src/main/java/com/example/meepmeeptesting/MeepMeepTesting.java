@@ -44,7 +44,7 @@ public class MeepMeepTesting {
                                     //scorer.take();
                                 })
                                 .waitSeconds(0.1)
-                                .UNSTABLE_addTemporalMarkerOffset(1, () -> {
+                                .UNSTABLE_addTemporalMarkerOffset(2.5, () -> {
                                     // intake
                                 })
                                 .lineToConstantHeading(PIXEL_STACK_VECTOR)
@@ -52,11 +52,11 @@ public class MeepMeepTesting {
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                                     // intake stop
                                 })
-                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                                .UNSTABLE_addTemporalMarkerOffset(2.1, () -> {
                                     // lift up
                                     // rotate scorer
                                 })
-                                .UNSTABLE_addTemporalMarkerOffset(1.1, () -> {
+                                .UNSTABLE_addTemporalMarkerOffset(2.4, () -> {
                                     // lift down
                                 })
                                 .lineToConstantHeading(BACKDROP_CENTER_VECTOR)
