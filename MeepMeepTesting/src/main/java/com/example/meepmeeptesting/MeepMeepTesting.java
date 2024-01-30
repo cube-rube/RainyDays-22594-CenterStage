@@ -1,6 +1,5 @@
 package com.example.meepmeeptesting;
 
-import static com.example.meepmeeptesting.PositionConstants.BACKDROP_CENTER_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.BACKDROP_RIGHT_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.NEAR_START_POSE;
 import static com.example.meepmeeptesting.PositionConstants.PIXEL_STACK_VECTOR;
@@ -26,7 +25,7 @@ public class MeepMeepTesting {
                 .setDimensions(16.7, 15.6)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(NEAR_START_POSE)
-                                .lineTo(PURPLE_CENTER_VECTOR)
+                                .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_VECTOR, PURPLE_RIGHT_HEADING))
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                                     //scorer.open_lower();
                                 })
@@ -36,7 +35,7 @@ public class MeepMeepTesting {
                                     //scorer.deploy();
                                 })
                                 .waitSeconds(0.1)
-                                .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_VECTOR, Math.toRadians(0)))
+                                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR.plus(new Vector2d(0, -1)), Math.toRadians(0))) // move to backdrop
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                                     //scorer.open_lower();
                                 })
@@ -44,27 +43,35 @@ public class MeepMeepTesting {
                                     //scorer.take();
                                 })
                                 .waitSeconds(0.1)
-                                .UNSTABLE_addTemporalMarkerOffset(2.5, () -> {
+                                .setReversed(true)
+                                .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(180))
+                                .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(180))
+                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
                                     // intake
                                 })
-                                .lineToConstantHeading(PIXEL_STACK_VECTOR)
+                                .splineToConstantHeading(PIXEL_STACK_VECTOR, Math.toRadians(180))
+                                .setReversed(false)
                                 .waitSeconds(1)
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                                     // intake stop
                                 })
-                                .UNSTABLE_addTemporalMarkerOffset(2.1, () -> {
-                                    // lift up
-                                    // rotate scorer
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(2.4, () -> {
-                                    // lift down
-                                })
-                                .lineToConstantHeading(BACKDROP_CENTER_VECTOR)
+                                .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(0))
+                                .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(0))
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    // release
+                                    // lift.setReference(570);
+                                    // scorer.deploy();
+                                })
+
+                                .splineToConstantHeading(BACKDROP_RIGHT_VECTOR.plus(new Vector2d(0, -1)), Math.toRadians(0))
+                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                                    // scorer.open_lower();
                                 })
                                 .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
-                                    // take
+                                    // scorer.open_upper();
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                                    // scorer.take();
+                                    // lift.setReference(0);
                                 })
                                 .waitSeconds(1)
                                 .build()
