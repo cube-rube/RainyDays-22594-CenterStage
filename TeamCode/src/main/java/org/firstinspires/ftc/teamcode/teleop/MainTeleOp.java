@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.BasicDrive;
+import org.firstinspires.ftc.teamcode.drive.opmode.Gyroscope;
 import org.firstinspires.ftc.teamcode.modules.PullUp;
 import org.firstinspires.ftc.teamcode.modules.Scorer;
 import org.firstinspires.ftc.teamcode.modules.Intake;
@@ -18,6 +19,7 @@ public class MainTeleOp extends LinearOpMode {
     public Lift lift;
     public Intake intake;
     public Scorer scorer;
+    public Gyroscope gyroscope;
     public PullUp pullUp;
     public Shooter shooter;
     private final ElapsedTime runtime = new ElapsedTime();
@@ -40,6 +42,7 @@ public class MainTeleOp extends LinearOpMode {
             intake.opControlSensor();
             scorer.opControl();
             pullUp.opControlPos();
+            gyroscope.opControl();
             // shooter.tele();
 
             telemetry.addData("Runtime", runtime.toString());
