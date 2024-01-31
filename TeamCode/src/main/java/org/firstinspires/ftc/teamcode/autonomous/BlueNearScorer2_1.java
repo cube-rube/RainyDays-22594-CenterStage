@@ -9,6 +9,8 @@ import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionCo
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_HEADING;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_DOWN_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_UP_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.BACKDROP_CENTER_VECTOR;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -92,6 +94,7 @@ public class BlueNearScorer2_1 extends LinearOpMode {
 
         while (opModeIsActive()) {
             lift.PIDControl();
+            intake.autoControl();
             drive.update();
             telemetry.addData("Time", getRuntime());
             telemetry.update();
@@ -128,29 +131,29 @@ public class BlueNearScorer2_1 extends LinearOpMode {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
                 .lineTo(PURPLE_CENTER_VECTOR)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    //scorer.open_lower();
+                    scorer.open_lower();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    //scorer.close_lower();
-                    //scorer.open_upper();
-                    //scorer.deploy();
+                    scorer.close_lower();
+                    scorer.open_upper();
+                    scorer.deploy();
                 })
                 .waitSeconds(0.1)
                 .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_VECTOR, Math.toRadians(0)))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    //scorer.open_lower();
+                    scorer.open_lower();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
-                    //scorer.take();
+                    scorer.take();
                 })
                 .waitSeconds(0.1)
                 .UNSTABLE_addTemporalMarkerOffset(2.5, () -> {
-                    // intake
+                    intake.take();
                 })
                 .lineToConstantHeading(PIXEL_STACK_VECTOR)
                 .waitSeconds(1)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    // intake stop
+                    intake.stop();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(2.1, () -> {
                     // lift up
@@ -173,23 +176,53 @@ public class BlueNearScorer2_1 extends LinearOpMode {
 
     private void move_right() {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
-                .splineTo(PURPLE_RIGHT_VECTOR, PURPLE_RIGHT_HEADING)
+                .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_VECTOR, PURPLE_RIGHT_HEADING))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    finger.setPosition(0.1);
+                    //scorer.open_lower();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    lift.setReference(300);
-                    scorer.deploy();
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    //scorer.close_lower();
+                    //scorer.open_upper();
+                    //scorer.deploy();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-                    lift.setReference(0);
-                })
-                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR, Math.toRadians(0)))
+                .waitSeconds(0.1)
+                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR.plus(new Vector2d(0, -1)), Math.toRadians(0))) // move to backdrop
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    scorer.open_lower();
+                    //scorer.open_lower();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
-                    scorer.take();
+                    //scorer.take();
+                })
+                .waitSeconds(0.1)
+                .setReversed(true)
+                .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(180))
+                .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(180))
+                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+                    // intake
+                })
+                .splineToConstantHeading(PIXEL_STACK_VECTOR, Math.toRadians(180))
+                .setReversed(false)
+                .waitSeconds(1)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // intake stop
+                })
+                .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(0))
+                .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // lift.setReference(570);
+                    // scorer.deploy();
+                })
+
+                .splineToConstantHeading(BACKDROP_RIGHT_VECTOR.plus(new Vector2d(0, -1)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // scorer.open_lower();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
+                    // scorer.open_upper();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                    // scorer.take();
+                    // lift.setReference(0);
                 })
                 .waitSeconds(1)
                 .build();
@@ -201,6 +234,7 @@ public class BlueNearScorer2_1 extends LinearOpMode {
 
         drive = new SampleMecanumDrive(this.hardwareMap);
         drive.setPoseEstimate(NEAR_START_POSE);
+        PoseCache.pose = NEAR_START_POSE;
         intake = new Intake(this);
         lift = new Lift(this, dashboard);
         scorer = new Scorer(this, lift);

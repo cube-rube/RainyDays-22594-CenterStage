@@ -7,9 +7,9 @@ public class PositionConstants {
     public static Pose2d NEAR_START_POSE = new Pose2d(15, 63, Math.toRadians(270));
 
     public static Vector2d PURPLE_RIGHT_VECTOR = new Vector2d(13, 42.2);
-    public static double PURPLE_RIGHT_HEADING = Math.toRadians(210);
+    public static double PURPLE_RIGHT_HEADING = Math.toRadians(230);
     public static Vector2d PURPLE_CENTER_VECTOR = new Vector2d(13, 42.2); // 13, 33 for no scorer
-    public static Vector2d PURPLE_LEFT_VECTOR = new Vector2d(20, 38);
+    public static Vector2d PURPLE_LEFT_VECTOR = new Vector2d(13, 42.2);
     public static double PURPLE_LEFT_HEADING = Math.toRadians(290);
 
     public static Vector2d BACKDROP_RIGHT_VECTOR = new Vector2d(50, 29);

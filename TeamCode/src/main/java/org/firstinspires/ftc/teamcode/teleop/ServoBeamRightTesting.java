@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
 @TeleOp
-public class ServoBoxTesting extends LinearOpMode {
+public class ServoBeamRightTesting extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
-    private Servo servoRotationBox;
+    private Servo servoRotationBeamLeft;
     public FtcDashboard dashboard;
     public static double SERVO_POS = 0.5;
 
@@ -22,7 +22,7 @@ public class ServoBoxTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            servoRotationBox.setPosition(SERVO_POS);
+            servoRotationBeamLeft.setPosition(SERVO_POS);
 
 
             telemetry.addData("Runtime", runtime.toString());
@@ -33,7 +33,8 @@ public class ServoBoxTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        servoRotationBox = hardwareMap.get(Servo.class, "servo_rotation_box");
+        servoRotationBeamLeft = hardwareMap.get(Servo.class, "servo_rotation_beam_right");
+        servoRotationBeamLeft.setDirection(Servo.Direction.REVERSE);
 
         telemetry.update();
     }

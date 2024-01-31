@@ -38,12 +38,12 @@ public class Scorer {
     public RotationState rotationBoxState;
     public RotationState rotationBeamState;
 
-    public static double takeBoxPos = 0.86; // Позиция коробки при захвате
+    public static double takeBoxPos = 0.87; // Позиция коробки при захвате
     public static double moveBoxPos = 0.86; // Позиция коробки при перекиде
     public static double deployBoxPos = 0.32; // Позиция коробки при выгрузке
-    public static double takeBeamPos = 0.26; // Позиция перекида при захвате
-    public static double moveBeamPos = 0.3; // Позиция перекида между
-    public static double deployBeamPos = 0.88; // Позиция перекида при выгрузке
+    public static double takeBeamPos = 0.02; // Позиция перекида при захвате
+    public static double moveBeamPos = 0.3 - 0.21; // Позиция перекида между
+    public static double deployBeamPos = 0.68; // Позиция перекида при выгрузке
     public static double deployBeamAutoPos = 1;
     public static double deployBoxAutoPos = 0.4;
 
@@ -100,13 +100,13 @@ public class Scorer {
 
     public void deploy() {
         servoRotationBox.setPosition(0.38);
-        servoRotationBeamLeft.setPosition(0.915);
-        servoRotationBeamRight.setPosition(0.915);
+        servoRotationBeamLeft.setPosition(0.915 - 0.21);
+        servoRotationBeamRight.setPosition(0.915 - 0.21);
     }
     public void deployAuto() {
-        servoRotationBox.setPosition(0.4);
-        servoRotationBeamLeft.setPosition(1);
-        servoRotationBeamRight.setPosition(1);
+        servoRotationBox.setPosition(deployBoxAutoPos);
+        servoRotationBeamLeft.setPosition(deployBeamAutoPos);
+        servoRotationBeamRight.setPosition(deployBeamAutoPos);
     }
 
     public void move() {

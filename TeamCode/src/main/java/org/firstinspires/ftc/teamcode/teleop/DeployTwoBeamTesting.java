@@ -16,8 +16,8 @@ public class DeployTwoBeamTesting extends LinearOpMode {
     private Servo servoRotationBox;
     private Servo servoHoldLower;
     public FtcDashboard dashboard;
-    public static double SERVO_POS = 0.88;
-    public static double SERVO_BOX_POS = 0.32;
+    public static double SERVO_POS = 0.5;
+    public static double SERVO_BOX_POS = 0.5;
 
     @Override
     public void runOpMode() throws InterruptedException {
