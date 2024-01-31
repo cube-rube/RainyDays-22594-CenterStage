@@ -59,6 +59,7 @@ public class MainTeleOp extends LinearOpMode {
         intake = new Intake(this);
         scorer = new Scorer(this, lift);
         pullUp = new PullUp(this, dashboard);
+        gyroscope = new Gyroscope(this, dashboard);
         // shooter = new Shooter(this);
 
 

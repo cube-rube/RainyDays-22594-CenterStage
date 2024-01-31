@@ -44,9 +44,6 @@ public class Gyroscope {
 
     public Gyroscope(LinearOpMode linearOpMode, FtcDashboard dashboard) {
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-
-
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad2;
@@ -125,13 +122,11 @@ public class Gyroscope {
         // one place with time passing between those places. See the lesson on
         // Timing Considerations to know why.
 
-        aButton = gamepad.a;
-
-        if (aButton){
+        if (gamepad.a){
             correctRotate();
         }
 
-        while (aButton) {
+        while (gamepad.a) {
 
             if (gamepad.dpad_up) {
 
