@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
-@TeleOp(name = "ServoBeamLeftTesting")
+@TeleOp
 public class ServoBeamLeftTesting extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private Servo servoRotationBeamLeft;
@@ -34,7 +34,6 @@ public class ServoBeamLeftTesting extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
 
         servoRotationBeamLeft = hardwareMap.get(Servo.class, "servo_rotation_beam_left");
-        servoRotationBeamLeft.setDirection(Servo.Direction.REVERSE);
 
         telemetry.update();
     }

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.modules.utility.ButtonState;
 
 
 // TODO: Сделать
@@ -17,10 +18,13 @@ public class Shooter {
     private final Servo servoHold;
     private final Servo servoRaise;
 
-    private float up_pos;
-    private float down_pos;
-    public static double hold_pos = 0;
-    public static double release_pos = -1;
+    private double up_pos = 0.15;
+    private double up_pos1 = 0.04;
+    private double down_pos = 0;
+    public static double hold_pos = 0.55;
+    public static double release_pos = 1;
+    private ButtonState stickLeftState = ButtonState.RELEASED;
+    private ButtonState stickRightState = ButtonState.RELEASED;
 
 
 
@@ -30,8 +34,8 @@ public class Shooter {
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad2;
 
-        servoHold = hardwareMap.get(Servo.class, "servo_hold");
-        servoRaise = hardwareMap.get(Servo.class, "servo_raise");
+        servoHold = hardwareMap.get(Servo.class, "servo_launch");
+        servoRaise = hardwareMap.get(Servo.class, "servo_angle");
 
         telemetry.addLine("Shooter: Initialized");
     }
@@ -50,8 +54,47 @@ public class Shooter {
     }
 
     public void teleWithPos() {
-        servoRaise.setPosition(gamepad.right_stick_y);
-        if (gamepad.b) {
+        switch (stickRightState) {
+            case PRESSED:
+                servoRaise.setPosition(servoRaise.getPosition() + 0.05);
+                if (gamepad.right_stick_button) {
+                    stickRightState = ButtonState.HELD;
+                } else {
+                    stickRightState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (!gamepad.right_stick_button) {
+                    stickRightState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (gamepad.right_stick_button) {
+                    stickRightState = ButtonState.PRESSED;
+                }
+                break;
+        }
+        switch (stickLeftState) {
+            case PRESSED:
+                servoRaise.setPosition(servoRaise.getPosition() - 0.05);
+                if (gamepad.left_stick_button) {
+                    stickLeftState = ButtonState.HELD;
+                } else {
+                    stickLeftState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (!gamepad.left_stick_button) {
+                    stickLeftState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (gamepad.left_stick_button) {
+                    stickLeftState = ButtonState.PRESSED;
+                }
+                break;
+        }
+        if (gamepad.left_trigger > 0 && gamepad.left_bumper) {
             servoHold.setPosition(release_pos);
         }
         else {

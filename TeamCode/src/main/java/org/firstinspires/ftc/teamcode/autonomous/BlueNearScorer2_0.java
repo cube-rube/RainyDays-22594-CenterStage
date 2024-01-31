@@ -180,6 +180,7 @@ public class BlueNearScorer2_0 extends LinearOpMode {
 
         drive = new SampleMecanumDrive(this.hardwareMap);
         drive.setPoseEstimate(NEAR_START_POSE);
+        PoseCache.pose = NEAR_START_POSE;
         intake = new Intake(this);
         lift = new Lift(this, dashboard);
         scorer = new Scorer(this, lift);
