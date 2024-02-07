@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.drive;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,10 +11,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.Telemetry;import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Config
 public class OperatorDrive {
@@ -67,6 +71,9 @@ public class OperatorDrive {
     private ButtonState buttonState = ButtonState.RELEASED;
 
     private DriveState driveState = DriveState.ROBOT;
+    double globalAngle;
+    Orientation lastAngles = new Orientation();
+
 
     public OperatorDrive(LinearOpMode linearOpMode, FtcDashboard dashboard) {
         this.linearOpMode = linearOpMode;
@@ -108,43 +115,6 @@ public class OperatorDrive {
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addLine("BasicDrive: Initialized");
-    }
-
-    public void tele() {
-        switch (buttonState) {
-            case PRESSED:
-                switch (driveState) {
-                    case FIELD:
-                        driveState = DriveState.ROBOT;
-                        break;
-                    case ROBOT:
-                        driveState = DriveState.FIELD;
-                }
-                if (gamepad.right_bumper) {
-                    buttonState = ButtonState.HELD;
-                } else {
-                    buttonState = ButtonState.RELEASED;
-                }
-                break;
-            case HELD:
-                if (!gamepad.right_bumper) {
-                    buttonState = ButtonState.RELEASED;
-                }
-                break;
-            case RELEASED:
-                if (gamepad.right_bumper) {
-                    buttonState = ButtonState.PRESSED;
-                }
-                break;
-        }
-        switch (driveState) {
-            case ROBOT:
-                //driveRobotCentric();
-                driveRobotCentricEncoder();
-            case FIELD:
-                driveFieldCentric();
-        }
-        telemetry.addData("Drive_State: ", driveState);
     }
 
     public void driveRobotCentricEncoder() {
@@ -191,6 +161,8 @@ public class OperatorDrive {
         max = Math.max(max, Math.abs(leftBackPower));
         max = Math.max(max, Math.abs(rightBackPower));
 
+
+
         if (max > 1.0) {
             leftFrontPower  /= max;
             rightFrontPower /= max;
@@ -198,10 +170,15 @@ public class OperatorDrive {
             rightBackPower  /= max;
         }
 
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
+        double SPEED_MULTIPLIER = 1.0;
+        if (gamepad.b) {
+            SPEED_MULTIPLIER = 0.5;
+        }
+
+        leftFrontDrive.setPower(leftFrontPower * SPEED_MULTIPLIER);
+        rightFrontDrive.setPower(rightFrontPower * SPEED_MULTIPLIER);
+        leftBackDrive.setPower(leftBackPower * SPEED_MULTIPLIER);
+        rightBackDrive.setPower(rightBackPower * SPEED_MULTIPLIER);
     }
 
     public void driveFieldCentricEncoder() {
@@ -273,8 +250,6 @@ public class OperatorDrive {
         double derivativeRb = (rightBackError - lastErRb) / timer.seconds();
         lastErRb = rightBackError;
 
-
-        /*
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("reference_lf", leftFrontPower * DRIVE_SPEED_TPS * 0.75);
         packet.put("encoder_lf", leftFrontSpeed);
@@ -285,8 +260,6 @@ public class OperatorDrive {
         packet.put("reference_rb", rightBackPower * DRIVE_SPEED_TPS * 0.75);
         packet.put("encoder_rb", rightBackSpeed);
         dashboard.sendTelemetryPacket(packet);
-        */
-
         timer.reset();
 
 
@@ -294,6 +267,17 @@ public class OperatorDrive {
         rightFrontDrive.setPower((rightFrontPower * 0.75 + kP * rightFrontError + kI * intengalSumRf + derivativeRf * kD));
         leftBackDrive.setPower((leftBackPower * 0.75 + kP * leftBackError + kI * intengalSumLb + derivativeLb * kD));
         rightBackDrive.setPower((rightBackPower * 0.75 + kP * rightBackError + kI * intengalSumRb + derivativeRb * kD));
+    }
+
+    public void drive() {
+        if (gamepad.b) {
+            backdropDrive();
+        } else {
+            driveFieldCentric();
+            reference = 0;
+            lastError = 0;
+            integralSum = 0;
+        }
     }
 
     public void driveFieldCentric() {
@@ -335,6 +319,140 @@ public class OperatorDrive {
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+    }
+
+    double lastError = 0;
+    double integralSum = 0;
+    public static PIDCoefficients coefficients = new PIDCoefficients(0.015, 0, 0);
+    double reference = 0;
+    public void backdropDrive() {
+        double angle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+        if (reference == 0) {
+            reference = 90;
+            if (angle < 0) {
+                reference = -90;
+            }
+        }
+
+
+        double error = angle - reference;
+        double derivative = (error - lastError) * timer.seconds();
+        integralSum += error * timer.seconds();
+
+        double power = (error * coefficients.p) + (integralSum * coefficients.i) + (derivative * coefficients.d);
+
+        double lateral = -gamepad.left_stick_y;
+
+        double leftFrontPower  = power + lateral;
+        double rightFrontPower = - power - lateral;
+        double leftBackPower   = power - lateral;
+        double rightBackPower  = - power + lateral;
+
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower  /= max;
+            rightFrontPower /= max;
+            leftBackPower   /= max;
+            rightBackPower  /= max;
+        }
+
+        leftFrontDrive.setPower(leftFrontPower);
+        rightFrontDrive.setPower(rightFrontPower);
+        leftBackDrive.setPower(leftBackPower);
+        rightBackDrive.setPower(rightBackPower);
+
+        TelemetryPacket packet = new TelemetryPacket();
+        packet.put("reference_angle", reference);
+        packet.put("angle", angle);
+        dashboard.sendTelemetryPacket(packet);
+
+        lastError = error;
+        timer.reset();
+    }
+
+    public void sendAngle() {
+        telemetry.addData("imu_yaw", imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+        telemetry.addData("imu_orientation", getAngle());
+    }
+
+
+     // Resets the cumulative angle tracking to zero
+    private void resetAngle() {
+        lastAngles = imu.getRobotOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle = 0;
+    }
+
+
+    /**     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right.     */
+    private double getAngle()
+    {        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+        //Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = imu.getRobotOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX, AngleUnit.DEGREES);
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+        lastAngles = angles;
+        return globalAngle;
+    }
+
+    /**     * See if we are moving in a straight line and if not return a power correction value.
+     * @return Power adjustment, + is adjust left - is adjust right.     */
+    private double checkDirection()    {
+        // The gain value determines how sensitive the correction is to direction changes.
+        // You will have to experiment with your robot to get small smooth direction changes
+        // to stay on a straight line.
+        double correction, angle, gain = .10;
+        angle = getAngle();
+        if (angle == 0)
+            correction = 0;             // no adjustment.        else
+        correction = -angle;        // reverse sign of angle for correction.
+        correction = correction * gain;
+        return correction;
+    }
+
+
+    /**
+     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.     * @param degrees Degrees to turn, + is left - is right
+     */
+    private void rotate( double power)
+    {
+        int degrees = (int)getAngle();
+
+        while (degrees < 90) {
+
+            leftFrontDrive.setPower(power);
+            leftBackDrive.setPower(power);
+            rightFrontDrive.setPower(-power);
+            rightBackDrive.setPower(-power);
+        }
+        while (degrees > 90)
+        {   // turn left.
+            leftFrontDrive.setPower(-power);
+            leftBackDrive.setPower(-power);
+            rightFrontDrive.setPower(power);
+            rightBackDrive.setPower(power);
+        }
+
+        // rotate until turn is completed.
+        // turn the motors off.
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightFrontDrive.setPower(0);
+        rightBackDrive.setPower(0);
+
+        // reset angle tracking on new heading.
     }
 
     public void forwardWithIMU() {

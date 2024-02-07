@@ -16,7 +16,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.FIRST_LINE_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.MIN_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.MAX_POS;
-import static org.firstinspires.ftc.teamcode.modules.LiftConstants.SECOND_LINE_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.SPEED;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.THIRD_LINE_POS;
 import static org.firstinspires.ftc.teamcode.modules.LiftConstants.kP;
@@ -162,7 +161,7 @@ public class Lift {
         if (gamepad.dpad_right) {
             reference = THIRD_LINE_POS;
         } else if (gamepad.dpad_up) {
-            reference = SECOND_LINE_POS;
+            //reference = SECOND_LINE_POS;
         } else if (gamepad.dpad_left) {
             reference = FIRST_LINE_POS;
         } else if (gamepad.dpad_down) {
@@ -202,36 +201,7 @@ public class Lift {
         PIDControl();
     }
 
-
     public void moveToPos(double pos) {
-        double encoderPos;
-        double error;
-        double lastError = 0;
-        double derivative;
-        double integralSum = 0;
-        double out;
-        double counter = 350;
-
-        timer.reset();
-
-        while (counter > 0) {
-            encoderPos = motorRight.getCurrentPosition();
-            error = pos - encoderPos;
-            derivative = (error - lastError) / timer.seconds();
-            integralSum += error * timer.seconds();
-            out = (kP * error) + (kI * integralSum) + (kD * derivative) + kG;
-
-            motorRight.setPower(out);
-            motorLeft.setPower(out);
-
-            lastError = error;
-
-            timer.reset();
-            counter -= 1;
-        }
-    }
-
-    public void moveToPos2(double pos) {
         reference = pos;
         int counter = 150;
 

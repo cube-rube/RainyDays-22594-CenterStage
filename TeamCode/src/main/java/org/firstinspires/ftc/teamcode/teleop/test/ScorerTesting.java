@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.teleop.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -7,13 +7,19 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.modules.Lift;
+import org.firstinspires.ftc.teamcode.modules.Scorer;
+
 @Config
-@TeleOp
-public class ServoBoxTesting extends LinearOpMode {
+@TeleOp(group = "test")
+public class ScorerTesting extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
-    private Servo servoRotationBox;
+    private Lift lift;
+    private Scorer scorer;
     public FtcDashboard dashboard;
     public static double SERVO_POS = 0.5;
+    public static double SERVO_POS_BOX = 0.5;
+    public static double diff = 0.043;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -22,8 +28,8 @@ public class ServoBoxTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            servoRotationBox.setPosition(SERVO_POS);
-
+            lift.opControl();
+            scorer.opControl();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();
@@ -33,7 +39,8 @@ public class ServoBoxTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        servoRotationBox = hardwareMap.get(Servo.class, "servo_rotation_box");
+        lift = new Lift(this, dashboard);
+        scorer = new Scorer(this, lift);
 
         telemetry.update();
     }

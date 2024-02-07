@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_CENTER_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_POSE;
@@ -11,14 +12,12 @@ import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionCo
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_DOWN_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_UP_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.BACKDROP_CENTER_VECTOR;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -33,17 +32,25 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous
+@Autonomous(name = "BlueNearScorer2+2")
 public class BlueNearScorer2_1 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
     private Intake intake;
     private Lift lift;
     private Scorer scorer;
-    private Servo finger;
     private OpenCvWebcam webcam;
     private PropDetectionPipeline pipeline;
     private PropDetectionPipeline.PropPosition position;
+    private enum TrajectoryState {
+        TRAJECTORY_1,
+        INTAKE_1,
+        TRAJECTORY_2,
+        IDLE
+    }
+    private TrajectoryState currentTrajectory = TrajectoryState.TRAJECTORY_1;
+    private TrajectorySequence traj1, traj2;
+
     @Override
     public void runOpMode() throws InterruptedException {
         init_robot();
@@ -87,12 +94,20 @@ public class BlueNearScorer2_1 extends LinearOpMode {
             }
         });
 
-        scorer.close_lower();
-        scorer.close_upper();
-        scorer.deployAuto();
-        lift.resetEncoders();
-
         while (opModeIsActive()) {
+            switch (currentTrajectory) {
+                case TRAJECTORY_1:
+                    if (!drive.isBusy()) {
+                        currentTrajectory = TrajectoryState.INTAKE_1;
+                        intake.take();
+                    }
+                    break;
+                case INTAKE_1:
+                    if (scorer.getLowerPixel() && scorer.getUpperPixel()) {
+                        currentTrajectory = TrajectoryState.TRAJECTORY_2;
+                        drive.followTrajectorySequenceAsync(traj2);
+                    }
+            }
             lift.PIDControl();
             intake.autoControl();
             drive.update();
@@ -102,80 +117,124 @@ public class BlueNearScorer2_1 extends LinearOpMode {
     }
 
     private void move_left() {
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
+        traj1 = drive.trajectorySequenceBuilder(NEAR_START_POSE)
                 .lineToSplineHeading(new Pose2d(PURPLE_LEFT_VECTOR, PURPLE_LEFT_HEADING))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    finger.setPosition(0.1);
+                    //scorer.open_lower();
                 })
-                .lineToConstantHeading(PURPLE_LEFT_VECTOR.plus(new Vector2d(0, 6)))
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    lift.setReference(300);
-                    scorer.deploy();
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    //scorer.close_lower();
+                    //scorer.open_upper();
+                    //scorer.deploy();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-                    lift.setReference(0);
-                })
-                .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_VECTOR, Math.toRadians(0)))
+                .waitSeconds(0.1)
+                .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_VECTOR, Math.toRadians(0))) // move to backdrop
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    scorer.open_lower();
+                    //scorer.open_lower();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
-                    scorer.take();
+                    //scorer.take();
+                })
+                .waitSeconds(0.1)
+                .setReversed(true)
+                .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(180))
+                .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(180))
+                .splineToConstantHeading(PIXEL_STACK_VECTOR, Math.toRadians(180))
+                .build();
+
+        traj2 = drive.trajectorySequenceBuilder(traj1.end())
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // intake stop
+                })
+                .splineToConstantHeading(RIGGING_DOWN_VECTOR.plus(new Vector2d(0, 0.5)), Math.toRadians(0))
+                .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(0, 0.5)), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // lift.setReference(570);
+                    // scorer.deploy();
+                })
+
+                .splineToConstantHeading(BACKDROP_LEFT_VECTOR, Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    // scorer.open_lower();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
+                    // scorer.open_upper();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                    // scorer.take();
+                    // lift.setReference(0);
                 })
                 .waitSeconds(1)
                 .build();
-        drive.followTrajectorySequenceAsync(traj);
+
+        drive.followTrajectorySequenceAsync(traj1);
     }
 
     private void move_center() {
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
+        traj1 = drive.trajectorySequenceBuilder(NEAR_START_POSE)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.closeLower();
+                    scorer.closeUpper();
+                    scorer.deployAuto();
+                    lift.resetEncoders();
+                })
+                .waitSeconds(0.8)
                 .lineTo(PURPLE_CENTER_VECTOR)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    scorer.open_lower();
+                    scorer.openLower();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    scorer.close_lower();
-                    scorer.open_upper();
+                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
                     scorer.deploy();
+                    scorer.closeLower();
+                    scorer.openUpper();
                 })
                 .waitSeconds(0.1)
                 .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_VECTOR, Math.toRadians(0)))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    scorer.open_lower();
+                    scorer.openLower();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
                     scorer.take();
                 })
                 .waitSeconds(0.1)
-                .UNSTABLE_addTemporalMarkerOffset(2.5, () -> {
-                    intake.take();
-                })
-                .lineToConstantHeading(PIXEL_STACK_VECTOR)
-                .waitSeconds(1)
+                .setReversed(true)
+                .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(180))
+                .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(180))
+                .splineToConstantHeading(PIXEL_STACK_VECTOR, Math.toRadians(180))
+                .build();
+
+        traj2 = drive.trajectorySequenceBuilder(traj1.end())
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    intake.eject();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(3, () -> {
                     intake.stop();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(2.1, () -> {
-                    // lift up
-                    // rotate scorer
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2.4, () -> {
-                    // lift down
-                })
-                .lineToConstantHeading(BACKDROP_CENTER_VECTOR)
+                .splineToConstantHeading(RIGGING_DOWN_VECTOR.plus(new Vector2d(0, 0.5)), Math.toRadians(0))
+                .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(0, 0.5)), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    // release
+                    lift.setReference(570);
+                    scorer.deploy();
+                })
+                .splineToConstantHeading(BACKDROP_CENTER_VECTOR, Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.openLower();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
-                    // take
+                    scorer.openUpper();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                    scorer.take();
+                    lift.setReference(0);
                 })
                 .waitSeconds(1)
                 .build();
-        drive.followTrajectorySequenceAsync(traj);
+
+        drive.followTrajectorySequenceAsync(traj1);
     }
 
     private void move_right() {
-        TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
+        traj1 = drive.trajectorySequenceBuilder(NEAR_START_POSE)
                 .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_VECTOR, PURPLE_RIGHT_HEADING))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     //scorer.open_lower();
@@ -197,12 +256,10 @@ public class BlueNearScorer2_1 extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(180))
                 .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(180))
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    // intake
-                })
                 .splineToConstantHeading(PIXEL_STACK_VECTOR, Math.toRadians(180))
-                .setReversed(false)
-                .waitSeconds(1)
+                .build();
+
+        traj2 = drive.trajectorySequenceBuilder(traj1.end())
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     // intake stop
                 })
@@ -226,7 +283,8 @@ public class BlueNearScorer2_1 extends LinearOpMode {
                 })
                 .waitSeconds(1)
                 .build();
-        drive.followTrajectorySequenceAsync(traj);
+
+        drive.followTrajectorySequenceAsync(traj1);
     }
 
     public void init_robot() {
@@ -238,7 +296,6 @@ public class BlueNearScorer2_1 extends LinearOpMode {
         intake = new Intake(this);
         lift = new Lift(this, dashboard);
         scorer = new Scorer(this, lift);
-        finger = hardwareMap.get(Servo.class, "servo_finger");
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());

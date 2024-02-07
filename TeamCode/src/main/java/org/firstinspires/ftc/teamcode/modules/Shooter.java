@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.modules.utility.ButtonState;
 
 
 // TODO: Сделать
+@Config
 public class Shooter {
     private final LinearOpMode linearOpMode;
     private final HardwareMap hardwareMap;
@@ -18,13 +20,25 @@ public class Shooter {
     private final Servo servoHold;
     private final Servo servoRaise;
 
-    private double up_pos = 0.15;
-    private double up_pos1 = 0.04;
-    private double down_pos = 0;
+    private double up_pos = 0.6-0.05;
+    private double down_pos = 0.45;
     public static double hold_pos = 0.55;
     public static double release_pos = 1;
-    private ButtonState stickLeftState = ButtonState.RELEASED;
-    private ButtonState stickRightState = ButtonState.RELEASED;
+    private ButtonState leftTriggerState = ButtonState.RELEASED;
+    private ButtonState leftBumperState = ButtonState.RELEASED;
+    private ButtonState rightStickButtonState = ButtonState.RELEASED;
+
+    private enum PositionState {
+        UP,
+        DOWN,
+        HOLDING
+    }
+    private PositionState position = PositionState.DOWN;
+    private int counter = 0;
+
+    public void start_shooter_pos(){
+        servoRaise.setPosition(down_pos);
+    }
 
 
 
@@ -41,56 +55,140 @@ public class Shooter {
     }
 
     public void tele() {
-        if (gamepad.right_trigger > 0) {
-            servoRaise.setPosition(up_pos);
-        } else if (gamepad.left_trigger > 0) {
-            servoRaise.setPosition(down_pos);
-        }
-        if (gamepad.right_bumper && gamepad.left_bumper) {
-            servoHold.setPosition(release_pos);
-        } else {
-            servoHold.setPosition(hold_pos);
-        }
-    }
-
-    public void teleWithPos() {
-        switch (stickRightState) {
+        switch (leftBumperState) {
             case PRESSED:
                 servoRaise.setPosition(servoRaise.getPosition() + 0.05);
-                if (gamepad.right_stick_button) {
-                    stickRightState = ButtonState.HELD;
+                if (gamepad.left_bumper) {
+                    leftBumperState = ButtonState.HELD;
                 } else {
-                    stickRightState = ButtonState.RELEASED;
+                    leftBumperState = ButtonState.RELEASED;
                 }
                 break;
             case HELD:
-                if (!gamepad.right_stick_button) {
-                    stickRightState = ButtonState.RELEASED;
+                if (!gamepad.left_bumper) {
+                    leftBumperState = ButtonState.RELEASED;
                 }
                 break;
             case RELEASED:
-                if (gamepad.right_stick_button) {
-                    stickRightState = ButtonState.PRESSED;
+                if (gamepad.left_bumper) {
+                    leftBumperState = ButtonState.PRESSED;
                 }
                 break;
         }
-        switch (stickLeftState) {
+        switch (leftTriggerState) {
+            case PRESSED:
+                servoRaise.setPosition(servoRaise.getPosition() - 0.05);
+                if (gamepad.left_trigger > 0) {
+                    leftTriggerState = ButtonState.HELD;
+                } else {
+                    leftTriggerState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (gamepad.left_trigger == 0) {
+                    leftTriggerState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (gamepad.left_trigger > 0) {
+                    leftTriggerState = ButtonState.PRESSED;
+                }
+                break;
+        }
+        switch (rightStickButtonState) {
+            case PRESSED:
+                switch (position) {
+                    case UP:
+                        position = PositionState.HOLDING;
+                        break;
+                    case DOWN:
+                        position = PositionState.UP;
+                        break;
+                    case HOLDING:
+                        position = PositionState.DOWN;
+                        break;
+                }
+                if (gamepad.dpad_up) {
+                    rightStickButtonState = ButtonState.HELD;
+                } else {
+                    rightStickButtonState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (!gamepad.dpad_up) {
+                    rightStickButtonState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (gamepad.dpad_up) {
+                    rightStickButtonState = ButtonState.PRESSED;
+                }
+                break;
+        }
+        switch (position) {
+            case DOWN:
+                servoRaise.setPosition(down_pos);
+                break;
+            case UP:
+                servoRaise.setPosition(up_pos);
+                position = PositionState.HOLDING;
+                break;
+            case HOLDING:
+                servoRaise.setPosition(servoRaise.getPosition());
+                break;
+        }
+        if (gamepad.b) {
+            counter += 1;
+            if (counter > 5) {
+                servoHold.setPosition(release_pos);
+            }
+        } else {
+            servoHold.setPosition(hold_pos);
+            counter = 0;
+        }
+        telemetry.addData("right_stick", rightStickButtonState);
+        telemetry.addData("left_bumper", leftBumperState);
+        telemetry.addData("left_trigger", leftTriggerState);
+    }
+
+    public void teleWithPos() {
+        switch (leftBumperState) {
+            case PRESSED:
+                servoRaise.setPosition(servoRaise.getPosition() + 0.05);
+                if (gamepad.right_stick_button) {
+                    leftBumperState = ButtonState.HELD;
+                } else {
+                    leftBumperState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (!gamepad.dpad_up) {
+                    leftBumperState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (gamepad.dpad_up) {
+                    leftBumperState = ButtonState.PRESSED;
+                }
+                break;
+        }
+        switch (leftTriggerState) {
             case PRESSED:
                 servoRaise.setPosition(servoRaise.getPosition() - 0.05);
                 if (gamepad.left_stick_button) {
-                    stickLeftState = ButtonState.HELD;
+                    leftTriggerState = ButtonState.HELD;
                 } else {
-                    stickLeftState = ButtonState.RELEASED;
+                    leftTriggerState = ButtonState.RELEASED;
                 }
                 break;
             case HELD:
                 if (!gamepad.left_stick_button) {
-                    stickLeftState = ButtonState.RELEASED;
+                    leftTriggerState = ButtonState.RELEASED;
                 }
                 break;
             case RELEASED:
                 if (gamepad.left_stick_button) {
-                    stickLeftState = ButtonState.PRESSED;
+                    leftTriggerState = ButtonState.PRESSED;
                 }
                 break;
         }

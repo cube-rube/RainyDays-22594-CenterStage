@@ -12,6 +12,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -29,6 +30,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
+@Disabled
 public class BlueNear2_1 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
@@ -72,7 +74,7 @@ public class BlueNear2_1 extends LinearOpMode {
             }
         });
 
-        scorer.close_lower();
+        scorer.closeLower();
         scorer.take();
         lift.resetEncoders();
         finger.setPosition(0.58);
@@ -126,15 +128,15 @@ public class BlueNear2_1 extends LinearOpMode {
                 .waitSeconds(1)
                 .lineTo(new Vector2d(11.7, 35))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    lift.moveToPos2(300);
+                    lift.moveToPos(300);
                     scorer.deploy();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-                    lift.moveToPos2(0);
+                    lift.moveToPos(0);
                 })
                 .lineToSplineHeading(new Pose2d(44, 35, Math.toRadians(0)))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    scorer.open_lower();
+                    scorer.openLower();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     scorer.take();

@@ -1,19 +1,20 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.teleop.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
 import org.firstinspires.ftc.teamcode.modules.Scorer;
 
 @Config
-@TeleOp(name = "ScorerTesting")
-public class ScorerTesting extends LinearOpMode {
+@TeleOp(group = "test")
+public class ScoringTesting extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
+    private Intake intake;
     private Lift lift;
     private Scorer scorer;
     public FtcDashboard dashboard;
@@ -28,6 +29,7 @@ public class ScorerTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+            intake.opControlOld();
             lift.opControl();
             scorer.opControl();
 
@@ -39,6 +41,7 @@ public class ScorerTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
+        intake = new Intake(this);
         lift = new Lift(this, dashboard);
         scorer = new Scorer(this, lift);
 

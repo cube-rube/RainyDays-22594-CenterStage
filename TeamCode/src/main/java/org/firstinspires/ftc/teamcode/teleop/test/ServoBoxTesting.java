@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.teleop.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
-@TeleOp
-public class ServoBeamLeftTesting extends LinearOpMode {
+@TeleOp(group = "test")
+public class ServoBoxTesting extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
-    private Servo servoRotationBeamLeft;
+    private Servo servoRotationBox;
     public FtcDashboard dashboard;
     public static double SERVO_POS = 0.5;
 
@@ -22,7 +22,7 @@ public class ServoBeamLeftTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            servoRotationBeamLeft.setPosition(SERVO_POS);
+            servoRotationBox.setPosition(SERVO_POS);
 
 
             telemetry.addData("Runtime", runtime.toString());
@@ -33,7 +33,7 @@ public class ServoBeamLeftTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        servoRotationBeamLeft = hardwareMap.get(Servo.class, "servo_rotation_beam_left");
+        servoRotationBox = hardwareMap.get(Servo.class, "servo_rotation_box");
 
         telemetry.update();
     }
