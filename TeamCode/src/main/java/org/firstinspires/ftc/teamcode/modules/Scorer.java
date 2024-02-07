@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.modules;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -39,13 +40,13 @@ public class Scorer {
     public RotationState rotationBeamState;
 
     public static double takeBoxPos = 0.87; // Позиция коробки при захвате
-    public static double moveBoxPos = 0.86; // Позиция коробки при перекиде
-    public static double deployBoxPos = 0.32; // Позиция коробки при выгрузке
-    public static double takeBeamPos = 0.02; // Позиция перекида при захвате
-    public static double moveBeamPos = 0.3 - 0.21; // Позиция перекида между
+    public static double takeBeamPos = 0.065; // Позиция перекида при захвате
+    public static double deployBoxPos = 0.34; // Позиция коробки при выгрузке
     public static double deployBeamPos = 0.68; // Позиция перекида при выгрузке
-    public static double deployBeamAutoPos = 1;
-    public static double deployBoxAutoPos = 0.4;
+    public static double moveBoxPos = 0.87; // Позиция коробки при перекиде
+    public static double moveBeamPos = 0.1; // Позиция перекида между
+    public static double deployBeamAutoPos = 0.87;
+    public static double deployBoxAutoPos = 0.45;
 
     private ButtonState dpadDownState = ButtonState.RELEASED;
     private ButtonState dpadUpState = ButtonState.RELEASED;
@@ -56,6 +57,7 @@ public class Scorer {
     public static int delayClose = 10;
     public static int delayLift = 20;
     public static int liftPos = 200;
+    public DigitalChannel sensorLower, sensorUpper;
 
     public Scorer(LinearOpMode linearOpMode, Lift lift) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
@@ -73,6 +75,11 @@ public class Scorer {
         servoHoldUpper = hardwareMap.get(Servo.class, "servo_hold_upper");
         servoHoldUpper.setDirection(Servo.Direction.REVERSE);
 
+        sensorLower = hardwareMap.get(DigitalChannel.class, "sensor_lower");
+        sensorLower.setMode(DigitalChannel.Mode.INPUT);
+
+        sensorUpper = hardwareMap.get(DigitalChannel.class, "sensor_upper");
+        sensorUpper.setMode(DigitalChannel.Mode.INPUT);
 
         rotationBoxState = RotationState.TAKE;
         rotationBeamState = RotationState.TAKE;
@@ -82,20 +89,28 @@ public class Scorer {
         telemetry.addLine("Scorer: Initialized");
     }
 
-    public void close_upper() {
+    public void closeUpper() {
         servoHoldUpper.setPosition(holdPos);
     }
 
-    public void open_upper() {
+    public void openUpper() {
         servoHoldUpper.setPosition(releasePos);
     }
 
-    public void close_lower() {
+    public void closeLower() {
         servoHoldLower.setPosition(holdPos);
     }
 
-    public void open_lower() {
+    public void openLower() {
         servoHoldLower.setPosition(releasePos);
+    }
+
+    public boolean getLowerPixel() {
+        return !sensorLower.getState();
+    }
+
+    public boolean getUpperPixel() {
+        return !sensorUpper.getState();
     }
 
     public void deploy() {

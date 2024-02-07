@@ -49,7 +49,7 @@ public class Intake {
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addLine("Intake: initializing sensor");
-        sensor = hardwareMap.get(DigitalChannel.class, "light_sensor");
+        sensor = hardwareMap.get(DigitalChannel.class, "sensor_intake");
         sensor.setMode(DigitalChannel.Mode.INPUT);
 
         telemetry.addLine("Intake: Initialized");
@@ -110,6 +110,10 @@ public class Intake {
         intakeState = IntakeState.INTAKE;
     }
 
+    public void eject() {
+        intakeState = IntakeState.EJECT;
+    }
+
     public void stop() {
         intakeState = IntakeState.STOP;
     }
@@ -117,12 +121,13 @@ public class Intake {
     public void autoControl() {
         switch (intakeState) {
             case INTAKE:
-                motor.setPower(-1);
+                motor.setPower(-0.7);
                 direction = Direction.FORWARD;
                 break;
             case EJECT:
-                motor.setPower(0.6);
+                motor.setPower(1);
                 direction = Direction.BACKWARD;
+                break;
             case STOP:
                 switch (direction) {
                     case FORWARD:

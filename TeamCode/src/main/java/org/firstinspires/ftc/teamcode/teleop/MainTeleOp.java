@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -19,7 +20,9 @@ public class MainTeleOp extends LinearOpMode {
     public Intake intake;
     public Scorer scorer;
     public PullUp pullUp;
+
     public Shooter shooter;
+    //public guro gyroscope;
     private final ElapsedTime runtime = new ElapsedTime();
     public FtcDashboard dashboard;
 
@@ -29,6 +32,9 @@ public class MainTeleOp extends LinearOpMode {
         runtime.reset();
         waitForStart();
         lift.timer.reset();
+
+        shooter.start_shooter_pos(); //может все сломать
+
         pullUp.timer.reset();
         operatorDrive.runtimeReset();
 
@@ -40,7 +46,7 @@ public class MainTeleOp extends LinearOpMode {
             intake.opControlSensor();
             scorer.opControl();
             pullUp.opControlPos();
-            // shooter.tele();
+            shooter.tele();
 
             telemetry.addData("Runtime", runtime.toString());
 
@@ -50,14 +56,14 @@ public class MainTeleOp extends LinearOpMode {
 
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
+        MultipleTelemetry mulTelemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
         operatorDrive = new OperatorDrive(this, dashboard);
         lift = new Lift(this, dashboard);
         intake = new Intake(this);
         scorer = new Scorer(this, lift);
         pullUp = new PullUp(this, dashboard);
-        // shooter = new Shooter(this);
-
+        shooter = new Shooter(this);
 
         telemetry.update();
     }

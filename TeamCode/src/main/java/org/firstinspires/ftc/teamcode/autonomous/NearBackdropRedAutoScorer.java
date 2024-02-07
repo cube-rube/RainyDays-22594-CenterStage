@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -20,6 +21,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous
+@Disabled
 public class NearBackdropRedAutoScorer extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
@@ -66,7 +68,7 @@ public class NearBackdropRedAutoScorer extends LinearOpMode {
             }
         });
 
-        scorer.close_lower();
+        scorer.closeLower();
         scorer.take();
         lift.resetEncoders();
 
@@ -97,22 +99,22 @@ public class NearBackdropRedAutoScorer extends LinearOpMode {
                 .splineTo(new Vector2d(25.3, -32.88), Math.toRadians(-90))
                 .build();
         drive.followTrajectory(traj1);
-        lift.moveToPos2(400);
+        lift.moveToPos(400);
         scorer.deploy();
         sleep(600);
-        lift.moveToPos2(0);
+        lift.moveToPos(0);
 
         Trajectory trajStrafe = drive.trajectoryBuilder(traj1.end(), false)
                 .strafeLeft(8)
                 .build();
         drive.followTrajectory(trajStrafe);
         sleep(500);
-        scorer.open_lower();
+        scorer.openLower();
         sleep(500);
-        lift.moveToPos2(300);
+        lift.moveToPos(300);
         scorer.take();
         sleep(1500);
-        lift.moveToPos2(0);
+        lift.moveToPos(0);
         sleep(400);
 
         Trajectory tra = drive.trajectoryBuilder(trajStrafe.end())
@@ -134,18 +136,18 @@ public class NearBackdropRedAutoScorer extends LinearOpMode {
                 .splineTo(new Vector2d(23.71, -32.38), Math.toRadians(-90))
                 .build();
         drive.followTrajectory(traj1);
-        lift.moveToPos2(400);
+        lift.moveToPos(400);
         scorer.deploy();
         sleep(600);
-        lift.moveToPos2(0);
+        lift.moveToPos(0);
 
         sleep(500);
-        scorer.open_lower();
+        scorer.openLower();
         sleep(500);
-        lift.moveToPos2(300);
+        lift.moveToPos(300);
         scorer.take();
         sleep(1500);
-        lift.moveToPos2(0);
+        lift.moveToPos(0);
         sleep(400);
 
 
@@ -171,21 +173,21 @@ public class NearBackdropRedAutoScorer extends LinearOpMode {
                 .splineTo(new Vector2d(26.5, -32.88), Math.toRadians(-90))
                 .build();
         drive.followTrajectory(traj1);
-        lift.moveToPos2(400);
+        lift.moveToPos(400);
         scorer.deploy();
         sleep(450);
-        lift.moveToPos2(0);
+        lift.moveToPos(0);
 
         Trajectory trajStrafe = drive.trajectoryBuilder(traj1.end(), false)
                 .lineTo(new Vector2d(34.7, -34.4))
                 .build();
         drive.followTrajectory(trajStrafe);
-        scorer.open_lower();
+        scorer.openLower();
         sleep(500);
-        lift.moveToPos2(300);
+        lift.moveToPos(300);
         scorer.take();
         sleep(1500);
-        lift.moveToPos2(0);
+        lift.moveToPos(0);
         sleep(100);
 
         Trajectory tra = drive.trajectoryBuilder(traj1.end())

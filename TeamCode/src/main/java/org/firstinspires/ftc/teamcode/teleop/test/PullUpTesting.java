@@ -1,15 +1,14 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.teleop.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.modules.Lift;
 import org.firstinspires.ftc.teamcode.modules.PullUp;
 
-@TeleOp(name = "PullUpPIDTesting")
-public class PullUpPIDTesting extends LinearOpMode {
+@TeleOp(group = "test")
+public class PullUpTesting extends LinearOpMode {
     public PullUp pullUp;
     private final ElapsedTime runtime = new ElapsedTime();
     public FtcDashboard dashboard;
@@ -21,7 +20,7 @@ public class PullUpPIDTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            pullUp.PIDTesting();
+            pullUp.opControlPos();
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.teleop.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
-@TeleOp(name = "DeployTwoBeamTesting")
+@TeleOp(group = "test")
 public class DeployTwoBeamTesting extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private Servo servoRotationBeamLeft;
