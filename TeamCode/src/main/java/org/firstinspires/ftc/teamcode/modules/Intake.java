@@ -121,7 +121,7 @@ public class Intake {
     public void autoControl() {
         switch (intakeState) {
             case INTAKE:
-                motor.setPower(-0.7);
+                motor.setPower(-0.5);
                 direction = Direction.FORWARD;
                 break;
             case EJECT:

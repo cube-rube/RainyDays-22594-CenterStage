@@ -24,5 +24,5 @@ public class PositionConstants {
 
     public static Vector2d RIGGING_UP_VECTOR = new Vector2d(5, -58);
     public static Vector2d RIGGING_DOWN_VECTOR = new Vector2d(-30, -58);
-    public static Vector2d PIXEL_STACK_VECTOR = new Vector2d(-60,  -35);
+    public static Vector2d PIXEL_STACK_VECTOR = new Vector2d(-62,  -35);
 }
