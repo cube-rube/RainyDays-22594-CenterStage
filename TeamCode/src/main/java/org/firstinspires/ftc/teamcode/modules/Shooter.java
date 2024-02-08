@@ -146,6 +146,8 @@ public class Shooter {
             servoHold.setPosition(hold_pos);
             counter = 0;
         }
+        telemetry.addLine("---------------");
+        telemetry.addLine("Shooter:");
         telemetry.addData("right_stick", rightStickButtonState);
         telemetry.addData("left_bumper", leftBumperState);
         telemetry.addData("left_trigger", leftTriggerState);

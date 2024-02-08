@@ -4,7 +4,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 public class RedPositionConstants {
-    public static Pose2d NEAR_START_POSE = new Pose2d(15, -63, Math.toRadians(90));
+    public static Pose2d NEAR_START_POSE = new Pose2d(15, -63 + 0.19, Math.toRadians(90));
 
     public static Vector2d PURPLE_LEFT_VECTOR = new Vector2d(11, -37);
     public static double PURPLE_LEFT_HEADING = Math.toRadians(155);

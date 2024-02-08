@@ -122,6 +122,9 @@ public class PullUp {
         packet.put("seconds_per_call", timer.seconds());
         dashboard.sendTelemetryPacket(packet);
 
+        telemetry.addData("reference_pull", reference);
+        telemetry.addData("encoder", encoderPos);
+
         timer.reset();
     }
 
@@ -172,11 +175,16 @@ public class PullUp {
                 break;
         }
 
-        telemetry.addData("ButtonUpState", dpadUpState);
         reference += (-gamepad.right_stick_y) * SPEED * timer.seconds();
         if (-gamepad.right_stick_y < 0) {
             pullUpState = PullUpState.DOWN;
         }
+
+        telemetry.addLine("---------------");
+        telemetry.addLine("PullUp:");
+        telemetry.addData("motor_power: ", motor.getPower());
+        telemetry.addData("x_state", dpadUpState);
+        telemetry.addData("pull_up_state", pullUpState);
 
         PIDControl();
     }
