@@ -14,15 +14,15 @@ public class RedPositionConstants {
 
 
 
-    public static Vector2d BACKDROP_LEFT_VECTOR = new Vector2d(47.85, -29);
-    public static Vector2d BACKDROP_CENTER_VECTOR = new Vector2d(47.85, -35);
-    public static Vector2d BACKDROP_CENTER_LEFT_VECTOR = new Vector2d(47.85, -35);
-    public static Vector2d BACKDROP_CENTER_RIGHT_VECTOR = new Vector2d(47.85, -37.5);
-    public static Vector2d BACKDROP_RIGHT_VECTOR = new Vector2d(47.85, -42);
+    public static Vector2d BACKDROP_LEFT_VECTOR = new Vector2d(48.2, -29);
+    public static Vector2d BACKDROP_CENTER_VECTOR = new Vector2d(48.2, -35);
+    public static Vector2d BACKDROP_CENTER_LEFT_VECTOR = new Vector2d(48.2, -35);
+    public static Vector2d BACKDROP_CENTER_RIGHT_VECTOR = new Vector2d(48.2, -37.5);
+    public static Vector2d BACKDROP_RIGHT_VECTOR = new Vector2d(48.2, -42);
 
     public static Vector2d DIFF_VECTOR = new Vector2d(0, -0.5);
 
-    public static Vector2d RIGGING_UP_VECTOR = new Vector2d(5, -58);
-    public static Vector2d RIGGING_DOWN_VECTOR = new Vector2d(-30, -58);
+    public static Vector2d RIGGING_UP_VECTOR = new Vector2d(5, -59);
+    public static Vector2d RIGGING_DOWN_VECTOR = new Vector2d(-30, -59);
     public static Vector2d PIXEL_STACK_VECTOR = new Vector2d(-59.3,  -35);
 }

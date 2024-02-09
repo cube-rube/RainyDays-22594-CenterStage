@@ -118,10 +118,14 @@ public class Intake {
         intakeState = IntakeState.STOP;
     }
 
+    public boolean isMoving() {
+        return motor.getPower() != 0;
+    }
+
     public void autoControl() {
         switch (intakeState) {
             case INTAKE:
-                motor.setPower(-0.5);
+                motor.setPower(-0.7);
                 direction = Direction.FORWARD;
                 break;
             case EJECT:

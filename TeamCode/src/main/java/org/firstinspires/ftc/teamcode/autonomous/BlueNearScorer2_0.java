@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_CENTER_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DIFF_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_POSE;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_CENTER_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_HEADING;
@@ -95,24 +96,36 @@ public class BlueNearScorer2_0 extends LinearOpMode {
 
     private void move_left() {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.closeLower();
+                    scorer.closeUpper();
+                    scorer.deployAuto();
+                    lift.resetEncoders();
+                })
+                .waitSeconds(0.8)
                 .lineToSplineHeading(new Pose2d(PURPLE_LEFT_VECTOR, PURPLE_LEFT_HEADING))
-
-                .lineToConstantHeading(PURPLE_LEFT_VECTOR.plus(new Vector2d(0, 6)))
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    lift.setReference(300);
-                    scorer.deploy();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-                    lift.setReference(0);
-                })
-                .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_VECTOR, Math.toRadians(0)))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                    scorer.deployAutoPush();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    scorer.deploy();
+                    scorer.closeLower();
+                    scorer.openUpper();
+                })
+                .waitSeconds(0.2)
+                .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_VECTOR.plus(new Vector2d(1, 1)), Math.toRadians(0)))
+                .waitSeconds(0.05)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.openLower();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                     scorer.take();
                 })
-                .waitSeconds(1)
+                .waitSeconds(0.4)
+                .lineToSplineHeading(new Pose2d(47, 60, Math.toRadians(270)))
                 .build();
         drive.followTrajectorySequenceAsync(traj);
     }
@@ -125,48 +138,62 @@ public class BlueNearScorer2_0 extends LinearOpMode {
                     scorer.deployAuto();
                     lift.resetEncoders();
                 })
-                .waitSeconds(1)
+                .waitSeconds(0.8)
                 .lineTo(PURPLE_CENTER_VECTOR)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
+                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                    scorer.deployAutoPush();
+                })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    scorer.closeLower();
-                    scorer.openUpper();
                     scorer.deploy();
                 })
-                .waitSeconds(0.1)
-                .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_VECTOR, Math.toRadians(0)))
+                .waitSeconds(0.2)
+                .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_VECTOR.plus(new Vector2d(1, 1))/*.plus(new Vector2d(0, 2.7))*/, Math.toRadians(0)))
+                .waitSeconds(0.05)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    scorer.openLower();
+                    scorer.openUpper();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                     scorer.take();
                 })
-                .waitSeconds(1)
+                .waitSeconds(0.4)
+                .lineToSplineHeading(new Pose2d(47, 60, Math.toRadians(270)))
                 .build();
         drive.followTrajectorySequenceAsync(traj);
     }
 
     private void move_right() {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
-                .splineTo(PURPLE_RIGHT_VECTOR, PURPLE_RIGHT_HEADING)
-
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    lift.setReference(300);
-                    scorer.deploy();
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.closeLower();
+                    scorer.closeUpper();
+                    scorer.deployAuto();
+                    lift.resetEncoders();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-                    lift.setReference(0);
-                })
-                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR, Math.toRadians(0)))
+                .waitSeconds(0.8)
+                .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_VECTOR, PURPLE_RIGHT_HEADING))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                    scorer.deployAutoPush();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    scorer.deploy();
+                })
+                .waitSeconds(0.2)
+                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR.plus(new Vector2d(0.7, -5.5)), Math.toRadians(0)))
+                .waitSeconds(0.05)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.openUpper();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                     scorer.take();
                 })
-                .waitSeconds(1)
+                .waitSeconds(0.4)
+                .lineToSplineHeading(new Pose2d(47, 60, Math.toRadians(270)))
                 .build();
         drive.followTrajectorySequenceAsync(traj);
     }

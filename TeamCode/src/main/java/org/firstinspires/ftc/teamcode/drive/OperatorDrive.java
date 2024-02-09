@@ -315,10 +315,15 @@ public class OperatorDrive {
             rightBackPower  /= max;
         }
 
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
+        double SPEED_MULTIPLIER = 1.0;
+        if (gamepad.b) {
+            SPEED_MULTIPLIER = 0.5;
+        }
+
+        leftFrontDrive.setPower(leftFrontPower * SPEED_MULTIPLIER);
+        rightFrontDrive.setPower(rightFrontPower * SPEED_MULTIPLIER);
+        leftBackDrive.setPower(leftBackPower * SPEED_MULTIPLIER);
+        rightBackDrive.setPower(rightBackPower * SPEED_MULTIPLIER);
     }
 
     double lastError = 0;
