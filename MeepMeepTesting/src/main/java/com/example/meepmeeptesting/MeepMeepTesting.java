@@ -40,18 +40,23 @@ public class MeepMeepTesting {
                                     //lift.resetEncoders();
                                 })
                                 .waitSeconds(0.8)
-                                .lineTo(PURPLE_CENTER_VECTOR)
+                                .lineToSplineHeading(new Pose2d(PURPLE_LEFT_VECTOR, PURPLE_LEFT_HEADING))
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                                     //scorer.openLower();
                                 })
                                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                                    //scorer.deploy();
+                                    //scorer.deployAutoPush();
                                 })
-                                .waitSeconds(0.1)
-                                .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_VECTOR.plus(DIFF_VECTOR), Math.toRadians(0)))
+                                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                                    //scorer.deploy();
+                                    //scorer.closeLower();
+                                    //scorer.openUpper();
+                                })
+                                .waitSeconds(0.2)
+                                .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_VECTOR.plus(new Vector2d(1, 2)), Math.toRadians(0)))
                                 .waitSeconds(0.05)
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    //scorer.openUpper();
+                                    //scorer.openLower();
                                 })
                                 .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                                     //scorer.take();
@@ -60,44 +65,8 @@ public class MeepMeepTesting {
                                 .setReversed(true)
                                 .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(180))
                                 .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(180))
-                                .splineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(0, -6)), Math.toRadians(180))
-
-                                .setReversed(false)
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    //intake.take()
-                                })
-                                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(10, 5.375, 4.95))
-                                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(0, 5)))
-                                .resetVelConstraint()
-
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    //scorer.closeLower();
-                                    //scorer.closeUpper();
-                                    //intake.eject();
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-                                    //intake.stop();
-                                })
-                                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(5,5)))
-                                .splineToConstantHeading(RIGGING_DOWN_VECTOR.plus(new Vector2d(0, 0.5)), Math.toRadians(0))
-                                .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(0, 0.5)), Math.toRadians(0))
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    //scorer.deploy();
-                                    //lift.setReference(420);
-                                })
-                                .splineToConstantHeading(BACKDROP_RIGHT_VECTOR.plus(DIFF_VECTOR), Math.toRadians(0))
-                                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                                    //scorer.openLower();
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
-                                    //scorer.openUpper();
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(1.5, () -> {
-                                    //scorer.take();
-                                    //lift.setReference(0);
-                                })
-                                .waitSeconds(1.5)
-                                .lineToSplineHeading(new Pose2d(47, -60, Math.toRadians(90)))
+                                .splineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-2.5, 2)), Math.toRadians(180))
+                                .waitSeconds(0.2)
                                 .build()
                 );
 
