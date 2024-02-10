@@ -7,7 +7,7 @@ public class RedPositionConstants {
     public static Pose2d NEAR_START_POSE = new Pose2d(15, -63 + 0.19, Math.toRadians(90));
 
     public static Vector2d PURPLE_LEFT_VECTOR = new Vector2d(11, -37);
-    public static double PURPLE_LEFT_HEADING = Math.toRadians(155);
+    public static double PURPLE_LEFT_HEADING = Math.toRadians(140);
     public static Vector2d PURPLE_CENTER_VECTOR = new Vector2d(13, -36); // 13, 33 for no scorer
     public static Vector2d PURPLE_RIGHT_VECTOR = new Vector2d(22.65, -44);
     public static double PURPLE_RIGHT_HEADING = Math.toRadians(90);

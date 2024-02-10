@@ -126,7 +126,16 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                                 drive.followTrajectorySequenceAsync(intake_traj1);
                             }
                         }
-
+                    } else {
+                        if (scorer.getLowerPixel() && scorer.getUpperPixel()) {
+                            deltaIntake = 0;
+                            delta += timer.seconds();
+                            if (delta >= 0.5) {
+                                intake.eject();
+                            }
+                        } else {
+                            delta = 0;
+                        }
                     }
                     timer.reset();
                     break;
@@ -163,12 +172,15 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                     scorer.deployAutoPush();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    scorer.deploy();
+                    scorer.deployAutoUp();
                     scorer.closeLower();
                     scorer.openUpper();
                 })
                 .waitSeconds(0.2)
                 .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_VECTOR.plus(new Vector2d(1, 2)), Math.toRadians(0)))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.deploy();
+                })
                 .waitSeconds(0.05)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
@@ -180,7 +192,7 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(180))
                 .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(180))
-                .splineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-2.5, 2)), Math.toRadians(180))
+                .splineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-2.5, 7)), Math.toRadians(180))
                 .waitSeconds(0.2)
                 .build();
 
@@ -189,8 +201,8 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                         DriveConstants.MAX_ANG_VEL,
                         DriveConstants.TRACK_WIDTH))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> intake.take())
-                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(5, 2)))
-                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-2.5, 2)))
+                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(5, 7)))
+                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-2.5, 7)))
                 .build();
 
         traj2 = drive.trajectorySequenceBuilder(intake_traj1.end())
@@ -203,7 +215,7 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(5,0)))
+                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(2,1)))
                 .splineToConstantHeading(RIGGING_DOWN_VECTOR.plus(new Vector2d(0, 0.2)), Math.toRadians(0))
                 .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(0, 0.2)), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -213,17 +225,18 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                 .splineToConstantHeading(BACKDROP_RIGHT_VECTOR.plus(new Vector2d(2.5,0)), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
                     scorer.openUpper();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     scorer.take();
-
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     lift.setReference(0);
                 })
                 .waitSeconds(1.5)
-                .lineToSplineHeading(new Pose2d(47, 60, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(47, 60, Math.toRadians(270)))
                 .build();
 
         drive.followTrajectorySequenceAsync(traj1);
@@ -259,7 +272,7 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                 })
                 .waitSeconds(0.4)
                 .setReversed(true)
-                .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(180))
+                .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(10, -1)), Math.toRadians(180))
                 .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(180))
                 .splineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-2.5, 2)), Math.toRadians(180))
                 .waitSeconds(0.2)
@@ -284,7 +297,7 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(5,0)))
+                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(2,2)))
                 .splineToConstantHeading(RIGGING_DOWN_VECTOR.plus(new Vector2d(0, 0.2)), Math.toRadians(0))
                 .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(0, 0.2)), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -294,17 +307,18 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                 .splineToConstantHeading(BACKDROP_RIGHT_VECTOR.plus(new Vector2d(2.5,0)), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
                     scorer.openUpper();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     scorer.take();
-
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     lift.setReference(0);
                 })
                 .waitSeconds(1.5)
-                .lineToSplineHeading(new Pose2d(47, 60, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(47, 60, Math.toRadians(270)))
                 .build();
 
         drive.followTrajectorySequenceAsync(traj1);
@@ -330,7 +344,7 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                     scorer.deploy();
                 })
                 .waitSeconds(0.2)
-                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR.plus(DIFF_VECTOR), Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR.minus(new Vector2d(-1.5, 1)), Math.toRadians(0)))
                 .waitSeconds(0.05)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openUpper();
@@ -351,7 +365,7 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                         DriveConstants.MAX_ANG_VEL,
                         DriveConstants.TRACK_WIDTH))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> intake.take())
-                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(8, 2)))
+                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(5, 2)))
                 .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-2.5, 2)))
                 .build();
 
@@ -365,9 +379,9 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(5,0)))
-                .splineToConstantHeading(RIGGING_DOWN_VECTOR.plus(new Vector2d(0, 0.2)), Math.toRadians(0))
-                .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(0, 0.2)), Math.toRadians(0))
+                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-1,4)))
+                .splineToConstantHeading(RIGGING_DOWN_VECTOR.plus(new Vector2d(-20, 2.2)), Math.toRadians(0))
+                .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(0, 3.2)), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
                     lift.setReference(570);
@@ -375,17 +389,18 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                 .splineToConstantHeading(BACKDROP_LEFT_VECTOR.plus(new Vector2d(2.5,0)), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
                     scorer.openUpper();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     scorer.take();
-
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     lift.setReference(0);
                 })
                 .waitSeconds(1.5)
-                .lineToSplineHeading(new Pose2d(47, 60, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(47, 60, Math.toRadians(270)))
                 .build();
 
         drive.followTrajectorySequenceAsync(traj1);

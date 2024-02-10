@@ -86,9 +86,11 @@ public class BlueNearScorer2_0 extends LinearOpMode {
             }
         });
 
+        intake.stop();
         while (opModeIsActive()) {
             lift.PIDControl();
             drive.update();
+            intake.autoControl();
             telemetry.addData("Time", getRuntime());
             telemetry.update();
         }
@@ -111,12 +113,15 @@ public class BlueNearScorer2_0 extends LinearOpMode {
                     scorer.deployAutoPush();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    scorer.deploy();
+                    scorer.deployAutoUp();
                     scorer.closeLower();
                     scorer.openUpper();
                 })
                 .waitSeconds(0.2)
-                .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_VECTOR.plus(new Vector2d(1, 1)), Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_VECTOR.plus(new Vector2d(1, 2)), Math.toRadians(0)))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.deploy();
+                })
                 .waitSeconds(0.05)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
@@ -184,7 +189,7 @@ public class BlueNearScorer2_0 extends LinearOpMode {
                     scorer.deploy();
                 })
                 .waitSeconds(0.2)
-                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR.plus(new Vector2d(0.7, -5.5)), Math.toRadians(0)))
+                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR.minus(new Vector2d(-1.5, 3)), Math.toRadians(0)))
                 .waitSeconds(0.05)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openUpper();
