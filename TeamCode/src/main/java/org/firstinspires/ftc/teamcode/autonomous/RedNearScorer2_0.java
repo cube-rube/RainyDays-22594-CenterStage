@@ -107,16 +107,21 @@ public class RedNearScorer2_0 extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(PURPLE_LEFT_VECTOR, PURPLE_LEFT_HEADING))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
-
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                    scorer.deploy();
+                    scorer.deployAutoPush();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    scorer.deployAutoUp();
                     scorer.closeLower();
                     scorer.openUpper();
-                    intake.stop();
                 })
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)
                 .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_VECTOR.plus(new Vector2d(0, 3)), Math.toRadians(0)))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.deploy();
+                })
+                .waitSeconds(0.05)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
@@ -145,7 +150,7 @@ public class RedNearScorer2_0 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
                     scorer.deploy();
                 })
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)
                 .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_VECTOR.plus(DIFF_VECTOR)/*.plus(new Vector2d(0, 2.7))*/, Math.toRadians(0)))
                 .waitSeconds(0.05)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -174,15 +179,16 @@ public class RedNearScorer2_0 extends LinearOpMode {
                     scorer.openLower();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                    scorer.deploy();
-                    scorer.closeLower();
-                    scorer.openUpper();
-                    intake.stop();
+                    scorer.deployAutoPush();
                 })
-                .waitSeconds(0.1)
+                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                    scorer.deploy();
+                })
+                .waitSeconds(0.2)
                 .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR, Math.toRadians(0)))
+                .waitSeconds(0.05)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    scorer.openLower();
+                    scorer.openUpper();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                     scorer.take();

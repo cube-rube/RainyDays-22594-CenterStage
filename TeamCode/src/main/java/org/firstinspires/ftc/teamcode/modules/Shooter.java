@@ -20,7 +20,7 @@ public class Shooter {
     private final Servo servoHold;
     private final Servo servoRaise;
 
-    private double up_pos = 0.6-0.05;
+    private double up_pos = 0.6;
     private double down_pos = 0.45;
     public static double hold_pos = 0.55;
     public static double release_pos = 1;
