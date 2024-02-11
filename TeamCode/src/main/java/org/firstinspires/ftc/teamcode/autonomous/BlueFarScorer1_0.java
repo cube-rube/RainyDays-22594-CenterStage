@@ -3,11 +3,13 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_CENTER_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DIFF_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.FAR_START_POSE;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_POSE;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_CENTER_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_HEADING;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_FAR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_FAR_HEADING;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_HEADING;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_VECTOR;
 
@@ -15,6 +17,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -30,8 +33,9 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name = "BlueNearScorer2+0")
-public class BlueNearScorer2_0 extends LinearOpMode {
+@Autonomous(name = "BlueFarScorer1+0")
+@Disabled
+public class BlueFarScorer1_0 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
     private Intake intake;
@@ -174,8 +178,8 @@ public class BlueNearScorer2_0 extends LinearOpMode {
                     scorer.deployAuto();
                     lift.resetEncoders();
                 })
-                .waitSeconds(1.2)
-                .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_VECTOR, PURPLE_RIGHT_HEADING))
+                .waitSeconds(0.8)
+                .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_FAR, PURPLE_RIGHT_FAR_HEADING))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
@@ -183,19 +187,15 @@ public class BlueNearScorer2_0 extends LinearOpMode {
                     scorer.deployAutoPush();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    scorer.deploy();
-                })
-                .waitSeconds(0.2)
-                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR.minus(new Vector2d(-1.5, 3)), Math.toRadians(0)))
-                .waitSeconds(0.05)
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.deployAutoUp();
+                    scorer.closeLower();
                     scorer.openUpper();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
+                .waitSeconds(0.2)
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.take();
                 })
-                .waitSeconds(0.4)
-                .lineToSplineHeading(new Pose2d(47, 60, Math.toRadians(270)))
+                .waitSeconds(1)
                 .build();
         drive.followTrajectorySequenceAsync(traj);
     }
@@ -204,8 +204,8 @@ public class BlueNearScorer2_0 extends LinearOpMode {
         dashboard = FtcDashboard.getInstance();
 
         drive = new SampleMecanumDrive(this.hardwareMap);
-        drive.setPoseEstimate(NEAR_START_POSE);
-        PoseCache.pose = NEAR_START_POSE;
+        drive.setPoseEstimate(FAR_START_POSE);
+        PoseCache.pose = FAR_START_POSE;
         intake = new Intake(this);
         lift = new Lift(this, dashboard);
         scorer = new Scorer(this, lift);

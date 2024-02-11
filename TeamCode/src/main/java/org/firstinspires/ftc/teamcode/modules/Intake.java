@@ -34,9 +34,11 @@ public class Intake {
     private enum IntakeState {
         EJECT,
         INTAKE,
+        BREAK,
         STOP
     }
     private IntakeState intakeState = IntakeState.STOP;
+    public static double STOP_POWER = 0.15;
 
     public Intake(LinearOpMode linearOpMode) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
@@ -74,9 +76,9 @@ public class Intake {
             direction = Direction.FORWARD;
         } else {
             switch (direction) {
-                case FORWARD: motor.setPower(0.2);
+                case FORWARD: motor.setPower(STOP_POWER);
                     break;
-                case BACKWARD: motor.setPower(-0.2);
+                case BACKWARD: motor.setPower(-STOP_POWER);
                     break;
                 case B_STOP:
                 case F_STOP:
@@ -113,6 +115,9 @@ public class Intake {
     public void eject() {
         intakeState = IntakeState.EJECT;
     }
+    public void break_() {
+        intakeState = IntakeState.BREAK;
+    }
 
     public void stop() {
         intakeState = IntakeState.STOP;
@@ -129,16 +134,20 @@ public class Intake {
                 direction = Direction.FORWARD;
                 break;
             case EJECT:
-                motor.setPower(1);
+                motor.setPower(0.7);
+                direction = Direction.BACKWARD;
+                break;
+            case BREAK:
+                motor.setPower(0.5);
                 direction = Direction.BACKWARD;
                 break;
             case STOP:
                 switch (direction) {
                     case FORWARD:
-                        motor.setPower(0.2);
+                        motor.setPower(STOP_POWER);
                         break;
                     case BACKWARD:
-                        motor.setPower(-0.2);
+                        motor.setPower(-STOP_POWER);
                         break;
                     case B_STOP:
                     case F_STOP:

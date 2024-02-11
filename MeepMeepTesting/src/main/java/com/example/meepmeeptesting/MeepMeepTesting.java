@@ -4,11 +4,14 @@ import static com.example.meepmeeptesting.PositionConstants.BACKDROP_CENTER_VECT
 import static com.example.meepmeeptesting.PositionConstants.BACKDROP_LEFT_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.BACKDROP_RIGHT_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.DIFF_VECTOR;
+import static com.example.meepmeeptesting.PositionConstants.FAR_START_POSE;
 import static com.example.meepmeeptesting.PositionConstants.NEAR_START_POSE;
 import static com.example.meepmeeptesting.PositionConstants.PIXEL_STACK_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.PURPLE_CENTER_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.PURPLE_LEFT_HEADING;
 import static com.example.meepmeeptesting.PositionConstants.PURPLE_LEFT_VECTOR;
+import static com.example.meepmeeptesting.PositionConstants.PURPLE_RIGHT_FAR;
+import static com.example.meepmeeptesting.PositionConstants.PURPLE_RIGHT_FAR_HEADING;
 import static com.example.meepmeeptesting.PositionConstants.PURPLE_RIGHT_HEADING;
 import static com.example.meepmeeptesting.PositionConstants.PURPLE_RIGHT_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.RIGGING_DOWN_VECTOR;
@@ -32,7 +35,7 @@ public class MeepMeepTesting {
                 .setConstraints(35, 60, 5.375, 5.375, 4.95)
                 .setDimensions(16.7, 15.6)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(NEAR_START_POSE)
+                        drive.trajectorySequenceBuilder(FAR_START_POSE)
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                                     //scorer.closeLower();
                                     //scorer.closeUpper();
@@ -40,7 +43,7 @@ public class MeepMeepTesting {
                                     //lift.resetEncoders();
                                 })
                                 .waitSeconds(0.8)
-                                .lineToSplineHeading(new Pose2d(PURPLE_LEFT_VECTOR, PURPLE_LEFT_HEADING))
+                                .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_FAR, PURPLE_RIGHT_FAR_HEADING))
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                                     //scorer.openLower();
                                 })
@@ -48,25 +51,15 @@ public class MeepMeepTesting {
                                     //scorer.deployAutoPush();
                                 })
                                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                                    //scorer.deploy();
+                                    //scorer.deployAutoUp();
                                     //scorer.closeLower();
                                     //scorer.openUpper();
                                 })
                                 .waitSeconds(0.2)
-                                .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_VECTOR.plus(new Vector2d(1, 2)), Math.toRadians(0)))
-                                .waitSeconds(0.05)
                                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    //scorer.openLower();
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                                     //scorer.take();
                                 })
-                                .waitSeconds(0.4)
-                                .setReversed(true)
-                                .splineToConstantHeading(RIGGING_UP_VECTOR, Math.toRadians(180))
-                                .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(180))
-                                .splineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-2.5, 2)), Math.toRadians(180))
-                                .waitSeconds(0.2)
+                                .waitSeconds(1)
                                 .build()
                 );
 
