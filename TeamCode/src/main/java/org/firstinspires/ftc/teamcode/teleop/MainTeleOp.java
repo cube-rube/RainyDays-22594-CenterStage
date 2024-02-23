@@ -40,13 +40,19 @@ public class MainTeleOp extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-            operatorDrive.driveFieldCentric();
+            operatorDrive.drive();
             operatorDrive.telemetry();
             lift.opControlPos();
             intake.opControlSensor();
             scorer.opControl();
             pullUp.opControlPos();
             shooter.tele();
+
+            if (scorer.rotationBeamState == Scorer.RotationState.DEPLOY) {
+                operatorDrive.driveState = OperatorDrive.DriveState.BACKDROP;
+            } else {
+                operatorDrive.driveState = OperatorDrive.DriveState.FIELD;
+            }
 
             telemetry.addData("Runtime", runtime.toString());
 

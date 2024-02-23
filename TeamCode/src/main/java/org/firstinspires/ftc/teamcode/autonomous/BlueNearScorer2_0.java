@@ -62,7 +62,9 @@ public class BlueNearScorer2_0 extends LinearOpMode {
 
         waitForStart();
         resetRuntime();
-        position = pipeline.getPropPosition();
+        //TODO: CHANGE BACK
+        //position = pipeline.getPropPosition();
+        position = PropDetectionPipeline.PropPosition.CENTER;
         telemetry.addData("prop_pos", position);
         telemetry.update();
 
@@ -88,7 +90,12 @@ public class BlueNearScorer2_0 extends LinearOpMode {
             lift.PIDControl();
             drive.update();
             intake.autoControl();
+
+            PoseCache.pose = drive.getPoseEstimate();
             telemetry.addData("Time", getRuntime());
+            telemetry.addData("heading", drive.getExternalHeading());
+            telemetry.addData("raw_heading", drive.getRawExternalHeading());
+            telemetry.addData("cache_heading", PoseCache.pose.getHeading());
             telemetry.update();
         }
     }

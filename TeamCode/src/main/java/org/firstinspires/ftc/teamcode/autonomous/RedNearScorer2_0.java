@@ -41,8 +41,6 @@ public class RedNearScorer2_0 extends LinearOpMode {
     private PropDetectionPipeline pipeline;
     private PropDetectionPipeline.PropPosition position;
     private final Pose2d startPose = new Pose2d(15, 63, Math.toRadians(270));
-    private boolean sensor = false;
-    private boolean running = true;
     @Override
     public void runOpMode() throws InterruptedException {
         init_robot();
@@ -91,6 +89,7 @@ public class RedNearScorer2_0 extends LinearOpMode {
             drive.update();
             intake.autoControl();
             telemetry.addData("Time", getRuntime());
+            telemetry.addData("heading", drive.getExternalHeading());
             telemetry.update();
         }
     }

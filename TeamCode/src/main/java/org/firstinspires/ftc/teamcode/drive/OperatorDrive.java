@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -12,11 +13,14 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.autonomous.PoseCache;
+import org.firstinspires.ftc.teamcode.teleop.MainTeleOp;
 
 @Config
 public class OperatorDrive {
@@ -59,8 +63,8 @@ public class OperatorDrive {
     private double lastErLb = 0;
 
 
-    private enum DriveState {
-        ROBOT,
+    public enum DriveState {
+        BACKDROP,
         FIELD
     }
     private enum ButtonState {
@@ -70,7 +74,7 @@ public class OperatorDrive {
     }
     private ButtonState buttonState = ButtonState.RELEASED;
 
-    private DriveState driveState = DriveState.ROBOT;
+    public DriveState driveState = DriveState.FIELD;
     double globalAngle;
     Orientation lastAngles = new Orientation();
 
@@ -269,17 +273,6 @@ public class OperatorDrive {
         rightBackDrive.setPower((rightBackPower * 0.75 + kP * rightBackError + kI * intengalSumRb + derivativeRb * kD));
     }
 
-    public void drive() {
-        if (gamepad.b) {
-            backdropDrive();
-        } else {
-            driveFieldCentric();
-            reference = 0;
-            lastError = 0;
-            integralSum = 0;
-        }
-    }
-
     public void driveFieldCentric() {
         double max;
 
@@ -289,6 +282,7 @@ public class OperatorDrive {
 
         if (gamepad.start) {
             imu.resetYaw();
+            PoseCache.pose = new Pose2d(PoseCache.pose.vec(), Math.toRadians(0));
         }
 
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
@@ -324,12 +318,18 @@ public class OperatorDrive {
         rightFrontDrive.setPower(rightFrontPower * SPEED_MULTIPLIER);
         leftBackDrive.setPower(leftBackPower * SPEED_MULTIPLIER);
         rightBackDrive.setPower(rightBackPower * SPEED_MULTIPLIER);
+
+        telemetry.addData("heading", botHeading);
+        telemetry.addData("Auto_heading", PoseCache.pose.getHeading());
     }
 
-    double lastError = 0;
-    double integralSum = 0;
-    public static PIDCoefficients coefficients = new PIDCoefficients(0.015, 0, 0);
+    private double lastError = 0;
+    private double integralSum = 0;
+    public static double INTEGRAL_SUM_MAX = 0.14;
+    public static double MULTIPLIER = 0.5;
+    public static PIDFCoefficients coefficients = new PIDFCoefficients(0.014, 0, 0.7, 0); // 2.2 0.2 0.014
     double reference = 0;
+
     public void backdropDrive() {
         double angle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         if (reference == 0) {
@@ -342,16 +342,33 @@ public class OperatorDrive {
 
         double error = angle - reference;
         double derivative = (error - lastError) * timer.seconds();
-        integralSum += error * timer.seconds();
+        if (Math.abs(integralSum * coefficients.i) >= INTEGRAL_SUM_MAX && Math.signum(integralSum) == Math.signum(error)) {
+            integralSum = INTEGRAL_SUM_MAX / coefficients.i * Math.signum(integralSum);
+        } else {
+            integralSum += error * timer.seconds();
+        }
+
 
         double power = (error * coefficients.p) + (integralSum * coefficients.i) + (derivative * coefficients.d);
+        if (Math.abs(error) > 0.2) {
+            power += coefficients.f * Math.signum(error);
+        }
 
-        double lateral = -gamepad.left_stick_y;
+        double axial   = -gamepad.left_stick_y * MULTIPLIER;
+        double lateral =  gamepad.left_stick_x * MULTIPLIER;
 
-        double leftFrontPower  = power + lateral;
-        double rightFrontPower = - power - lateral;
-        double leftBackPower   = power - lateral;
-        double rightBackPower  = - power + lateral;
+        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+
+        double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
+        double rotAxial   = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
+
+
+        rotLateral = rotLateral * 1.1;
+
+        double leftFrontPower  = rotAxial + power + rotLateral;
+        double rightFrontPower = rotAxial - power - rotLateral;
+        double leftBackPower   = rotAxial + power - rotLateral;
+        double rightBackPower  = rotAxial - power + rotLateral;
 
         double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
         max = Math.max(max, Math.abs(leftBackPower));
@@ -372,10 +389,27 @@ public class OperatorDrive {
         TelemetryPacket packet = new TelemetryPacket();
         packet.put("reference_angle", reference);
         packet.put("angle", angle);
+        packet.put("integral_sum_angle", integralSum);
+        packet.put("integral_power_angle", integralSum * coefficients.i);
         dashboard.sendTelemetryPacket(packet);
 
         lastError = error;
         timer.reset();
+    }
+
+    public void drive() {
+        switch (driveState) {
+            case BACKDROP:
+                backdropDrive();
+                break;
+            case FIELD:
+                driveFieldCentric();
+                reference = 0;
+                lastError = 0;
+                integralSum = 0;
+                break;
+
+        }
     }
 
     public void sendAngle() {
@@ -520,122 +554,6 @@ public class OperatorDrive {
         return x * x * x;
     }
 
-    public void encoderDriveY(double speed,
-                              double leftInches, double rightInches,
-                              double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
-
-        // Ensure that the OpMode is still active
-        if (linearOpMode.opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newLeftTarget = leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            leftFrontDrive.setTargetPosition(newLeftTarget);
-            leftBackDrive.setTargetPosition(newLeftTarget);
-            rightFrontDrive.setTargetPosition(newRightTarget);
-            rightBackDrive.setTargetPosition(newRightTarget);
-
-            // Turn On RUN_TO_POSITION
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            leftFrontDrive.setPower(Math.abs(speed));
-            leftBackDrive.setPower(Math.abs(speed));
-            rightFrontDrive.setPower(Math.abs(speed));
-            rightBackDrive.setPower(Math.abs(speed));
-
-
-            while (linearOpMode.opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (leftFrontDrive.isBusy() && rightFrontDrive.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Currently at",  " at %7d :%7d",
-                        leftFrontDrive.getCurrentPosition(), rightFrontDrive.getCurrentPosition());
-                telemetry.update();
-            }
-
-            // Stop all motion;
-            leftFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            linearOpMode.sleep(250);   // optional pause after each move.
-        }
-    }
-
-    public void encoderDriveX(double speed,
-                              double leftInches, double rightInches,
-                              double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
-
-        // Ensure that the OpMode is still active
-        if (linearOpMode.opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            newLeftTarget = leftFrontDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = rightFrontDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            leftFrontDrive.setTargetPosition(newLeftTarget);
-            leftBackDrive.setTargetPosition(-newRightTarget);
-            rightFrontDrive.setTargetPosition(-newLeftTarget);
-            rightBackDrive.setTargetPosition(newRightTarget);
-
-            // Turn On RUN_TO_POSITION
-            leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // reset the timeout time and start motion.
-            runtime.reset();
-            leftFrontDrive.setPower(Math.abs(speed));
-            leftBackDrive.setPower(Math.abs(speed));
-            rightFrontDrive.setPower(Math.abs(speed));
-            rightBackDrive.setPower(Math.abs(speed));
-
-
-            while (linearOpMode.opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
-                    (leftFrontDrive.isBusy() && rightFrontDrive.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Currently at",  " at %7d :%7d",
-                        leftFrontDrive.getCurrentPosition(), rightBackDrive.getCurrentPosition());
-                telemetry.update();
-            }
-
-            // Stop all motion
-            leftFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            rightBackDrive.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            linearOpMode.sleep(250);   // optional pause after each move.
-        }
-    }
-
     public void telemetry() {
         telemetry.addLine("---------------");
         telemetry.addLine("BasicDrive:");
@@ -645,6 +563,8 @@ public class OperatorDrive {
         telemetry.addData("right_back_encoder: ", rightBackDrive.getCurrentPosition());
         telemetry.addData("gp1_left_stick_y", -gamepad.left_stick_y);
         telemetry.addData("gp1_left_stick_x", gamepad.left_stick_x);
+        telemetry.addData("gp1_right_trigger", gamepad.right_trigger);
+        telemetry.addData("gp1_left_trigger", gamepad.left_trigger);
         telemetry.addData("gp1_options", gamepad.options);
         telemetry.addData("gp1_start", gamepad.start);
         telemetry.addData("gp1_back", gamepad.back);
