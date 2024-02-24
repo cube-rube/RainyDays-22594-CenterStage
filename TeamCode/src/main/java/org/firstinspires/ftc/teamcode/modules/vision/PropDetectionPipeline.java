@@ -103,6 +103,6 @@ public class PropDetectionPipeline extends OpenCvPipeline {
     }
 
     public PropPosition getPropPosition() {
-        return position;
+        return PropPosition.CENTER;
     }
 }

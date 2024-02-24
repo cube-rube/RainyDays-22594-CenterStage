@@ -4,7 +4,8 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 public class PositionConstants {
-    public static Pose2d NEAR_START_POSE = new Pose2d(15, 63 - 0.19, Math.toRadians(270));
+    public static Pose2d NEAR_START_POSE = new Pose2d(14.885, 62.61615, Math.toRadians(270));
+    public static double[] NEAR_START_COORDS = {14.885, 62.61615};
     public static Pose2d FAR_START_POSE = new Pose2d(-38.5, 63 - 0.19, Math.toRadians(270));
 
     public static Vector2d PURPLE_RIGHT_VECTOR = new Vector2d(12.8, 37);
@@ -13,6 +14,7 @@ public class PositionConstants {
     public static double PURPLE_RIGHT_FAR_HEADING = Math.toRadians(270);
 
     public static Vector2d PURPLE_CENTER_VECTOR = new Vector2d(13, 36); // 13, 33 for no scorer
+    public static double[] PURPLE_CENTER_COORDS = {11.7, 36};
     public static Vector2d PURPLE_CENTER_FAR = new Vector2d(-39, 36);
 
     public static Vector2d PURPLE_LEFT_VECTOR = new Vector2d(22.65, 44);

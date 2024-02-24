@@ -62,9 +62,7 @@ public class BlueNearScorer2_0 extends LinearOpMode {
 
         waitForStart();
         resetRuntime();
-        //TODO: CHANGE BACK
-        //position = pipeline.getPropPosition();
-        position = PropDetectionPipeline.PropPosition.CENTER;
+        position = pipeline.getPropPosition();
         telemetry.addData("prop_pos", position);
         telemetry.update();
 

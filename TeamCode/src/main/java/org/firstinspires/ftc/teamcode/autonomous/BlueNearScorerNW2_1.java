@@ -299,9 +299,9 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                 })
                 .waitSeconds(0.4)
                 .setReversed(true)
-                .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(10, -1)), Math.toRadians(180))
+                .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(10, 3)), Math.toRadians(180))
                 .splineToConstantHeading(RIGGING_DOWN_VECTOR, Math.toRadians(180))
-                .splineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-2, 2)), Math.toRadians(180))
+                .splineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(0, 4.5)), Math.toRadians(180))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     //intake.break_();
                 })
@@ -319,11 +319,11 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                     intake.take();
                     isMovingToStack = false;
                 })
-                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(5, 2)))
+                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(5, 4.5)))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     isMovingToStack = true;
                 })
-                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-1.5, 2)))
+                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(-1.5, 4.5)))
                 .build();
 
         traj2 = drive.trajectorySequenceBuilder(intake_traj1.end())
@@ -336,9 +336,9 @@ public class BlueNearScorerNW2_1 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(2,2)))
+                .lineToConstantHeading(PIXEL_STACK_VECTOR.plus(new Vector2d(2,4.5)))
                 .splineToConstantHeading(RIGGING_DOWN_VECTOR.plus(new Vector2d(0, 0.2)), Math.toRadians(0))
-                .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(0, 0.2)), Math.toRadians(0))
+                .splineToConstantHeading(RIGGING_UP_VECTOR.plus(new Vector2d(0, 3.2)), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
                     lift.setReference(570);

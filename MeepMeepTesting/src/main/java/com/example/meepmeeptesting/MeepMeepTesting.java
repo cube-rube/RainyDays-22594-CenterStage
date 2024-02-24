@@ -5,6 +5,7 @@ import static com.example.meepmeeptesting.PositionConstants.BACKDROP_LEFT_VECTOR
 import static com.example.meepmeeptesting.PositionConstants.BACKDROP_RIGHT_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.DIFF_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.FAR_START_POSE;
+import static com.example.meepmeeptesting.PositionConstants.NEAR_START_COORDS;
 import static com.example.meepmeeptesting.PositionConstants.NEAR_START_POSE;
 import static com.example.meepmeeptesting.PositionConstants.PIXEL_STACK_VECTOR;
 import static com.example.meepmeeptesting.PositionConstants.PURPLE_CENTER_VECTOR;
@@ -32,33 +33,10 @@ public class MeepMeepTesting {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(35, 60, 5.375, 5.375, 4.95)
-                .setDimensions(16.7, 15.6)
+                .setConstraints(50, 100, 5.375, 25, 10.3)
+                .setDimensions(16.83, 15.7677)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(FAR_START_POSE)
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    //scorer.closeLower();
-                                    //scorer.closeUpper();
-                                    //scorer.deployAuto();
-                                    //lift.resetEncoders();
-                                })
-                                .waitSeconds(0.8)
-                                .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_FAR, PURPLE_RIGHT_FAR_HEADING))
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    //scorer.openLower();
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                                    //scorer.deployAutoPush();
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                                    //scorer.deployAutoUp();
-                                    //scorer.closeLower();
-                                    //scorer.openUpper();
-                                })
-                                .waitSeconds(0.2)
-                                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                    //scorer.take();
-                                })
+                        drive.trajectorySequenceBuilder(new Pose2d(NEAR_START_COORDS[0], NEAR_START_COORDS[1], Math.toRadians(270)))
                                 .waitSeconds(1)
                                 .build()
                 );

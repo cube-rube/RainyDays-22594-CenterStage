@@ -62,7 +62,7 @@ public class Intake {
         if (gamepad.y) {
             motor.setPower(-0.6);
         } else if (gamepad.a) {
-            motor.setPower(1);
+            motor.setPower(0.85);
         } else {
             motor.setPower(0);
         }
@@ -72,7 +72,7 @@ public class Intake {
             motor.setPower(0.6);
             direction = Direction.BACKWARD;
         } else if (gamepad.a) {
-            motor.setPower(-1);
+            motor.setPower(-0.85);
             direction = Direction.FORWARD;
         } else {
             switch (direction) {
