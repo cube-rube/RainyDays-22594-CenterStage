@@ -36,7 +36,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name = "BlueNearScorerNW2+2")
+@Autonomous(name = "BlueNear2+2")
 public class BlueNearScorerNW2_1 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;

@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LightSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.teleop.MainTeleOp;
@@ -22,6 +23,8 @@ public class Intake {
     private final Gamepad gamepad;
     private final DcMotor motor;
     private final DigitalChannel sensor;
+    private final Servo leftServo;
+    private final Servo rightServo;
     public static double TPR = 292.1212;
 
     public enum Direction {
@@ -39,6 +42,10 @@ public class Intake {
     }
     private IntakeState intakeState = IntakeState.STOP;
     public static double STOP_POWER = 0.15;
+    public static double OPEN_LEFT_POS = 0.03;
+    public static double OPEN_RIGHT_POS = 0.65;
+    public static double CLOSE_LEFT_POS = 0.75;
+    public static double CLOSE_RIGHT_POS = 0;
 
     public Intake(LinearOpMode linearOpMode) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
@@ -53,6 +60,10 @@ public class Intake {
         telemetry.addLine("Intake: initializing sensor");
         sensor = hardwareMap.get(DigitalChannel.class, "sensor_intake");
         sensor.setMode(DigitalChannel.Mode.INPUT);
+
+        telemetry.addLine("Intake: initializing servos");
+        leftServo = hardwareMap.get(Servo.class, "left_flap");
+        rightServo = hardwareMap.get(Servo.class, "right_flap");
 
         telemetry.addLine("Intake: Initialized");
     }
@@ -125,6 +136,22 @@ public class Intake {
 
     public boolean isMoving() {
         return motor.getPower() != 0;
+    }
+
+    public void openLeftFlap() {
+        leftServo.setPosition(OPEN_LEFT_POS);
+    }
+
+    public void openRightFlap() {
+        rightServo.setPosition(OPEN_RIGHT_POS);
+    }
+
+    public void closeLeftFlap() {
+        leftServo.setPosition(CLOSE_LEFT_POS);
+    }
+
+    public void closeRightFlap() {
+        rightServo.setPosition(CLOSE_RIGHT_POS);
     }
 
     public void autoControl() {

@@ -8,7 +8,6 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 public class PropDetectionPipeline extends OpenCvPipeline {
-	public int PROP_HEIGHT = 0;
 	private final AllianceColor ALLIANCECOLOR;
     Mat ybcrcb = new Mat();
     Mat leftCrop, centerCrop, rightCrop;
@@ -103,6 +102,6 @@ public class PropDetectionPipeline extends OpenCvPipeline {
     }
 
     public PropPosition getPropPosition() {
-        return PropPosition.CENTER;
+        return position;
     }
 }

@@ -10,7 +10,6 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.utility.ButtonState;
 
 
-// TODO: Сделать
 @Config
 public class Shooter {
     private final LinearOpMode linearOpMode;

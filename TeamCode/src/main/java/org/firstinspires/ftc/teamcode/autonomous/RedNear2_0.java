@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.BACKDROP_CENTER_LEFT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.BACKDROP_CENTER_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.BACKDROP_LEFT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.BACKDROP_RIGHT_VECTOR;
@@ -31,7 +30,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 @Autonomous(name = "RedNearScorer2+0")
-public class RedNearScorer2_0 extends LinearOpMode {
+public class RedNear2_0 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
     private Intake intake;
@@ -40,7 +39,6 @@ public class RedNearScorer2_0 extends LinearOpMode {
     private OpenCvWebcam webcam;
     private PropDetectionPipeline pipeline;
     private PropDetectionPipeline.PropPosition position;
-    private final Pose2d startPose = new Pose2d(15, 63, Math.toRadians(270));
     @Override
     public void runOpMode() throws InterruptedException {
         init_robot();

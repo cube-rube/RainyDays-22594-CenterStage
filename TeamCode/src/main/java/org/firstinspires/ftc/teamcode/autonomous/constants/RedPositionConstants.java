@@ -6,11 +6,12 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 @Config
 public class RedPositionConstants {
-    public static Pose2d NEAR_START_POSE = new Pose2d(15, -63 + 0.19, Math.toRadians(90));
+    public static Pose2d NEAR_START_POSE = new Pose2d(14.885, -62.61615, Math.toRadians(90));
 
     public static Vector2d PURPLE_LEFT_VECTOR = new Vector2d(11, -37);
     public static double PURPLE_LEFT_HEADING = Math.toRadians(155);
-    public static Vector2d PURPLE_CENTER_VECTOR = new Vector2d(13, -36); // 13, 33 for no scorer
+    public static Vector2d PURPLE_CENTER_VECTOR = new Vector2d(13, -36);
+    public static double[] PURPLE_CENTER_NEAR = {13, -37};
     public static Vector2d PURPLE_RIGHT_VECTOR = new Vector2d(23.2, -44);
     public static double PURPLE_RIGHT_HEADING = Math.toRadians(90);
 
@@ -26,7 +27,11 @@ public class RedPositionConstants {
 
     public static Vector2d RIGGING_UP_VECTOR = new Vector2d(5, -59);
     public static Vector2d RIGGING_DOWN_VECTOR = new Vector2d(-30, -59);
+
     public static Vector2d DOOR_UP_VECTOR = new Vector2d(24, -5);
+    public static double[] DOOR_UP_COORDS = {24, -9};
     public static Vector2d DOOR_DOWN_VECTOR = new Vector2d(-40, -5);
+    public static double[] DOOR_DOWN_COORDS = {-40, -9};
     public static Vector2d PIXEL_STACK_VECTOR = new Vector2d(-58.3,  -35);
+    public static double[] PIXEL_STACK_COORDS = {-60.5, -35.3};
 }
