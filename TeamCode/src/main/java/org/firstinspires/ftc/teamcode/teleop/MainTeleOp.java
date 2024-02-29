@@ -42,7 +42,7 @@ public class MainTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             operatorDrive.drive();
             operatorDrive.telemetry();
-            lift.opControlPos();
+            lift.opControl();
             intake.opControlSensor();
             scorer.opControl();
             pullUp.opControlPos();
