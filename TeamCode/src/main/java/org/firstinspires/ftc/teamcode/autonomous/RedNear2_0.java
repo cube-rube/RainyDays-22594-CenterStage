@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.misc.GameConstants;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Lift;
 import org.firstinspires.ftc.teamcode.modules.Scorer;
@@ -206,11 +207,13 @@ public class RedNear2_0 extends LinearOpMode {
         lift = new Lift(this, dashboard);
         scorer = new Scorer(this, lift);
 
+        GameConstants.ALLIANCE_COLOR = AllianceColor.RED;
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        pipeline = new PropDetectionPipeline(AllianceColor.RED);
+        pipeline = new PropDetectionPipeline(GameConstants.ALLIANCE_COLOR);
         webcam.setPipeline(pipeline);
         telemetry.update();
     }

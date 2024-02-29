@@ -20,6 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.autonomous.PoseCache;
+import org.firstinspires.ftc.teamcode.misc.GameConstants;
+import org.firstinspires.ftc.teamcode.modules.vision.AllianceColor;
 import org.firstinspires.ftc.teamcode.teleop.MainTeleOp;
 
 @Config
@@ -334,7 +336,7 @@ public class OperatorDrive {
         double angle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         if (reference == 0) {
             reference = 90;
-            if (angle < 0) {
+            if (GameConstants.ALLIANCE_COLOR == AllianceColor.BLUE) {
                 reference = -90;
             }
         }
