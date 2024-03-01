@@ -7,9 +7,9 @@ import org.firstinspires.ftc.teamcode.modules.vision.AllianceColor;
 @Config
 public class GameConstants {
     public enum StartPos {
-        NEAR_BACKDROP,
-        NOT_NEAR_BACKDROP
+        NEAR,
+        FAR
     }
-    public static StartPos STARTPOS = StartPos.NEAR_BACKDROP;
+    public static StartPos STARTPOS = StartPos.NEAR;
     public static AllianceColor ALLIANCE_COLOR = AllianceColor.RED;
 }

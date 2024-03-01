@@ -5,9 +5,8 @@ import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionCon
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.BACKDROP_RIGHT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.DIFF_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.NEAR_START_POSE;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_CENTER_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_LEFT_HEADING;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_LEFT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_CENTER_NEAR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_LEFT_NEAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_RIGHT_VECTOR;
 
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -102,7 +101,7 @@ public class RedNear2_0 extends LinearOpMode {
                     lift.resetEncoders();
                 })
                 .waitSeconds(0.8)
-                .lineToSplineHeading(new Pose2d(PURPLE_LEFT_VECTOR, PURPLE_LEFT_HEADING))
+                .lineToSplineHeading(new Pose2d(PURPLE_LEFT_NEAR[0], PURPLE_LEFT_NEAR[1], Math.toRadians(PURPLE_LEFT_NEAR[2])))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
@@ -141,7 +140,7 @@ public class RedNear2_0 extends LinearOpMode {
                     lift.resetEncoders();
                 })
                 .waitSeconds(0.8)
-                .lineTo(PURPLE_CENTER_VECTOR)
+                .lineTo(new Vector2d(PURPLE_CENTER_NEAR[0], PURPLE_CENTER_NEAR[1]))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })

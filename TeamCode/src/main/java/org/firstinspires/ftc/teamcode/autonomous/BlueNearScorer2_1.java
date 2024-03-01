@@ -13,6 +13,8 @@ import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionCo
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_DOWN_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_UP_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.DIFF_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_CENTER_NEAR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_LEFT_NEAR;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -163,7 +165,7 @@ public class BlueNearScorer2_1 extends LinearOpMode {
                     lift.resetEncoders();
                 })
                 .waitSeconds(0.8)
-                .lineToSplineHeading(new Pose2d(RedPositionConstants.PURPLE_LEFT_VECTOR, RedPositionConstants.PURPLE_LEFT_HEADING))
+                .lineToSplineHeading(new Pose2d(RedPositionConstants.PURPLE_LEFT_VECTOR, Math.toRadians(PURPLE_LEFT_NEAR[2])))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
@@ -246,7 +248,7 @@ public class BlueNearScorer2_1 extends LinearOpMode {
                     lift.resetEncoders();
                 })
                 .waitSeconds(0.8)
-                .lineTo(RedPositionConstants.PURPLE_CENTER_VECTOR)
+                .lineTo(PURPLE_CENTER_VECTOR)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })

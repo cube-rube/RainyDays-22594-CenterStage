@@ -10,7 +10,8 @@ public class PositionConstants {
     public static double START_HEADING = Math.toRadians(90);
 
     public static Vector2d PURPLE_LEFT_VECTOR = new Vector2d(11, -37);
-    public static double PURPLE_LEFT_HEADING = Math.toRadians(155);
+    public static double[] PURPLE_LEFT_NEAR = {11, -37, 155};
+    public static double[] PURPLE_LEFT_FAR = {-46.5, -44, 90};
     public static double[] PURPLE_CENTER_NEAR = {13, -37};
     public static double[] PURPLE_CENTER_FAR = {-35.4, -37};
     public static Vector2d PURPLE_RIGHT_VECTOR = new Vector2d(23.2, -44);
@@ -39,4 +40,5 @@ public class PositionConstants {
     public static double[] FIRST_PIXEL_STACK_COORDS = {-60.5, -35.3};
     public static double[] SECOND_PIXEL_STACK_COORDS = {-60.5, -23.3};
     public static double[] THIRD_PIXEL_STACK_COORDS = {-60.5, -11.5};
+    public static double[] END = {47, -60, 300};
 }
