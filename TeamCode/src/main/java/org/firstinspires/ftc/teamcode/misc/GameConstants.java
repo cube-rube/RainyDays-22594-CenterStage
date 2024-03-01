@@ -10,6 +10,6 @@ public class GameConstants {
         NEAR_BACKDROP,
         NOT_NEAR_BACKDROP
     }
-    public static StartPos STARTPOS = StartPos.NEAR_BACKDROP; // 0 - near backdrop, 1 not near
-    public static AllianceColor ALLIANCE_COLOR = AllianceColor.BLUE; // 1 - red, 2 - blue
+    public static StartPos STARTPOS = StartPos.NEAR_BACKDROP;
+    public static AllianceColor ALLIANCE_COLOR = AllianceColor.RED;
 }

@@ -38,13 +38,13 @@ public class PullUp {
     private boolean holding = false;
     private ButtonState dpadDownState = ButtonState.RELEASED;
     private ButtonState dpadUpState = ButtonState.RELEASED;
-    private enum PullUpState {
+    public enum PullUpState {
         DOWN,
         AIMING,
         CATCH,
         LIFT
     }
-    private PullUpState pullUpState = PullUpState.DOWN;
+    public PullUpState pullUpState = PullUpState.DOWN;
     public static int pos = 0;
 
 
