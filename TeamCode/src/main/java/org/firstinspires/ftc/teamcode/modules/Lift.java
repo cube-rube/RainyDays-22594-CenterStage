@@ -67,7 +67,6 @@ public class Lift {
 
     public void opControl() {
         reference += (-gamepad.left_stick_y) * SPEED * timer.seconds();
-        reference = pos;
         PIDControl();
     }
 

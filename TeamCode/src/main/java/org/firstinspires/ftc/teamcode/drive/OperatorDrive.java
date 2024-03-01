@@ -15,6 +15,8 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.NonConst;
 import org.firstinspires.ftc.robotcore.external.Telemetry;import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -330,16 +332,19 @@ public class OperatorDrive {
     public static double INTEGRAL_SUM_MAX = 0.14;
     public static double MULTIPLIER = 0.5;
     public static PIDFCoefficients coefficients = new PIDFCoefficients(0.014, 0, 0.7, 0); // 2.2 0.2 0.014
-    double reference = 0;
+    double reference = 181;
 
     public void backdropDrive() {
+        double yaw =  gamepad.right_trigger - gamepad.left_trigger;
+
         double angle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-        if (reference == 0) {
+        if (reference == 181) {
             reference = 90;
             if (GameConstants.ALLIANCE_COLOR == AllianceColor.BLUE) {
                 reference = -90;
             }
         }
+
 
 
         double error = angle - reference;
@@ -354,6 +359,9 @@ public class OperatorDrive {
         double power = (error * coefficients.p) + (integralSum * coefficients.i) + (derivative * coefficients.d);
         if (Math.abs(error) > 0.2) {
             power += coefficients.f * Math.signum(error);
+        }
+        if (yaw != 0) {
+            power = 0;
         }
 
         double axial   = -gamepad.left_stick_y * MULTIPLIER;
@@ -406,7 +414,7 @@ public class OperatorDrive {
                 break;
             case FIELD:
                 driveFieldCentric();
-                reference = 0;
+                reference = 181;
                 lastError = 0;
                 integralSum = 0;
                 break;
