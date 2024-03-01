@@ -42,6 +42,8 @@ public class Intake {
     }
     private IntakeState intakeState = IntakeState.STOP;
     public static double STOP_POWER = 0.15;
+    public static double INTAKE_POWER = -0.8;
+    public static double OUT_POWER = 0.6;
     public static double OPEN_LEFT_POS = 0.03;
     public static double OPEN_RIGHT_POS = 0.65;
     public static double CLOSE_LEFT_POS = 0.75;
@@ -80,10 +82,10 @@ public class Intake {
     }
     public void opControlSensor() {
         if (gamepad.y) {
-            motor.setPower(0.6);
+            motor.setPower(OUT_POWER);
             direction = Direction.BACKWARD;
         } else if (gamepad.a) {
-            motor.setPower(-0.85);
+            motor.setPower(INTAKE_POWER);
             direction = Direction.FORWARD;
         } else {
             switch (direction) {
