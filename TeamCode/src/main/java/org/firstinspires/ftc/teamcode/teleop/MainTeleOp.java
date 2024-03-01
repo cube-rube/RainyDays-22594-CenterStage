@@ -50,6 +50,8 @@ public class MainTeleOp extends LinearOpMode {
 
             if (scorer.rotationBeamState == Scorer.RotationState.DEPLOY) {
                 operatorDrive.driveState = OperatorDrive.DriveState.BACKDROP;
+            } else if (gamepad1.x) {
+                operatorDrive.driveState = OperatorDrive.DriveState.PULLUP;
             } else {
                 operatorDrive.driveState = OperatorDrive.DriveState.FIELD;
             }

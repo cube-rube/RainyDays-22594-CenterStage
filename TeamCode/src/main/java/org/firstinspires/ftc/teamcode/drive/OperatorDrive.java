@@ -69,7 +69,8 @@ public class OperatorDrive {
 
     public enum DriveState {
         BACKDROP,
-        FIELD
+        FIELD,
+        PULLUP
     }
     private enum ButtonState {
         PRESSED,
@@ -340,12 +341,10 @@ public class OperatorDrive {
         double angle = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         if (reference == 181) {
             reference = 90;
-            if (GameConstants.ALLIANCE_COLOR == AllianceColor.BLUE) {
+            if (GameConstants.ALLIANCE_COLOR == AllianceColor.RED) {
                 reference = -90;
             }
         }
-
-
 
         double error = angle - reference;
         double derivative = (error - lastError) * timer.seconds();
@@ -410,6 +409,7 @@ public class OperatorDrive {
     public void drive() {
         switch (driveState) {
             case BACKDROP:
+            case PULLUP:
                 backdropDrive();
                 break;
             case FIELD:
@@ -418,7 +418,6 @@ public class OperatorDrive {
                 lastError = 0;
                 integralSum = 0;
                 break;
-
         }
     }
 
