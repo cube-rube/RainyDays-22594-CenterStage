@@ -12,15 +12,13 @@ import org.firstinspires.ftc.teamcode.modules.utility.ButtonState;
 
 @Config
 public class Shooter {
-    private final LinearOpMode linearOpMode;
-    private final HardwareMap hardwareMap;
     private final Telemetry telemetry;
     private final Gamepad gamepad;
     private final Servo servoHold;
     private final Servo servoRaise;
 
-    private double up_pos = 0.6;
-    private double down_pos = 0.45;
+    public static double up_pos = 0.55;
+    public static double down_pos = 0.45;
     public static double hold_pos = 0.55;
     public static double release_pos = 1;
     private ButtonState leftTriggerState = ButtonState.RELEASED;
@@ -42,8 +40,7 @@ public class Shooter {
 
 
     public Shooter(LinearOpMode linearOpMode) {
-        this.linearOpMode = linearOpMode;
-        hardwareMap = linearOpMode.hardwareMap;
+        HardwareMap hardwareMap = linearOpMode.hardwareMap;
         telemetry = linearOpMode.telemetry;
         gamepad = linearOpMode.gamepad2;
 
