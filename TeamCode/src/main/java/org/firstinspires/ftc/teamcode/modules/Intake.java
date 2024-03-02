@@ -34,13 +34,13 @@ public class Intake {
         BACKWARD,
     }
     private Direction direction = Direction.F_STOP;
-    private enum IntakeState {
+    public enum IntakeState {
         EJECT,
         INTAKE,
         BREAK,
         STOP
     }
-    private IntakeState intakeState = IntakeState.STOP;
+    public IntakeState intakeState = IntakeState.STOP;
     public static double STOP_POWER = 0.15;
     public static double INTAKE_POWER = -0.8;
     public static double OUT_POWER = 0.6;
@@ -86,7 +86,7 @@ public class Intake {
             direction = Direction.BACKWARD;
         } else if (gamepad.a) {
             motor.setPower(INTAKE_POWER);
-            direction = Direction.FORWARD;
+            direction = Direction.BACKWARD;
         } else {
             switch (direction) {
                 case FORWARD: motor.setPower(STOP_POWER);
@@ -125,6 +125,11 @@ public class Intake {
         intakeState = IntakeState.INTAKE;
     }
 
+    public void ejectOp() {
+        motor.setPower(OUT_POWER);
+        direction = Direction.BACKWARD;
+    }
+
     public void eject() {
         intakeState = IntakeState.EJECT;
     }
@@ -160,7 +165,7 @@ public class Intake {
         switch (intakeState) {
             case INTAKE:
                 motor.setPower(-0.7);
-                direction = Direction.FORWARD;
+                direction = Direction.BACKWARD;
                 break;
             case EJECT:
                 motor.setPower(0.7);

@@ -43,10 +43,26 @@ public class MainTeleOp extends LinearOpMode {
             operatorDrive.drive();
             operatorDrive.telemetry();
             lift.opControl();
-            intake.opControlSensor();
+            switch (intake.intakeState) {
+                case STOP:
+                    intake.opControlSensor();
+                    break;
+                case EJECT:
+                    intake.ejectOp();
+                    break;
+            }
             scorer.opControl();
             pullUp.opControlPos();
             shooter.tele();
+
+            switch (scorer.intakeState) {
+                case EJECT:
+                    intake.intakeState = Intake.IntakeState.EJECT;
+                    break;
+                case STOP:
+                    intake.intakeState = Intake.IntakeState.STOP;
+                    break;
+            }
 
             if (scorer.rotationBeamState == Scorer.RotationState.DEPLOY) {
                 operatorDrive.driveState = OperatorDrive.DriveState.BACKDROP;

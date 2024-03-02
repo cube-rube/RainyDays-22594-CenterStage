@@ -53,11 +53,14 @@ public class Scorer {
     private int counterClose = -1;
     private int counterLift = -1;
     private int counterDown = -1;
+    private int counterEject = -1;
     public static int delayDown = 21;
     public static int delayClose = 10;
     public static int delayLift = 20;
+    public static int delayEject = 10;
     public static int liftPos = 200;
     public DigitalChannel sensorLower, sensorUpper;
+    public Intake.IntakeState intakeState = Intake.IntakeState.STOP;
 
     public Scorer(LinearOpMode linearOpMode, Lift lift) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
@@ -277,6 +280,13 @@ public class Scorer {
             rotationBoxState = RotationState.TAKE;
             holderUpperState = HolderState.RELEASE;
             holderLowerState = HolderState.RELEASE;
+            intakeState = Intake.IntakeState.EJECT;
+            counterEject = delayEject;
+        }
+
+        counterEject -= 1;
+        if (counterEject == 0) {
+            intakeState = Intake.IntakeState.STOP;
         }
 
         telemetry.addLine("---------------");
