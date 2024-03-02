@@ -316,7 +316,7 @@ public class OperatorDrive {
 
         double SPEED_MULTIPLIER = 1.0;
         if (gamepad.b) {
-            SPEED_MULTIPLIER = 0.5;
+            SPEED_MULTIPLIER = 0.7;
         }
 
         leftFrontDrive.setPower(leftFrontPower * SPEED_MULTIPLIER);
@@ -363,16 +363,19 @@ public class OperatorDrive {
             power = 0;
         }
 
-        double axial   = -gamepad.left_stick_y * MULTIPLIER;
-        double lateral =  gamepad.left_stick_x * MULTIPLIER;
+        double SPEED_MULTIPLIER = MULTIPLIER;
+        if (gamepad.b) {
+            SPEED_MULTIPLIER = 0.7;
+        }
+
+        double axial   = -gamepad.left_stick_y * SPEED_MULTIPLIER;
+        double lateral =  gamepad.left_stick_x * SPEED_MULTIPLIER;
 
         double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
         double rotAxial   = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
 
-
-        rotLateral = rotLateral * 1.1;
 
         double leftFrontPower  = rotAxial + power + rotLateral;
         double rightFrontPower = rotAxial - power - rotLateral;
@@ -409,8 +412,12 @@ public class OperatorDrive {
     public void drive() {
         switch (driveState) {
             case BACKDROP:
+                backdropDrive();
+                MULTIPLIER = 0.5;
+                break;
             case PULLUP:
                 backdropDrive();
+                MULTIPLIER = 1;
                 break;
             case FIELD:
                 driveFieldCentric();
