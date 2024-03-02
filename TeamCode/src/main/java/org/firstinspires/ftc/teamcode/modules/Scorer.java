@@ -44,7 +44,7 @@ public class Scorer {
     public static double deployBoxPos = 0.34; // Позиция коробки при выгрузке
     public static double deployBeamPos = 0.68; // Позиция перекида при выгрузке
     public static double moveBoxPos = 0.87; // Позиция коробки при перекиде
-    public static double moveBeamPos = 0.1; // Позиция перекида между
+    public static double moveBeamPos = 0.087; // Позиция перекида между
     public static double deployBeamAutoPos = 0.87;
     public static double deployBoxAutoPos = 0.45;
 
