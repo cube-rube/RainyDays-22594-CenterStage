@@ -42,7 +42,7 @@ public class Intake {
     }
     public IntakeState intakeState = IntakeState.STOP;
     public static double STOP_POWER = 0.15;
-    public static double INTAKE_POWER = -0.8;
+    public static double INTAKE_POWER = -1;
     public static double OUT_POWER = 0.6;
     public static double OPEN_LEFT_POS = 0.03;
     public static double OPEN_RIGHT_POS = 0.65;

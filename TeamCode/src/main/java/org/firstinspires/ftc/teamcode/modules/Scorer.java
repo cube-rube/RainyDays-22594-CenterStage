@@ -40,7 +40,7 @@ public class Scorer {
     public RotationState rotationBeamState;
 
     public static double takeBoxPos = 0.87; // Позиция коробки при захвате
-    public static double takeBeamPos = 0.065; // Позиция перекида при захвате
+    public static double takeBeamPos = 0.01; // Позиция перекида при захвате
     public static double deployBoxPos = 0.34; // Позиция коробки при выгрузке
     public static double deployBeamPos = 0.68; // Позиция перекида при выгрузке
     public static double moveBoxPos = 0.87; // Позиция коробки при перекиде
@@ -54,7 +54,7 @@ public class Scorer {
     private int counterLift = -1;
     private int counterDown = -1;
     private int counterEject = -1;
-    public static int delayDown = 21;
+    public static int delayDown = 26;
     public static int delayClose = 10;
     public static int delayLift = 20;
     public static int delayEject = 10;
@@ -159,10 +159,12 @@ public class Scorer {
             holderUpperState = HolderState.HOLD;
             counterDown = delayDown;
             lift.setReference(0);
+
         } else if (gamepad.y && rotationBeamState == RotationState.TAKE) { // Deploy
             holderLowerState = HolderState.HOLD;
             holderUpperState = HolderState.HOLD;
             counterClose = delayClose;
+
         }
 
         // HoldLower Button switch
