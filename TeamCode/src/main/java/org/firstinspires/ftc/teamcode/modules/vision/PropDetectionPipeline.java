@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.modules.vision;
 
+import org.firstinspires.ftc.teamcode.misc.GameConstants;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Rect;
@@ -8,7 +9,6 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 public class PropDetectionPipeline extends OpenCvPipeline {
-	private final AllianceColor ALLIANCECOLOR;
     Mat ybcrcb = new Mat();
     Mat leftCrop, centerCrop, rightCrop;
     double avgLeft, avgCenter, avgRight;
@@ -24,10 +24,6 @@ public class PropDetectionPipeline extends OpenCvPipeline {
     }
     public volatile PropPosition position;
 
-    public PropDetectionPipeline(AllianceColor color) {
-        this.ALLIANCECOLOR = color;
-    }
-
     @Override
     public Mat processFrame(Mat input) {
         Imgproc.cvtColor(input, ybcrcb, Imgproc.COLOR_RGB2YCrCb);
@@ -36,16 +32,22 @@ public class PropDetectionPipeline extends OpenCvPipeline {
         Rect centerRect = null;
         Rect rightRect = null;
 
-        switch (ALLIANCECOLOR) {
+        switch (GameConstants.ALLIANCE_COLOR) {
             case RED:
                 leftRect = new Rect(50, 140, 120, 120);
                 centerRect = new Rect(260, 120, 100, 100);
                 rightRect = new Rect(480, 140, 120, 120);
                 break;
             case BLUE:
-                leftRect = new Rect(80, 140, 100, 100);
-                centerRect = new Rect(280, 120, 100, 100);
-                rightRect = new Rect(500, 140, 100, 100);
+                switch (GameConstants.STARTPOS) {
+                    case NEAR:
+                        leftRect = new Rect(90, 140, 120, 80);
+                        centerRect = new Rect(280, 140, 100, 80);
+                        rightRect = new Rect(480, 140, 120, 80);
+                        break;
+                    case FAR:
+
+                }
                 break;
         }
 
@@ -55,7 +57,7 @@ public class PropDetectionPipeline extends OpenCvPipeline {
         centerCrop = ybcrcb.submat(centerRect);
         rightCrop = ybcrcb.submat(rightRect);
 
-        switch (ALLIANCECOLOR) {
+        switch (GameConstants.ALLIANCE_COLOR) {
             case RED:
                 Core.extractChannel(leftCrop, leftCrop, 1);
                 Core.extractChannel(centerCrop, centerCrop, 1);

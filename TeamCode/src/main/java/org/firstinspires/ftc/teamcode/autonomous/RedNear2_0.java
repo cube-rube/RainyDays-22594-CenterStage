@@ -207,12 +207,13 @@ public class RedNear2_0 extends LinearOpMode {
         scorer = new Scorer(this, lift);
 
         GameConstants.ALLIANCE_COLOR = AllianceColor.RED;
+        GameConstants.STARTPOS = GameConstants.StartPos.NEAR;
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        pipeline = new PropDetectionPipeline(GameConstants.ALLIANCE_COLOR);
+        pipeline = new PropDetectionPipeline();
         webcam.setPipeline(pipeline);
         telemetry.update();
     }

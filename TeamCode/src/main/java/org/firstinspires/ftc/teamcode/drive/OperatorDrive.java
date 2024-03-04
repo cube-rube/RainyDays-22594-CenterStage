@@ -330,9 +330,9 @@ public class OperatorDrive {
 
     private double lastError = 0;
     private double integralSum = 0;
-    public static double INTEGRAL_SUM_MAX = 0.14;
+    public static double INTEGRAL_SUM_MAX = 40;
     public static double MULTIPLIER = 0.5;
-    public static PIDFCoefficients coefficients = new PIDFCoefficients(0.014, 0, 0.7, 0); // 2.2 0.2 0.014
+    public static PIDFCoefficients coefficients = new PIDFCoefficients(0.014, 0.008, 0.7, 0); // 2.2 0.2 0.014
     double reference = 181;
 
     public void backdropDrive() {
@@ -348,8 +348,11 @@ public class OperatorDrive {
 
         double error = angle - reference;
         double derivative = (error - lastError) * timer.seconds();
-        if (Math.abs(integralSum * coefficients.i) >= INTEGRAL_SUM_MAX && Math.signum(integralSum) == Math.signum(error)) {
-            integralSum = INTEGRAL_SUM_MAX / coefficients.i * Math.signum(integralSum);
+        if (Math.signum(lastError) != Math.signum(error) || Math.abs(error) > 15) {
+            integralSum = 0;
+        }
+        if (Math.abs(integralSum) >= INTEGRAL_SUM_MAX && Math.signum(integralSum) == Math.signum(error)) {
+            integralSum = INTEGRAL_SUM_MAX * Math.signum(integralSum);
         } else {
             integralSum += error * timer.seconds();
         }
@@ -360,7 +363,7 @@ public class OperatorDrive {
             power += coefficients.f * Math.signum(error);
         }
         if (yaw != 0) {
-            power = 0;
+            power = yaw;
         }
 
         double SPEED_MULTIPLIER = MULTIPLIER;
@@ -460,98 +463,6 @@ public class OperatorDrive {
         globalAngle += deltaAngle;
         lastAngles = angles;
         return globalAngle;
-    }
-
-    /**     * See if we are moving in a straight line and if not return a power correction value.
-     * @return Power adjustment, + is adjust left - is adjust right.     */
-    private double checkDirection()    {
-        // The gain value determines how sensitive the correction is to direction changes.
-        // You will have to experiment with your robot to get small smooth direction changes
-        // to stay on a straight line.
-        double correction, angle, gain = .10;
-        angle = getAngle();
-        if (angle == 0)
-            correction = 0;             // no adjustment.        else
-        correction = -angle;        // reverse sign of angle for correction.
-        correction = correction * gain;
-        return correction;
-    }
-
-
-    /**
-     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.     * @param degrees Degrees to turn, + is left - is right
-     */
-    private void rotate( double power)
-    {
-        int degrees = (int)getAngle();
-
-        while (degrees < 90) {
-
-            leftFrontDrive.setPower(power);
-            leftBackDrive.setPower(power);
-            rightFrontDrive.setPower(-power);
-            rightBackDrive.setPower(-power);
-        }
-        while (degrees > 90)
-        {   // turn left.
-            leftFrontDrive.setPower(-power);
-            leftBackDrive.setPower(-power);
-            rightFrontDrive.setPower(power);
-            rightBackDrive.setPower(power);
-        }
-
-        // rotate until turn is completed.
-        // turn the motors off.
-        leftFrontDrive.setPower(0);
-        leftBackDrive.setPower(0);
-        rightFrontDrive.setPower(0);
-        rightBackDrive.setPower(0);
-
-        // reset angle tracking on new heading.
-    }
-
-    public void forwardWithIMU() {
-        double axial   = -gamepad.left_stick_y;
-        double lateral = 0;
-
-        if (gamepad.options) {
-            imu.resetYaw();
-        }
-
-        double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-
-        double rotLateral = lateral * Math.cos(-botHeading) - axial * Math.sin(-botHeading);
-        double rotAxial   = lateral * Math.sin(-botHeading) + axial * Math.cos(-botHeading);
-
-        double leftFrontPower  = rotAxial + rotLateral;
-        double rightFrontPower = rotAxial - rotLateral;
-        double leftBackPower   = rotAxial - rotLateral;
-        double rightBackPower  = rotAxial + rotLateral;
-
-        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-        max = Math.max(max, Math.abs(leftBackPower));
-        max = Math.max(max, Math.abs(rightBackPower));
-
-        if (max > 1.0) {
-            leftFrontPower  /= max;
-            rightFrontPower /= max;
-            leftBackPower   /= max;
-            rightBackPower  /= max;
-        }
-
-        leftFrontDrive.setPower(leftFrontPower);
-        rightFrontDrive.setPower(rightFrontPower);
-        leftBackDrive.setPower(leftBackPower);
-        rightBackDrive.setPower(rightBackPower);
-    }
-
-    public void forward() {
-        double axial = -gamepad.left_stick_y;
-
-        leftFrontDrive.setPower(axial);
-        rightFrontDrive.setPower(axial);
-        leftBackDrive.setPower(axial);
-        rightBackDrive.setPower(axial);
     }
 
     public double driveFunc(double x) {
