@@ -46,7 +46,10 @@ public class PropDetectionPipeline extends OpenCvPipeline {
                         rightRect = new Rect(480, 140, 120, 80);
                         break;
                     case FAR:
-
+                        leftRect = new Rect(0, 140, 100, 70);
+                        centerRect = new Rect(220, 140, 60, 60);
+                        rightRect = new Rect(400, 140, 90, 70);
+                        break;
                 }
                 break;
         }

@@ -129,8 +129,8 @@ public class Scorer {
 
     public void deployAutoUp() {
         servoRotationBox.setPosition(deployBoxAutoPos);
-        servoRotationBeamLeft.setPosition(deployBeamAutoPos - 0.25);
-        servoRotationBeamRight.setPosition(deployBeamAutoPos - 0.25);
+        servoRotationBeamLeft.setPosition(deployBeamAutoPos - 0.35);
+        servoRotationBeamRight.setPosition(deployBeamAutoPos - 0.35);
     }
 
     public void deployAutoPush() {

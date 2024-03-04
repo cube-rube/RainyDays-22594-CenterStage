@@ -15,7 +15,7 @@ public class Camera {
     public final OpenCvWebcam webcam;
     public final PropDetectionPipeline pipeline;
 
-    public Camera(LinearOpMode linearOpMode, AllianceColor color) {
+    public Camera(LinearOpMode linearOpMode) {
         telemetry = linearOpMode.telemetry;
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
@@ -23,7 +23,7 @@ public class Camera {
         webcam = OpenCvCameraFactory.getInstance().createWebcam(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
-        pipeline = new PropDetectionPipeline(color);
+        pipeline = new PropDetectionPipeline();
         webcam.setPipeline(pipeline);
         telemetry.addLine("Camera initialized");
     }

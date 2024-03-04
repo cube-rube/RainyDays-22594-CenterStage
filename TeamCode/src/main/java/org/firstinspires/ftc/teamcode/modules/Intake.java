@@ -45,9 +45,9 @@ public class Intake {
     public static double INTAKE_POWER = -1;
     public static double OUT_POWER = 0.6;
     public static double OPEN_LEFT_POS = 0.03;
-    public static double OPEN_RIGHT_POS = 0.95;
+    public static double OPEN_RIGHT_POS = 0.965;
     public static double CLOSE_LEFT_POS = 0.73;
-    public static double CLOSE_RIGHT_POS = 0.14;
+    public static double CLOSE_RIGHT_POS = 0.23;
 
     public Intake(LinearOpMode linearOpMode) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
