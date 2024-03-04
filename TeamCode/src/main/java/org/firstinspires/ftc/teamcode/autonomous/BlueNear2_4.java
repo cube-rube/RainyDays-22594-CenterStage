@@ -86,7 +86,7 @@ public class BlueNear2_4 extends LinearOpMode {
 
         switch (position) {
             case RIGHT:
-                //move_right();
+                move_right();
                 break;
             case CENTER:
                 move_center();
@@ -516,7 +516,7 @@ public class BlueNear2_4 extends LinearOpMode {
                     scorer.deploy();
                     lift.setReference(570);
                 })
-                .splineToConstantHeading(new Vector2d(BACKDROP_RIGHT_COORDS[0], BACKDROP_RIGHT_COORDS[1]), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(BACKDROP_CENTER_COORDS[0], BACKDROP_CENTER_COORDS[1]), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
@@ -570,7 +570,7 @@ public class BlueNear2_4 extends LinearOpMode {
                     scorer.deploy();
                     lift.setReference(570);
                 })
-                .splineToConstantHeading(new Vector2d(BACKDROP_RIGHT_COORDS[0], BACKDROP_RIGHT_COORDS[1]), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(BACKDROP_CENTER_COORDS[0] + 0.5, BACKDROP_CENTER_COORDS[1]), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })

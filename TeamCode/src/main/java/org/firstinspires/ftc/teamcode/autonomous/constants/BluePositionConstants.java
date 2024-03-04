@@ -13,17 +13,17 @@ public class BluePositionConstants {
 
     public static Vector2d PURPLE_LEFT_VECTOR = new Vector2d(11, 37);
     public static double[] PURPLE_LEFT_NEAR = {22.65, 44, 90};
-    public static double[] PURPLE_LEFT_FAR = {-46.5, 44, 205};
+    public static double[] PURPLE_LEFT_FAR = {-46.5, 44, 335};
     public static double[] PURPLE_CENTER_NEAR = {13, 36.3};
     public static double[] PURPLE_CENTER_FAR = {-35.4, 36.3};
     public static Vector2d PURPLE_RIGHT_VECTOR = new Vector2d(23.2, 44);
-    public static double[] PURPLE_RIGHT_NEAR = {23.2, 44};
+    public static double[] PURPLE_RIGHT_NEAR = {12.8, 37, 205};
     public static double PURPLE_RIGHT_HEADING = Math.toRadians(90);
 
 
 
     public static Vector2d BACKDROP_LEFT_VECTOR = new Vector2d(49.5, 29);
-    public static double[] BACKDROP_RIGHT_COORDS = {49.4, 30};
+    public static double[] BACKDROP_RIGHT_COORDS = {49.4, 29.3};
     public static Vector2d BACKDROP_CENTER_VECTOR = new Vector2d(48.9, 35);
     public static double[] BACKDROP_CENTER_COORDS = {49.4, 34.8};
     public static Vector2d BACKDROP_RIGHT_VECTOR = new Vector2d(49.6, 42);
