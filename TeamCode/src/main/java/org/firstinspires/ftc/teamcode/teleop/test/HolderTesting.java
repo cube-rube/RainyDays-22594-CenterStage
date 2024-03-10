@@ -27,8 +27,11 @@ public class HolderTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            servoHoldLower.setPosition(SERVO_POS_LOWER);
+
             servoHoldUpper.setPosition(SERVO_POS_UPPER);
+            sleep(500);
+            servoHoldUpper.setPosition(SERVO_POS_UPPER + 0.5);
+            sleep(500);
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();

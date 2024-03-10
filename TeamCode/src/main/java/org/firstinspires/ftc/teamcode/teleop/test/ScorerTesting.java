@@ -11,15 +11,12 @@ import org.firstinspires.ftc.teamcode.modules.Lift;
 import org.firstinspires.ftc.teamcode.modules.Scorer;
 
 @Config
-@TeleOp(group = "test")
+@TeleOp(name = "HolderTest", group = "test")
 public class ScorerTesting extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
-    private Lift lift;
-    private Scorer scorer;
     public FtcDashboard dashboard;
+    private Servo holder;
     public static double SERVO_POS = 0.5;
-    public static double SERVO_POS_BOX = 0.5;
-    public static double diff = 0.043;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -28,8 +25,7 @@ public class ScorerTesting extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            lift.opControl();
-            scorer.opControl();
+            holder.setPosition(SERVO_POS);
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();
@@ -39,8 +35,7 @@ public class ScorerTesting extends LinearOpMode {
     private void initRobot() {
         dashboard = FtcDashboard.getInstance();
 
-        lift = new Lift(this, dashboard);
-        scorer = new Scorer(this, lift);
+        holder = hardwareMap.get(Servo.class, "servo_hold_upper");
 
         telemetry.update();
     }

@@ -44,10 +44,10 @@ public class Intake {
     public static double STOP_POWER = 0.15;
     public static double INTAKE_POWER = -1;
     public static double OUT_POWER = 0.6;
-    public static double OPEN_LEFT_POS = 0.03;
-    public static double OPEN_RIGHT_POS = 0.965;
-    public static double CLOSE_LEFT_POS = 0.73;
-    public static double CLOSE_RIGHT_POS = 0.23;
+    public static double OPEN_LEFT_POS = 0;
+    public static double OPEN_RIGHT_POS = 1;
+    public static double CLOSE_LEFT_POS = 0.68;
+    public static double CLOSE_RIGHT_POS = 0.3;
 
     public Intake(LinearOpMode linearOpMode) {
         HardwareMap hardwareMap = linearOpMode.hardwareMap;
@@ -168,7 +168,7 @@ public class Intake {
                 direction = Direction.BACKWARD;
                 break;
             case EJECT:
-                motor.setPower(0.7);
+                motor.setPower(0.85);
                 direction = Direction.BACKWARD;
                 break;
             case BREAK:

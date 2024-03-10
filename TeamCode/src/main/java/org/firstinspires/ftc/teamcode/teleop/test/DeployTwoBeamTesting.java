@@ -16,8 +16,8 @@ public class DeployTwoBeamTesting extends LinearOpMode {
     private Servo servoRotationBox;
     private Servo servoHoldLower;
     public FtcDashboard dashboard;
-    public static double SERVO_POS = 0.5;
-    public static double SERVO_BOX_POS = 0.5;
+    public static double SERVO_POS = 0.68;
+    public static double SERVO_BOX_POS = 0.4;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -34,6 +34,8 @@ public class DeployTwoBeamTesting extends LinearOpMode {
             } else {
                 servoHoldLower.setPosition(0.5);
             }
+
+
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.update();

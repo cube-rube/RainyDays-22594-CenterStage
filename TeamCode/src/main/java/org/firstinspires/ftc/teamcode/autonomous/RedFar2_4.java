@@ -7,14 +7,12 @@ import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionCon
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.DIFF_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.DOOR_DOWN_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.DOOR_UP_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.END;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.END_NEAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.FAR_START_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.NEAR_START_POSE;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.FIRST_PIXEL_STACK_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PIXEL_STACK_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_CENTER_FAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_LEFT_FAR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_LEFT_NEAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_RIGHT_HEADING;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_RIGHT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.RIGGING_DOWN_VECTOR;
@@ -269,7 +267,7 @@ public class RedFar2_4 extends LinearOpMode {
                 })
                 .waitSeconds(0.3)
 
-                .lineToSplineHeading(new Pose2d(END[0], END[1], Math.toRadians(END[2])))
+                .lineToSplineHeading(new Pose2d(END_NEAR[0], END_NEAR[1], Math.toRadians(END_NEAR[2])))
 
                 .build();
 
@@ -431,7 +429,7 @@ public class RedFar2_4 extends LinearOpMode {
                 })
                 .waitSeconds(0.3)
 
-                .lineToSplineHeading(new Pose2d(END[0], END[1], Math.toRadians(END[2])))
+                .lineToSplineHeading(new Pose2d(END_NEAR[0], END_NEAR[1], Math.toRadians(END_NEAR[2])))
 
                 .build();
 

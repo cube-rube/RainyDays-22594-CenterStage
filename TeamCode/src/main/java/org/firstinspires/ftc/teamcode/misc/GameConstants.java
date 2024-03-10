@@ -11,5 +11,5 @@ public class GameConstants {
         FAR
     }
     public static StartPos STARTPOS = StartPos.NEAR;
-    public static AllianceColor ALLIANCE_COLOR = AllianceColor.RED;
+    public static AllianceColor ALLIANCE_COLOR = AllianceColor.BLUE;
 }

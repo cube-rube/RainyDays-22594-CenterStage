@@ -39,14 +39,14 @@ public class Scorer {
     public RotationState rotationBoxState;
     public RotationState rotationBeamState;
 
-    public static double takeBoxPos = 0.87; // Позиция коробки при захвате
+    public static double takeBoxPos = 0.89; // Позиция коробки при захвате
     public static double takeBeamPos = 0.01; // Позиция перекида при захвате
-    public static double deployBoxPos = 0.34; // Позиция коробки при выгрузке
+    public static double deployBoxPos = 0.4; // Позиция коробки при выгрузке
     public static double deployBeamPos = 0.68; // Позиция перекида при выгрузке
     public static double moveBoxPos = 0.87; // Позиция коробки при перекиде
     public static double moveBeamPos = 0.087; // Позиция перекида между
     public static double deployBeamAutoPos = 0.87;
-    public static double deployBoxAutoPos = 0.45;
+    public static double deployBoxAutoPos = 0.5;
 
     private ButtonState dpadDownState = ButtonState.RELEASED;
     private ButtonState dpadUpState = ButtonState.RELEASED;
@@ -93,11 +93,11 @@ public class Scorer {
     }
 
     public void closeUpper() {
-        servoHoldUpper.setPosition(holdPos);
+        servoHoldUpper.setPosition(holdPos + 0.5);
     }
 
     public void openUpper() {
-        servoHoldUpper.setPosition(releasePos);
+        servoHoldUpper.setPosition(releasePos + 0.5);
     }
 
     public void closeLower() {
@@ -116,6 +116,7 @@ public class Scorer {
         return !sensorUpper.getState();
     }
 
+    // box 0.45
     public void deploy() {
         servoRotationBox.setPosition(0.38);
         servoRotationBeamLeft.setPosition(0.915 - 0.21);
@@ -134,9 +135,9 @@ public class Scorer {
     }
 
     public void deployAutoPush() {
-        servoRotationBox.setPosition(deployBoxAutoPos - 0.12);
-        servoRotationBeamLeft.setPosition(deployBeamAutoPos);
-        servoRotationBeamRight.setPosition(deployBeamAutoPos);
+        servoRotationBox.setPosition(deployBoxAutoPos - 0.1);
+        servoRotationBeamLeft.setPosition(deployBeamAutoPos - 0.02);
+        servoRotationBeamRight.setPosition(deployBeamAutoPos - 0.02);
     }
 
     public void move() {
@@ -253,9 +254,9 @@ public class Scorer {
         }
 
         switch (holderUpperState) {
-            case HOLD: servoHoldUpper.setPosition(holdPos);
+            case HOLD: servoHoldUpper.setPosition(holdPos + 0.5);
                 break;
-            case RELEASE: servoHoldUpper.setPosition(releasePos);
+            case RELEASE: servoHoldUpper.setPosition(releasePos + 0.5);
                 break;
         }
 

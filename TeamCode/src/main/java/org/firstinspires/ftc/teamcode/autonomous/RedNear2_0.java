@@ -29,7 +29,7 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name = "RedNearScorer2+0")
+@Autonomous(name = "RedNear2+0")
 public class RedNear2_0 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
@@ -97,6 +97,9 @@ public class RedNear2_0 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
                     scorer.closeUpper();
+                    scorer.closeUpper();
+                    scorer.closeUpper();
+                    scorer.closeUpper();
                     scorer.deployAuto();
                     lift.resetEncoders();
                 })
@@ -111,6 +114,9 @@ public class RedNear2_0 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     scorer.deployAutoUp();
                     scorer.closeLower();
+                    scorer.openUpper();
+                    scorer.openUpper();
+                    scorer.openUpper();
                     scorer.openUpper();
                 })
                 .waitSeconds(0.2)
@@ -133,8 +139,13 @@ public class RedNear2_0 extends LinearOpMode {
 
     private void move_center() {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, 5.375, 4.95),
+                        SampleMecanumDrive.getAccelerationConstraint(60))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
+                    scorer.closeUpper();
+                    scorer.closeUpper();
+                    scorer.closeUpper();
                     scorer.closeUpper();
                     scorer.deployAuto();
                     lift.resetEncoders();
@@ -152,6 +163,9 @@ public class RedNear2_0 extends LinearOpMode {
                 .waitSeconds(0.05)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openUpper();
+                    scorer.openUpper();
+                    scorer.openUpper();
+                    scorer.openUpper();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                     scorer.take();
@@ -166,6 +180,9 @@ public class RedNear2_0 extends LinearOpMode {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
+                    scorer.closeUpper();
+                    scorer.closeUpper();
+                    scorer.closeUpper();
                     scorer.closeUpper();
                     scorer.deployAuto();
                     lift.resetEncoders();
@@ -185,6 +202,9 @@ public class RedNear2_0 extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_VECTOR, Math.toRadians(0)))
                 .waitSeconds(0.05)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.openUpper();
+                    scorer.openUpper();
+                    scorer.openUpper();
                     scorer.openUpper();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {

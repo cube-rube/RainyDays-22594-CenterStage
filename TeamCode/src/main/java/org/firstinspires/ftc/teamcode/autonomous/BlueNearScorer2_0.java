@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_CENTER_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DIFF_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_POSE;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_HEADING;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.BACKDROP_CENTER_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.BACKDROP_LEFT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.BACKDROP_RIGHT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.DIFF_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.NEAR_START_POSE;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.PURPLE_LEFT_VECTOR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.PURPLE_RIGHT_HEADING;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.PURPLE_RIGHT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.PURPLE_CENTER_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstantsOld.PURPLE_LEFT_HEADING;
 
@@ -101,6 +101,8 @@ public class BlueNearScorer2_0 extends LinearOpMode {
 
     private void move_left() {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, 5.375, 4.95),
+                        SampleMecanumDrive.getAccelerationConstraint(60))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
                     scorer.closeUpper();
@@ -140,6 +142,8 @@ public class BlueNearScorer2_0 extends LinearOpMode {
 
     private void move_center() {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, 5.375, 4.95),
+                        SampleMecanumDrive.getAccelerationConstraint(60))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
                     scorer.closeUpper();
@@ -174,6 +178,8 @@ public class BlueNearScorer2_0 extends LinearOpMode {
 
     private void move_right() {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(35, 5.375, 4.95),
+                        SampleMecanumDrive.getAccelerationConstraint(60))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
                     scorer.closeUpper();
@@ -181,7 +187,7 @@ public class BlueNearScorer2_0 extends LinearOpMode {
                     lift.resetEncoders();
                 })
                 .waitSeconds(1.2)
-                .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_VECTOR, PURPLE_RIGHT_HEADING))
+                .lineToSplineHeading(new Pose2d(PURPLE_RIGHT_VECTOR.plus(new Vector2d(-1.2, 0)), PURPLE_RIGHT_HEADING))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })

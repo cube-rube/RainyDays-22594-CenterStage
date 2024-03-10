@@ -22,16 +22,14 @@ public class FlapTesting extends LinearOpMode {
 
         while (opModeIsActive()) {
             if (gamepad1.y) {
+                intake.closeLeftFlap();
+            } else {
                 intake.openLeftFlap();
             }
-            if (gamepad1.b) {
-                intake.closeLeftFlap();
-            }
             if (gamepad1.x) {
-                intake.openRightFlap();
-            }
-            if (gamepad1.a) {
                 intake.closeRightFlap();
+            } else {
+                intake.openRightFlap();
             }
 
             telemetry.addData("Runtime", runtime.toString());

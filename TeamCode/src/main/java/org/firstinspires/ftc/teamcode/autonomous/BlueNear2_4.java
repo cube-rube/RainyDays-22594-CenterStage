@@ -179,8 +179,8 @@ public class BlueNear2_4 extends LinearOpMode {
                 // GOING TO STACK
                 .setReversed(true)
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(50, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1]), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1]), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] + 2.5), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] + 2.5), Math.toRadians(180))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(25, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
@@ -208,8 +208,8 @@ public class BlueNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1]), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1]), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] + 1.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] + 1.5), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
@@ -262,14 +262,14 @@ public class BlueNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1]), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1]), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] + 3), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] + 3), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
                     lift.setReference(570);
                 })
-                .splineToConstantHeading(new Vector2d(BACKDROP_RIGHT_COORDS[0], BACKDROP_RIGHT_COORDS[1]), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(BACKDROP_CENTER_COORDS[0], BACKDROP_CENTER_COORDS[1]), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
@@ -306,7 +306,7 @@ public class BlueNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
                     scorer.deployAutoPush();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     scorer.deploy();
                 })
                 .waitSeconds(0.2)
@@ -359,8 +359,8 @@ public class BlueNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1]), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1]), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] + 2.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] + 2.5), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
@@ -412,12 +412,12 @@ public class BlueNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1]), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1]), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] + 3), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] + 3), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
-                    lift.setReference(570);
+                    lift.setReference(700);
                 })
                 .splineToConstantHeading(new Vector2d(BACKDROP_RIGHT_COORDS[0], BACKDROP_RIGHT_COORDS[1]), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -426,12 +426,12 @@ public class BlueNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
                     scorer.openUpper();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     scorer.take();
                     lift.setReference(0);
                 })
                 .resetVelConstraint()
-                .waitSeconds(0.6)
+                .waitSeconds(0.7)
 
                 // PARKING
                 .lineToSplineHeading(new Pose2d(END_NEAR[0], END_NEAR[1], Math.toRadians(END_NEAR[2])))
