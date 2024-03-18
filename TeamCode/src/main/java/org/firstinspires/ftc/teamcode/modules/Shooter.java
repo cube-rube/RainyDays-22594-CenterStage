@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.modules.utility.ButtonState;
@@ -32,6 +33,7 @@ public class Shooter {
     }
     private PositionState position = PositionState.DOWN;
     private int counter = 0;
+    private ElapsedTime delta = new ElapsedTime();
 
     public void start_shooter_pos(){
         servoRaise.setPosition(down_pos);
@@ -195,6 +197,56 @@ public class Shooter {
         }
         else {
             servoHold.setPosition(hold_pos);
+        }
+    }
+
+    public void teleOneButton() {
+        switch (rightStickButtonState) {
+            case PRESSED:
+                switch (position) {
+                    case UP:
+                        break;
+                    case DOWN:
+                        position = PositionState.UP;
+                        break;
+                    case HOLDING:
+                        position = PositionState.DOWN;
+                        break;
+                }
+                if (gamepad.dpad_up) {
+                    rightStickButtonState = ButtonState.HELD;
+                } else {
+                    rightStickButtonState = ButtonState.RELEASED;
+                }
+                break;
+            case HELD:
+                if (!gamepad.dpad_up) {
+                    rightStickButtonState = ButtonState.RELEASED;
+                }
+                break;
+            case RELEASED:
+                if (gamepad.dpad_up) {
+                    rightStickButtonState = ButtonState.PRESSED;
+                }
+                break;
+        }
+
+        switch (position) {
+            case UP:
+                servoRaise.setPosition(up_pos);
+                if (delta.seconds() > 0.2) {
+                    servoHold.setPosition(release_pos);
+                    position = PositionState.HOLDING;
+                }
+                break;
+            case DOWN:
+                servoRaise.setPosition(down_pos);
+                servoHold.setPosition(hold_pos);
+                delta.reset();
+                break;
+            case HOLDING:
+                servoRaise.setPosition(up_pos);
+                break;
         }
     }
 }

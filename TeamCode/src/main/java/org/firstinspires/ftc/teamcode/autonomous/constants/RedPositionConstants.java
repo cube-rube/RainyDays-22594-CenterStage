@@ -33,8 +33,9 @@ public class RedPositionConstants {
     public static Vector2d DIFF_VECTOR = new Vector2d(0, -0.5);
 
     public static Vector2d RIGGING_UP_VECTOR = new Vector2d(5, -59);
+    public static double[] RIGGING_UP_COORDS = {5, -59};
     public static Vector2d RIGGING_DOWN_VECTOR = new Vector2d(-30, -59);
-
+    public static double[] RIGGING_DOWN_COORDS = {-40, -59};
     public static Vector2d DOOR_UP_VECTOR = new Vector2d(24, -8);
     public static double[] DOOR_UP_COORDS = {24, -8};
     public static Vector2d DOOR_DOWN_VECTOR = new Vector2d(-40, -8);
@@ -45,5 +46,4 @@ public class RedPositionConstants {
     public static double SECOND_PIXEL_STACK_BROKE = 4;
     public static double[] THIRD_PIXEL_STACK_COORDS = {-57.8, -11.5};
     public static double[] END_NEAR = {45, -55, 300};
-
 }
