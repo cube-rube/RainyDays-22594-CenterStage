@@ -28,8 +28,10 @@ public class Scorer {
     }
     public HolderState holderUpperState;
     public HolderState holderLowerState;
-    public static double holdPos = 0.5;
-    public static double releasePos = 0;
+    public static double holdLowerPos = 0.5;
+    public static double releaseLowerPos = 0;
+    public static double holdUpperPos = 0;
+    public static double releaseUpperPos = 0.5;
 
     public enum RotationState {
         TAKE,
@@ -76,7 +78,6 @@ public class Scorer {
 
         servoHoldLower = hardwareMap.get(Servo.class, "servo_hold_lower");
         servoHoldUpper = hardwareMap.get(Servo.class, "servo_hold_upper");
-        servoHoldUpper.setDirection(Servo.Direction.REVERSE);
 
         sensorLower = hardwareMap.get(DigitalChannel.class, "sensor_lower");
         sensorLower.setMode(DigitalChannel.Mode.INPUT);
@@ -93,19 +94,19 @@ public class Scorer {
     }
 
     public void closeUpper() {
-        servoHoldUpper.setPosition(holdPos + 0.5);
+        servoHoldUpper.setPosition(holdUpperPos);
     }
 
     public void openUpper() {
-        servoHoldUpper.setPosition(releasePos + 0.5);
+        servoHoldUpper.setPosition(releaseUpperPos);
     }
 
     public void closeLower() {
-        servoHoldLower.setPosition(holdPos);
+        servoHoldLower.setPosition(holdLowerPos);
     }
 
     public void openLower() {
-        servoHoldLower.setPosition(releasePos);
+        servoHoldLower.setPosition(releaseLowerPos);
     }
 
     public boolean getLowerPixel() {
@@ -247,16 +248,16 @@ public class Scorer {
         }
 
         switch (holderLowerState) {
-            case HOLD: servoHoldLower.setPosition(holdPos);
+            case HOLD: servoHoldLower.setPosition(holdLowerPos);
                 break;
-            case RELEASE: servoHoldLower.setPosition(releasePos);
+            case RELEASE: servoHoldLower.setPosition(releaseLowerPos);
                 break;
         }
 
         switch (holderUpperState) {
-            case HOLD: servoHoldUpper.setPosition(holdPos + 0.5);
+            case HOLD: servoHoldUpper.setPosition(holdUpperPos);
                 break;
-            case RELEASE: servoHoldUpper.setPosition(releasePos + 0.5);
+            case RELEASE: servoHoldUpper.setPosition(releaseUpperPos);
                 break;
         }
 

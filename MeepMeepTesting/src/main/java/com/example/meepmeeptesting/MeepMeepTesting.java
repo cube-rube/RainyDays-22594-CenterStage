@@ -88,11 +88,11 @@ public class MeepMeepTesting {
                                     //intake.take();
                                     //intake.openLeftFlap();
                                 })
-                                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, 3.5, 6.5))
                                 .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] + 0.5, FIRST_PIXEL_STACK_COORDS[1] + 8.5), Math.toRadians(270))
                                 .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
                                     //intake.closeLeftFlap();
                                 })
+                                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, 3.5, 6.5))
                                 .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 1.2, FIRST_PIXEL_STACK_COORDS[1] - 12), Math.toRadians(270))
                                 .lineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 1.2, FIRST_PIXEL_STACK_COORDS[1] + 8.5))
                                 .setReversed(false)
