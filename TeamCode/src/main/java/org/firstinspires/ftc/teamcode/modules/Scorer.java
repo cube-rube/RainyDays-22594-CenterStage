@@ -43,7 +43,7 @@ public class Scorer {
 
     public static double takeBoxPos = 0.89; // Позиция коробки при захвате
     public static double takeBeamPos = 0.01; // Позиция перекида при захвате
-    public static double deployBoxPos = 0.4; // Позиция коробки при выгрузке
+    public static double deployBoxPos = 0.42; // Позиция коробки при выгрузке
     public static double deployBeamPos = 0.68; // Позиция перекида при выгрузке
     public static double moveBoxPos = 0.87; // Позиция коробки при перекиде
     public static double moveBeamPos = 0.087; // Позиция перекида между
@@ -119,9 +119,9 @@ public class Scorer {
 
     // box 0.45
     public void deploy() {
-        servoRotationBox.setPosition(0.38);
-        servoRotationBeamLeft.setPosition(0.915 - 0.21);
-        servoRotationBeamRight.setPosition(0.915 - 0.21);
+        servoRotationBox.setPosition(deployBoxPos);
+        servoRotationBeamLeft.setPosition(deployBeamPos);
+        servoRotationBeamRight.setPosition(deployBeamPos);
     }
     public void deployAuto() {
         servoRotationBox.setPosition(deployBoxAutoPos);

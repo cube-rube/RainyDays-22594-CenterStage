@@ -45,7 +45,7 @@ public class MainTeleOp extends LinearOpMode {
             lift.opControl();
             switch (intake.intakeState) {
                 case STOP:
-                    intake.opControlSensor();
+                    intake.opControlOld();
                     break;
                 case EJECT:
                     intake.ejectOp();

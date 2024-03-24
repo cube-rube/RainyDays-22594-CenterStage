@@ -1,21 +1,21 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.BACKDROP_CENTER_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.BACKDROP_LEFT_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.BACKDROP_RIGHT_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.DOOR_DOWN_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.DOOR_UP_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.END_NEAR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.FIRST_PIXEL_STACK_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.NEAR_START_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.NEAR_START_POSE;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_CENTER_NEAR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_LEFT_NEAR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.PURPLE_RIGHT_NEAR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.RIGGING_DOWN_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.RIGGING_UP_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.START_HEADING;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.RedPositionConstants.THIRD_PIXEL_STACK_COORDS;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_CENTER_COORDS;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_COORDS;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_COORDS;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DOOR_DOWN_COORDS;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DOOR_UP_COORDS;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.END_NEAR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.FIRST_PIXEL_STACK_COORDS;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_COORDS;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_POSE;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_CENTER_NEAR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_NEAR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_NEAR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_DOWN_COORDS;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_UP_COORDS;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.START_HEADING;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.THIRD_PIXEL_STACK_COORDS;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -38,8 +38,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-@Autonomous(name = "RedNearRig2+2")
-public class RedNearRig2_2 extends LinearOpMode {
+@Autonomous(name = "BlueNearRig2+2")
+public class BlueNearRig2_2 extends LinearOpMode {
     private FtcDashboard dashboard;
     private SampleMecanumDrive drive;
     private Intake intake;
@@ -103,6 +103,7 @@ public class RedNearRig2_2 extends LinearOpMode {
         });
 
         ElapsedTime intakeTimer = new ElapsedTime();
+        double timeLeft = 0;
         while (opModeIsActive()) {
             PoseCache.pose = drive.getPoseEstimate();
             lift.PIDControl();
@@ -122,6 +123,12 @@ public class RedNearRig2_2 extends LinearOpMode {
             } else {
                 intakeTimer.reset();
             }
+            if (!drive.isBusy()) {
+                if (timeLeft == 0) {
+                    timeLeft = 30 - getRuntime();
+                }
+                telemetry.addData("TIME LEFT:", timeLeft);
+            }
 
             telemetry.addData("Time", getRuntime());
             telemetry.addData("x", drive.getPoseEstimate().getX());
@@ -133,7 +140,7 @@ public class RedNearRig2_2 extends LinearOpMode {
 
     private void move_left() {
         traj1 = drive.trajectorySequenceBuilder(new Pose2d(NEAR_START_COORDS[0], NEAR_START_COORDS[1], START_HEADING))
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(25, 3.5, 6.5),
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(40, 3.5, 6.5),
                         SampleMecanumDrive.getAccelerationConstraint(50))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
@@ -142,7 +149,7 @@ public class RedNearRig2_2 extends LinearOpMode {
                     lift.resetEncoders();
                 })
                 .waitSeconds(0.8)
-                .lineToSplineHeading(new Pose2d(PURPLE_LEFT_NEAR[0], PURPLE_LEFT_NEAR[1], Math.toRadians(PURPLE_LEFT_NEAR[2])))
+                .lineTo(new Vector2d(PURPLE_LEFT_NEAR[0], PURPLE_LEFT_NEAR[1]))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
@@ -150,12 +157,15 @@ public class RedNearRig2_2 extends LinearOpMode {
                     scorer.deployAutoPush();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    scorer.deploy();
+                    scorer.deployAutoUp();
                 })
                 .waitSeconds(0.2)
 
                 // GOING TO BACKDROP
-                .lineToSplineHeading(new Pose2d(BACKDROP_LEFT_COORDS[0], BACKDROP_LEFT_COORDS[1], Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(BACKDROP_LEFT_COORDS[0], BACKDROP_LEFT_COORDS[1], Math.toRadians(0)))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                    scorer.deploy();
+                })
                 .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
                     scorer.openUpper();
                 })
@@ -172,27 +182,30 @@ public class RedNearRig2_2 extends LinearOpMode {
 
                 // GOING TO STACK
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0] - 10, DOOR_DOWN_COORDS[1] - 1), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(RIGGING_UP_COORDS[0], RIGGING_UP_COORDS[1]), Math.toRadians(180))
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(22, 3.5, 6.5),
+                        SampleMecanumDrive.getAccelerationConstraint(50))
+                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0] - 5.4, RIGGING_DOWN_COORDS[1]), Math.toRadians(180))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                     scorer.openUpper();
                     intake.take();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     intake.openLeftFlap();
                 })
-                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0], THIRD_PIXEL_STACK_COORDS[1] + 8.5), Math.toRadians(270))
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] + 0.5, FIRST_PIXEL_STACK_COORDS[1] - 9.5), Math.toRadians(90))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     intake.closeLeftFlap();
                 })
-                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] - 2.2, THIRD_PIXEL_STACK_COORDS[1] - 12), Math.toRadians(270))
-                .lineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] - 4.2, THIRD_PIXEL_STACK_COORDS[1] + 8.5))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, 3.5, 6.5))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0], FIRST_PIXEL_STACK_COORDS[1] - 9.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 0.8, FIRST_PIXEL_STACK_COORDS[1] + 7.5), Math.toRadians(90))
                 .setReversed(false)
                 .waitSeconds(0.8)
-                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(25, 3.5, 6.5))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
 
                 // GOING TO BACKDROP
-                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(50, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
                     scorer.closeUpper();
@@ -201,36 +214,29 @@ public class RedNearRig2_2 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(0))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(0))
-                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
+                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0], RIGGING_DOWN_COORDS[1] - 0.5), Math.toRadians(0))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(25, 3.5, 6.5))
+                .splineToConstantHeading(new Vector2d(RIGGING_UP_COORDS[0], RIGGING_UP_COORDS[1] - 0.5), Math.toRadians(0))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(40, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
-                    lift.setReference(700);
+                    lift.setReference(570);
                 })
-                .splineToConstantHeading(new Vector2d(BACKDROP_CENTER_COORDS[0] + 0.5, BACKDROP_CENTER_COORDS[1]), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                .splineToConstantHeading(new Vector2d(BACKDROP_CENTER_COORDS[0], BACKDROP_CENTER_COORDS[1]), Math.toRadians(0))
+                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
                     scorer.openLower();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.25, () -> {
                     scorer.openUpper();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     scorer.take();
                     lift.setReference(0);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(2, () -> {
-                    intake.eject();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2.2, () -> {
-                    intake.stop();
-                })
-                .resetVelConstraint()
-                .waitSeconds(0.6)
+                .waitSeconds(0.75)
 
                 // PARKING
                 .lineToSplineHeading(new Pose2d(END_NEAR[0], END_NEAR[1], Math.toRadians(END_NEAR[2])))
-                .waitSeconds(10)
                 .build();
 
         drive.followTrajectorySequenceAsync(traj1);
@@ -238,7 +244,7 @@ public class RedNearRig2_2 extends LinearOpMode {
 
     private void move_center() {
         traj1 = drive.trajectorySequenceBuilder(new Pose2d(NEAR_START_COORDS[0], NEAR_START_COORDS[1], START_HEADING))
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(45, 3.5, 6.5),
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(40, 3.5, 6.5),
                         SampleMecanumDrive.getAccelerationConstraint(50))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
@@ -278,25 +284,28 @@ public class RedNearRig2_2 extends LinearOpMode {
                 // GOING TO STACK
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(RIGGING_UP_COORDS[0], RIGGING_UP_COORDS[1]), Math.toRadians(180))
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(25, 3.5, 6.5),
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(20, 3.5, 6.5),
                         SampleMecanumDrive.getAccelerationConstraint(50))
-                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0], RIGGING_DOWN_COORDS[1]), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0] - 5.3, RIGGING_DOWN_COORDS[1]), Math.toRadians(180))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                     scorer.openUpper();
                     intake.take();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     intake.openLeftFlap();
                 })
-                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] + 0.5, FIRST_PIXEL_STACK_COORDS[1] + 4.5), Math.toRadians(270))
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] + 0.6, FIRST_PIXEL_STACK_COORDS[1] - 9.5), Math.toRadians(90))
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     intake.closeLeftFlap();
                 })
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 1.2, FIRST_PIXEL_STACK_COORDS[1] - 12), Math.toRadians(270))
-                .lineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 1.2, FIRST_PIXEL_STACK_COORDS[1] + 8.5))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0], FIRST_PIXEL_STACK_COORDS[1] - 9.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 1.5, FIRST_PIXEL_STACK_COORDS[1] + 7.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 1.5, FIRST_PIXEL_STACK_COORDS[1] - 7.5), Math.toRadians(90))
                 .setReversed(false)
-                .waitSeconds(0.8)
-                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(45, 3.5, 6.5))
+                .waitSeconds(0.1)
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
 
                 // GOING TO BACKDROP
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -307,29 +316,36 @@ public class RedNearRig2_2 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0], RIGGING_DOWN_COORDS[1]), Math.toRadians(0))
-                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(25, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(RIGGING_UP_COORDS[0], RIGGING_UP_COORDS[1]), Math.toRadians(0))
-                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(45, 3.5, 6.5))
+                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0], RIGGING_DOWN_COORDS[1] - 0.5), Math.toRadians(0))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(22, 3.5, 6.5))
+                .splineToConstantHeading(new Vector2d(RIGGING_UP_COORDS[0], RIGGING_UP_COORDS[1] - 0.5), Math.toRadians(0))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(40, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
-                    lift.setReference(400);
+                    lift.setReference(570);
                 })
-                .splineToConstantHeading(new Vector2d(BACKDROP_RIGHT_COORDS[0], BACKDROP_RIGHT_COORDS[1]), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                .splineToConstantHeading(new Vector2d(BACKDROP_LEFT_COORDS[0] - 0.1, BACKDROP_LEFT_COORDS[1] + 1), Math.toRadians(90))
+                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
                     scorer.openLower();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.25, () -> {
                     scorer.openUpper();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     scorer.take();
                     lift.setReference(0);
                 })
-                .waitSeconds(0.6)
+                .UNSTABLE_addTemporalMarkerOffset(0.75 + 0.75, () -> {
+                    intake.eject();
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.75 + 0.75 + 0.2, () -> {
+                    intake.stop();
+                })
+                .waitSeconds(0.75)
 
                 // PARKING
                 .lineToSplineHeading(new Pose2d(END_NEAR[0], END_NEAR[1], Math.toRadians(END_NEAR[2])))
+                .waitSeconds(1)
                 .build();
 
         drive.followTrajectorySequenceAsync(traj1);
@@ -337,7 +353,7 @@ public class RedNearRig2_2 extends LinearOpMode {
 
     private void move_right() {
         traj1 = drive.trajectorySequenceBuilder(new Pose2d(NEAR_START_COORDS[0], NEAR_START_COORDS[1], START_HEADING))
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(25, 3.5, 6.5),
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(40, 3.5, 6.5),
                         SampleMecanumDrive.getAccelerationConstraint(50))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
@@ -346,7 +362,7 @@ public class RedNearRig2_2 extends LinearOpMode {
                     lift.resetEncoders();
                 })
                 .waitSeconds(0.8)
-                .lineTo(new Vector2d(PURPLE_RIGHT_NEAR[0], PURPLE_RIGHT_NEAR[1]))
+                .lineToLinearHeading(new Pose2d(PURPLE_RIGHT_NEAR[0], PURPLE_RIGHT_NEAR[1], Math.toRadians(PURPLE_RIGHT_NEAR[2])))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
@@ -359,7 +375,7 @@ public class RedNearRig2_2 extends LinearOpMode {
                 .waitSeconds(0.2)
 
                 // GOING TO BACKDROP
-                .lineToSplineHeading(new Pose2d(BACKDROP_RIGHT_COORDS[0], BACKDROP_RIGHT_COORDS[1], Math.toRadians(0)))
+                .lineToLinearHeading(new Pose2d(BACKDROP_RIGHT_COORDS[0], BACKDROP_RIGHT_COORDS[1], Math.toRadians(0)))
                 .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
                     scorer.openUpper();
                 })
@@ -376,24 +392,28 @@ public class RedNearRig2_2 extends LinearOpMode {
 
                 // GOING TO STACK
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(180))
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0] - 10, DOOR_DOWN_COORDS[1] - 1), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(RIGGING_UP_COORDS[0], RIGGING_UP_COORDS[1]), Math.toRadians(180))
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(25, 3.5, 6.5),
+                        SampleMecanumDrive.getAccelerationConstraint(50))
+                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0], RIGGING_DOWN_COORDS[1]), Math.toRadians(180))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                     scorer.openUpper();
                     intake.take();
-                    intake.openLeftFlap();
                 })
-                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(15, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] + 0.5, THIRD_PIXEL_STACK_COORDS[1] + 8.5), Math.toRadians(270))
                 .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
-                    intake.closeLeftFlap();
+                    intake.openRightFlap();
                 })
-                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] - 1.2, THIRD_PIXEL_STACK_COORDS[1] - 12), Math.toRadians(270))
-                .lineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] - 3.2, THIRD_PIXEL_STACK_COORDS[1] + 8.5))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] + 0.5, FIRST_PIXEL_STACK_COORDS[1] - 8.5), Math.toRadians(90))
+                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                    intake.closeRightFlap();
+                })
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(12, 3.5, 6.5))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] + 0.5, FIRST_PIXEL_STACK_COORDS[1] + 8.5), Math.toRadians(90))
+                .lineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0], FIRST_PIXEL_STACK_COORDS[1] - 10.5))
                 .setReversed(false)
                 .waitSeconds(0.8)
-                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(25, 3.5, 6.5))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
 
                 // GOING TO BACKDROP
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -404,34 +424,29 @@ public class RedNearRig2_2 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(-20))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0], RIGGING_DOWN_COORDS[1] - 0.05), Math.toRadians(0))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(25, 3.5, 6.5))
+                .splineToConstantHeading(new Vector2d(RIGGING_UP_COORDS[0], RIGGING_UP_COORDS[1] - 0.05), Math.toRadians(0))
+                .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(40, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
                     lift.setReference(570);
                 })
                 .splineToConstantHeading(new Vector2d(BACKDROP_CENTER_COORDS[0], BACKDROP_CENTER_COORDS[1]), Math.toRadians(0))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
                     scorer.openLower();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.25, () -> {
                     scorer.openUpper();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     scorer.take();
                     lift.setReference(0);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(2, () -> {
-                    intake.eject();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(2.2, () -> {
-                    intake.stop();
-                })
-                .waitSeconds(0.6)
+                .waitSeconds(0.75)
 
                 // PARKING
                 .lineToSplineHeading(new Pose2d(END_NEAR[0], END_NEAR[1], Math.toRadians(END_NEAR[2])))
-                .waitSeconds(10)
                 .build();
 
         drive.followTrajectorySequenceAsync(traj1);
@@ -447,7 +462,7 @@ public class RedNearRig2_2 extends LinearOpMode {
         lift = new Lift(this, dashboard);
         scorer = new Scorer(this, lift);
 
-        GameConstants.ALLIANCE_COLOR = AllianceColor.RED;
+        GameConstants.ALLIANCE_COLOR = AllianceColor.BLUE;
         GameConstants.STARTPOS = GameConstants.StartPos.NEAR;
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(

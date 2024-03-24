@@ -14,7 +14,7 @@ public class RedPositionConstants {
     public static Vector2d PURPLE_RIGHT_VECTOR = new Vector2d(22.65, -44);
     public static double[] PURPLE_RIGHT_NEAR = {22.65, -44, 90};
     public static double[] PURPLE_RIGHT_FAR = {-46.5, -44, 155};
-    public static double[] PURPLE_CENTER_NEAR = {15.2, -37};
+    public static double[] PURPLE_CENTER_NEAR = {15.2, -35};
     public static double[] PURPLE_CENTER_FAR = {-35.4, -36.3};
     public static Vector2d PURPLE_LEFT_VECTOR = new Vector2d(23.2, 44);
     public static double[] PURPLE_LEFT_NEAR = {11.6, -37, 155};
