@@ -34,9 +34,18 @@ public class PropDetectionPipeline extends OpenCvPipeline {
 
         switch (GameConstants.ALLIANCE_COLOR) {
             case RED:
-                leftRect = new Rect(50, 140, 120, 120);
-                centerRect = new Rect(260, 120, 100, 100);
-                rightRect = new Rect(480, 140, 120, 120);
+                switch (GameConstants.STARTPOS) {
+                    case NEAR:
+                        leftRect = new Rect(0, 140, 100, 70);
+                        centerRect = new Rect(220, 140, 60, 60);
+                        rightRect = new Rect(400, 140, 90, 70);
+                        break;
+                    case FAR:
+                        leftRect = new Rect(50, 140, 120, 120);
+                        centerRect = new Rect(260, 120, 100, 100);
+                        rightRect = new Rect(480, 140, 120, 120);
+                        break;
+                }
                 break;
             case BLUE:
                 switch (GameConstants.STARTPOS) {

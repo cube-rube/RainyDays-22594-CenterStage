@@ -6,12 +6,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.apache.commons.math3.random.RandomDataGenerator;
+import org.apache.commons.math3.random.RandomGenerator;
 import org.firstinspires.ftc.teamcode.drive.OperatorDrive;
 import org.firstinspires.ftc.teamcode.modules.PullUp;
 import org.firstinspires.ftc.teamcode.modules.Scorer;
 import org.firstinspires.ftc.teamcode.modules.Intake;
 import org.firstinspires.ftc.teamcode.modules.Shooter;
 import org.firstinspires.ftc.teamcode.modules.Lift;
+
+import java.util.RandomAccess;
+
+import kotlin.random.Random;
 
 @TeleOp(name = "MainTeleOp")
 public class MainTeleOp extends LinearOpMode {
@@ -25,6 +31,7 @@ public class MainTeleOp extends LinearOpMode {
     //public guro gyroscope;
     private final ElapsedTime runtime = new ElapsedTime();
     public FtcDashboard dashboard;
+    private double duration = Math.floor(Math.random() * 100 % 25);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,7 +45,7 @@ public class MainTeleOp extends LinearOpMode {
         pullUp.timer.reset();
         operatorDrive.runtimeReset();
 
-
+        ElapsedTime cycleTimer = new ElapsedTime();
         while (opModeIsActive()) {
             operatorDrive.drive();
             operatorDrive.telemetry();
@@ -72,9 +79,18 @@ public class MainTeleOp extends LinearOpMode {
                 operatorDrive.driveState = OperatorDrive.DriveState.FIELD;
             }
 
+            if (duration <= 0) {
+                gamepad1.rumble(300);
+                duration = Math.floor(Math.random() * 100 % 25);
+            }
+            duration -= cycleTimer.seconds();
+
             telemetry.addData("Runtime", runtime.toString());
+            telemetry.addData("Duration", duration);
+            telemetry.addData("Math.random", Math.random());
 
             telemetry.update();
+            cycleTimer.reset();
         }
     }
 

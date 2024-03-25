@@ -3,24 +3,14 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_CENTER_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DIFF_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DOOR_DOWN_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DOOR_UP_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.END_NEAR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.FIRST_PIXEL_STACK_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_POSE;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PIXEL_STACK_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_CENTER_NEAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_NEAR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_HEADING;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_NEAR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_DOWN_VECTOR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_UP_VECTOR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.START_HEADING;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.THIRD_PIXEL_STACK_COORDS;
 
@@ -56,7 +46,7 @@ public class BlueNear2_4 extends LinearOpMode {
     private OpenCvWebcam webcam;
     private PropDetectionPipeline pipeline;
     private PropDetectionPipeline.PropPosition position;
-    private TrajectorySequence traj1, intake_traj1, traj2;
+    private TrajectorySequence traj1;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -101,10 +91,8 @@ public class BlueNear2_4 extends LinearOpMode {
             }
         });
 
-        int delta = 0;
-        boolean exit = false;
-
-        ElapsedTime timer = new ElapsedTime();
+        ElapsedTime intakeTimer = new ElapsedTime();
+        double timeLeft = 0;
         while (opModeIsActive()) {
             PoseCache.pose = drive.getPoseEstimate();
             lift.PIDControl();
@@ -113,21 +101,24 @@ public class BlueNear2_4 extends LinearOpMode {
 
             if (intake.intakeState == Intake.IntakeState.INTAKE) {
                 if (scorer.getLowerPixel() && scorer.getUpperPixel()) {
-                    delta += timer.seconds();
-                    if (delta >= 0.5) {
+                    if (intakeTimer.seconds() >= 0.15) {
                         intake.stop();
                         scorer.closeUpper();
                         scorer.closeLower();
-                        exit = true;
                     }
                 } else {
-                    delta = 0;
+                    intakeTimer.reset();
                 }
+            } else {
+                intakeTimer.reset();
+            }
+            if (!drive.isBusy()) {
+                if (timeLeft == 0) {
+                    timeLeft = 30 - getRuntime();
+                }
+                telemetry.addData("TIME LEFT:", timeLeft);
             }
 
-            if (exit && intake.intakeState == Intake.IntakeState.STOP) {
-                telemetry.addLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-            }
             telemetry.addData("Time", getRuntime());
             telemetry.addData("x", drive.getPoseEstimate().getX());
             telemetry.addData("y", drive.getPoseEstimate().getY());
@@ -339,12 +330,12 @@ public class BlueNear2_4 extends LinearOpMode {
                     intake.take();
                     intake.openRightFlap();
                 })
-                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] + 1, THIRD_PIXEL_STACK_COORDS[1] - 7), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] - 2.1, THIRD_PIXEL_STACK_COORDS[1] - 7), Math.toRadians(90))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
                     intake.closeRightFlap();
                 })
-                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] - 0.7, THIRD_PIXEL_STACK_COORDS[1] + 6), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] - 2.1, THIRD_PIXEL_STACK_COORDS[1] + 9), Math.toRadians(90))
                 .setReversed(false)
                 .resetVelConstraint()
                 .waitSeconds(0.8)
@@ -397,7 +388,8 @@ public class BlueNear2_4 extends LinearOpMode {
                     scorer.openUpper();
                     intake.take();
                 })
-                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0], THIRD_PIXEL_STACK_COORDS[1] + 9), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] - 1, THIRD_PIXEL_STACK_COORDS[1] - 7), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(THIRD_PIXEL_STACK_COORDS[0] - 2.1, THIRD_PIXEL_STACK_COORDS[1] + 9), Math.toRadians(90))
                 .setReversed(false)
                 .resetVelConstraint()
                 .waitSeconds(0.8)
