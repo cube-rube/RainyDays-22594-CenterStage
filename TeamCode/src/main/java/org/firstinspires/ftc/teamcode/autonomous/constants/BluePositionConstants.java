@@ -11,7 +11,7 @@ public class BluePositionConstants {
     public static double[] FAR_START_COORDS = {-38.485, 62.61615};
     public static double START_HEADING = Math.toRadians(270);
 
-    public static double[] PURPLE_LEFT_NEAR = {20.65, 40, 270};
+    public static double[] PURPLE_LEFT_NEAR = {20.4, 40, 270};
     public static double[] PURPLE_LEFT_FAR = {-46.5, 44, 335};
     public static double[] PURPLE_CENTER_NEAR = {15.2, 35};
     public static double[] PURPLE_CENTER_FAR = {-35.4, 36.3};
@@ -20,11 +20,11 @@ public class BluePositionConstants {
     public static double PURPLE_RIGHT_HEADING = Math.toRadians(270);
 
     public static double[] BACKDROP_RIGHT_COORDS = {49.8, 29.3};
-    public static double[] BACKDROP_CENTER_COORDS = {49.8, 33}; // 35
-    public static double[] BACKDROP_LEFT_COORDS = {49.8, 41.5};
+    public static double[] BACKDROP_CENTER_COORDS = {49.8, 33.2}; // 35
+    public static double[] BACKDROP_LEFT_COORDS = {49.8, 40};
 
-    public static double[] RIGGING_UP_COORDS = {5, 59 - 0.45};
-    public static double[] RIGGING_DOWN_COORDS = {-45, 59 - 0.45};
+    public static double[] RIGGING_UP_COORDS = {5, 59 - 1.5};
+    public static double[] RIGGING_DOWN_COORDS = {-45, 59 - 1.5};
 
     public static double[] DOOR_UP_COORDS = {24, 8};
     public static double[] DOOR_DOWN_COORDS = {-40, 8};

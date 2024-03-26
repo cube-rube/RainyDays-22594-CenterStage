@@ -44,9 +44,9 @@ public class Intake {
     public static double STOP_POWER = 0.15;
     public static double INTAKE_POWER = -1;
     public static double OUT_POWER = 0.6;
-    public static double OPEN_LEFT_POS = 0.1;
+    public static double OPEN_LEFT_POS = 0.07;
     public static double OPEN_RIGHT_POS = 1;
-    public static double CLOSE_LEFT_POS = 0.78;
+    public static double CLOSE_LEFT_POS = 0.7;
     public static double CLOSE_RIGHT_POS = 0.3;
 
     public Intake(LinearOpMode linearOpMode) {
