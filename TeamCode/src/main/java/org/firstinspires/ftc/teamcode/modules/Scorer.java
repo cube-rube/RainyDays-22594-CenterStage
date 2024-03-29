@@ -42,7 +42,7 @@ public class Scorer {
     public RotationState rotationBeamState;
 
     public static double takeBoxPos = 0.89; // Позиция коробки при захвате
-    public static double takeBeamPos = 0.01; // Позиция перекида при захвате
+    public static double takeBeamPos = 0.00; // Позиция перекида при захвате
     public static double deployBoxPos = 0.42; // Позиция коробки при выгрузке
     public static double deployBeamPos = 0.68; // Позиция перекида при выгрузке
     public static double moveBoxPos = 0.87; // Позиция коробки при перекиде

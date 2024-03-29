@@ -45,7 +45,7 @@ public class Intake {
     public static double INTAKE_POWER = -1;
     public static double OUT_POWER = 0.6;
     public static double OPEN_LEFT_POS = 0.07;
-    public static double OPEN_RIGHT_POS = 1;
+    public static double OPEN_RIGHT_POS = 0.95;
     public static double CLOSE_LEFT_POS = 0.7;
     public static double CLOSE_RIGHT_POS = 0.3;
 

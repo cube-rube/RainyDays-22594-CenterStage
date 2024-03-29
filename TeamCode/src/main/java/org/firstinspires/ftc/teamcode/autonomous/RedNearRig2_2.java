@@ -100,7 +100,9 @@ public class RedNearRig2_2 extends LinearOpMode {
         });
 
         ElapsedTime intakeTimer = new ElapsedTime();
+        ElapsedTime ejectTimer = new ElapsedTime();
         double timeLeft = 0;
+
         while (opModeIsActive()) {
             PoseCache.pose = drive.getPoseEstimate();
             lift.PIDControl();
@@ -110,14 +112,18 @@ public class RedNearRig2_2 extends LinearOpMode {
             if (intake.intakeState == Intake.IntakeState.INTAKE) {
                 if (scorer.getLowerPixel() && scorer.getUpperPixel()) {
                     if (intakeTimer.seconds() >= 0.15) {
-                        intake.stop();
+                        intake.eject();
                         scorer.closeUpper();
                         scorer.closeLower();
                     }
                 } else {
                     intakeTimer.reset();
                 }
-            } else {
+                ejectTimer.reset();
+            } else if (intake.intakeState == Intake.IntakeState.EJECT) {
+                if (ejectTimer.seconds() >= 0.8) {
+                    intake.stop();
+                }
                 intakeTimer.reset();
             }
             if (!drive.isBusy()) {
@@ -218,9 +224,9 @@ public class RedNearRig2_2 extends LinearOpMode {
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
-                    lift.setReference(570);
+                    lift.setReference(770);
                 })
-                .splineToConstantHeading(new Vector2d(BACKDROP_CENTER_COORDS[0], BACKDROP_CENTER_COORDS[1]), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(BACKDROP_RIGHT_COORDS[0], BACKDROP_RIGHT_COORDS[1]), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
                     scorer.openLower();
                 })
@@ -284,7 +290,7 @@ public class RedNearRig2_2 extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(RIGGING_UP_COORDS[0], RIGGING_UP_COORDS[1]), Math.toRadians(180))
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(20, 3.5, 6.5),
                         SampleMecanumDrive.getAccelerationConstraint(50))
-                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0] - 10, RIGGING_DOWN_COORDS[1]), Math.toRadians(180))
+                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0] - 9, RIGGING_DOWN_COORDS[1]), Math.toRadians(180))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                     scorer.openUpper();
@@ -301,7 +307,7 @@ public class RedNearRig2_2 extends LinearOpMode {
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(15, 3.5, 6.5),
                         SampleMecanumDrive.getAccelerationConstraint(10))
                 .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 0.7, FIRST_PIXEL_STACK_COORDS[1] + 9.5), Math.toRadians(270))
-                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 0.7, FIRST_PIXEL_STACK_COORDS[1] - 7.5), Math.toRadians(270))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 0.7, FIRST_PIXEL_STACK_COORDS[1] - 5.5), Math.toRadians(270))
                 .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 0.7, FIRST_PIXEL_STACK_COORDS[1] + 7.5), Math.toRadians(270))
                 .setReversed(false)
                 .waitSeconds(0.1)
@@ -331,9 +337,6 @@ public class RedNearRig2_2 extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> {
                     scorer.openUpper();
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.45, () -> {
-                    lift.setReference(870);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     scorer.take();
@@ -440,7 +443,7 @@ public class RedNearRig2_2 extends LinearOpMode {
                     scorer.deploy();
                     lift.setReference(570);
                 })
-                .splineToConstantHeading(new Vector2d(BACKDROP_CENTER_COORDS[0], BACKDROP_CENTER_COORDS[1]), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(BACKDROP_LEFT_COORDS[0], BACKDROP_LEFT_COORDS[1]), Math.toRadians(0))
                 .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
                     scorer.openLower();
                 })

@@ -79,11 +79,11 @@ public class MainTeleOp extends LinearOpMode {
                 operatorDrive.driveState = OperatorDrive.DriveState.FIELD;
             }
 
-            if (duration <= 0) {
+            /*if (duration <= 0) {
                 gamepad1.rumble(300);
                 duration = Math.floor(Math.random() * 100 % 25);
             }
-            duration -= cycleTimer.seconds();
+            duration -= cycleTimer.seconds();*/
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.addData("Duration", duration);
