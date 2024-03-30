@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_CENTER_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.END_NEAR;
+import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.END_FAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_CENTER_NEAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_NEAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_NEAR;
@@ -140,7 +140,7 @@ public class BlueNear2_0 extends LinearOpMode {
                 .waitSeconds(0.75)
 
                 // PARKING
-                .lineToSplineHeading(new Pose2d(END_NEAR[0], END_NEAR[1], Math.toRadians(END_NEAR[2])))
+                .lineToSplineHeading(new Pose2d(END_FAR[0], END_FAR[1], Math.toRadians(END_FAR[2])))
                 .waitSeconds(1)
                 .build();
         drive.followTrajectorySequenceAsync(traj);
@@ -186,7 +186,7 @@ public class BlueNear2_0 extends LinearOpMode {
                 .waitSeconds(0.75)
 
                 // PARKING
-                .lineToSplineHeading(new Pose2d(END_NEAR[0], END_NEAR[1], Math.toRadians(END_NEAR[2])))
+                .lineToSplineHeading(new Pose2d(END_FAR[0], END_FAR[1], Math.toRadians(END_FAR[2])))
                 .waitSeconds(1)
                 .build();
         drive.followTrajectorySequenceAsync(traj);
@@ -232,7 +232,7 @@ public class BlueNear2_0 extends LinearOpMode {
                 .waitSeconds(0.75)
 
                 // PARKING
-                .lineToSplineHeading(new Pose2d(END_NEAR[0], END_NEAR[1], Math.toRadians(END_NEAR[2])))
+                .lineToSplineHeading(new Pose2d(END_FAR[0], END_FAR[1], Math.toRadians(END_FAR[2])))
                 .waitSeconds(1)
                 .build();
         drive.followTrajectorySequenceAsync(traj);

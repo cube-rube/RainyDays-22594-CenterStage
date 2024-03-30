@@ -161,7 +161,7 @@ public class RedNear2_4 extends LinearOpMode {
                 // GOING TO STACK
                 .setReversed(true)
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(50, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(200))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0] - 10, DOOR_DOWN_COORDS[1] - 1), Math.toRadians(180))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -189,7 +189,7 @@ public class RedNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(-20))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -219,7 +219,7 @@ public class RedNear2_4 extends LinearOpMode {
                 // GOING TO STACK
                 .setReversed(true)
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(50, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(200))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(180))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
@@ -243,7 +243,7 @@ public class RedNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(-20))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -314,7 +314,7 @@ public class RedNear2_4 extends LinearOpMode {
                 // GOING TO STACK
                 .setReversed(true)
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(50, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(200))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0] - 10, DOOR_DOWN_COORDS[1] - 1), Math.toRadians(180))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -342,7 +342,7 @@ public class RedNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(-20))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -372,7 +372,7 @@ public class RedNear2_4 extends LinearOpMode {
                 // GOING TO STACK
                 .setReversed(true)
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(50, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(200))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(180))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
@@ -396,7 +396,7 @@ public class RedNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(-20))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -467,7 +467,7 @@ public class RedNear2_4 extends LinearOpMode {
                 // GOING TO STACK
                 .setReversed(true)
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(50, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(200))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0] - 10, DOOR_DOWN_COORDS[1] - 1), Math.toRadians(180))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -495,7 +495,7 @@ public class RedNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(-20))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
@@ -525,7 +525,7 @@ public class RedNear2_4 extends LinearOpMode {
                 // GOING TO STACK
                 .setReversed(true)
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(50, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(200))
+                .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(180))
                 .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(180))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
@@ -549,7 +549,7 @@ public class RedNear2_4 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(-20))
+                .splineToConstantHeading(new Vector2d(DOOR_DOWN_COORDS[0], DOOR_DOWN_COORDS[1] - 1), Math.toRadians(0))
                 .splineToConstantHeading(new Vector2d(DOOR_UP_COORDS[0], DOOR_UP_COORDS[1] - 1), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {

@@ -95,6 +95,7 @@ public class BlueNearRig2_2 extends LinearOpMode {
         });
 
         ElapsedTime intakeTimer = new ElapsedTime();
+        ElapsedTime ejectTimer = new ElapsedTime();
         double timeLeft = 0;
         while (opModeIsActive()) {
             PoseCache.pose = drive.getPoseEstimate();
@@ -112,7 +113,11 @@ public class BlueNearRig2_2 extends LinearOpMode {
                 } else {
                     intakeTimer.reset();
                 }
-            } else {
+                ejectTimer.reset();
+            } else if (intake.intakeState == Intake.IntakeState.EJECT) {
+                if (ejectTimer.seconds() >= 1) {
+                    intake.stop();
+                }
                 intakeTimer.reset();
             }
             if (!drive.isBusy()) {
@@ -322,9 +327,9 @@ public class BlueNearRig2_2 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
                     intake.stop();
                 })
-                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0], RIGGING_DOWN_COORDS[1] - 0.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(RIGGING_DOWN_COORDS[0], RIGGING_DOWN_COORDS[1] - 0.3), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(20, 3.5, 6.5))
-                .splineToConstantHeading(new Vector2d(RIGGING_UP_COORDS[0], RIGGING_UP_COORDS[1] - 0.5), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(RIGGING_UP_COORDS[0], RIGGING_UP_COORDS[1] - 0.3), Math.toRadians(0))
                 .setVelConstraint(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.deploy();
@@ -417,9 +422,9 @@ public class BlueNearRig2_2 extends LinearOpMode {
                 })
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(15, 3.5, 6.5),
                         SampleMecanumDrive.getAccelerationConstraint(10))
-                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 2.7, FIRST_PIXEL_STACK_COORDS[1] - 11.5), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 2.7, FIRST_PIXEL_STACK_COORDS[1] + 5.5), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 2.7, FIRST_PIXEL_STACK_COORDS[1] - 7.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 3, FIRST_PIXEL_STACK_COORDS[1] - 9.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 3, FIRST_PIXEL_STACK_COORDS[1] + 5.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 3, FIRST_PIXEL_STACK_COORDS[1] - 7.5), Math.toRadians(90))
                 .setReversed(false)
                 .waitSeconds(0.1)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5),

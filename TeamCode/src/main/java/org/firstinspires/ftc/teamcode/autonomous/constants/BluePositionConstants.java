@@ -11,7 +11,7 @@ public class BluePositionConstants {
     public static double[] FAR_START_COORDS = {-38.485, 62.61615};
     public static double START_HEADING = Math.toRadians(270);
 
-    public static double[] PURPLE_LEFT_NEAR = {22.4, 40, 270};
+    public static double[] PURPLE_LEFT_NEAR = {21.6, 40, 270};
     public static double[] PURPLE_LEFT_FAR = {-46.5, 44, 335};
     public static double[] PURPLE_CENTER_NEAR = {15.2, 35};
     public static double[] PURPLE_CENTER_FAR = {-35.4, 36.3};
@@ -19,9 +19,9 @@ public class BluePositionConstants {
     public static double[] PURPLE_RIGHT_FAR = {11.6, 37, 205};
     public static double PURPLE_RIGHT_HEADING = Math.toRadians(270);
 
-    public static double[] BACKDROP_RIGHT_COORDS = {50, 29.3};
-    public static double[] BACKDROP_CENTER_COORDS = {50, 36.2}; // 33.2
-    public static double[] BACKDROP_LEFT_COORDS = {50, 40};
+    public static double[] BACKDROP_RIGHT_COORDS = {50.1, 29.3};
+    public static double[] BACKDROP_CENTER_COORDS = {50.1, 36.2}; // 33.2
+    public static double[] BACKDROP_LEFT_COORDS = {50.1, 40};
 
     public static double[] RIGGING_UP_COORDS = {5, 59 - 2};
     public static double[] RIGGING_DOWN_COORDS = {-45, 59 - 2};
@@ -33,4 +33,5 @@ public class BluePositionConstants {
     public static double SECOND_PIXEL_STACK_BROKE = 4;
     public static double[] THIRD_PIXEL_STACK_COORDS = {-57.8, 11.5};
     public static double[] END_NEAR = {45, 55, 40};
+    public static double[] END_FAR = {45, 55 - 49, 0};
 }

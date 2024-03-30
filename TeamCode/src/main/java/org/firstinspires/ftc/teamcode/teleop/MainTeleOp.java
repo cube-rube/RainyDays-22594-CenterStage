@@ -46,6 +46,7 @@ public class MainTeleOp extends LinearOpMode {
         operatorDrive.runtimeReset();
 
         ElapsedTime cycleTimer = new ElapsedTime();
+        ElapsedTime matchtime = new ElapsedTime();
         while (opModeIsActive()) {
             operatorDrive.drive();
             operatorDrive.telemetry();
@@ -60,7 +61,7 @@ public class MainTeleOp extends LinearOpMode {
             }
             scorer.opControl();
             pullUp.opControlPos();
-            shooter.tele();
+            shooter.teleOneButton();
 
             switch (scorer.intakeState) {
                 case EJECT:
@@ -84,6 +85,9 @@ public class MainTeleOp extends LinearOpMode {
                 duration = Math.floor(Math.random() * 100 % 25);
             }
             duration -= cycleTimer.seconds();*/
+            if (intake.intakeState == Intake.IntakeState.INTAKE && scorer.getLowerPixel() && scorer.getUpperPixel()) {
+                gamepad1.rumble(100);
+            }
 
             telemetry.addData("Runtime", runtime.toString());
             telemetry.addData("Duration", duration);

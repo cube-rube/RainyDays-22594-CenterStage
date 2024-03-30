@@ -234,7 +234,7 @@ public class Shooter {
         switch (position) {
             case UP:
                 servoRaise.setPosition(up_pos);
-                if (delta.seconds() > 0.2) {
+                if (delta.seconds() > 0.5) {
                     servoHold.setPosition(release_pos);
                     position = PositionState.HOLDING;
                 }
@@ -246,6 +246,9 @@ public class Shooter {
                 break;
             case HOLDING:
                 servoRaise.setPosition(up_pos);
+                if (delta.seconds() > 2.5) {
+                    position = PositionState.DOWN;
+                }
                 break;
         }
     }

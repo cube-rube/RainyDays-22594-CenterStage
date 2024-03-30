@@ -168,7 +168,7 @@ public class Intake {
                 direction = Direction.BACKWARD;
                 break;
             case EJECT:
-                motor.setPower(0.85);
+                motor.setPower(0.8);
                 direction = Direction.BACKWARD;
                 break;
             case BREAK:
