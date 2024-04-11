@@ -108,34 +108,30 @@ public class RedNear2_0 extends LinearOpMode {
                     lift.resetEncoders();
                 })
                 .waitSeconds(0.8)
-                .lineTo(new Vector2d(PURPLE_LEFT_NEAR[0], PURPLE_LEFT_NEAR[1]))
+                .lineToLinearHeading(new Pose2d(PURPLE_LEFT_NEAR[0], PURPLE_LEFT_NEAR[1], Math.toRadians(PURPLE_LEFT_NEAR[2])))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.openLower();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                    scorer.deployAutoPush();
+                    //scorer.deployAutoPush();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.2, () -> {
-                    scorer.deployAutoUp();
+                    scorer.deploy();
                 })
                 .waitSeconds(0.2)
 
                 // GOING TO BACKDROP
-                .lineToSplineHeading(new Pose2d(BACKDROP_CENTER_COORDS[0], BACKDROP_CENTER_COORDS[1], Math.toRadians(0)))
                 .lineToLinearHeading(new Pose2d(BACKDROP_LEFT_COORDS[0], BACKDROP_LEFT_COORDS[1], Math.toRadians(0)))
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                    scorer.deploy();
-                })
                 .UNSTABLE_addTemporalMarkerOffset(0.05, () -> {
                     scorer.openUpper();
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                     scorer.take();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.35 + 0.75, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(2, () -> {
                     intake.eject();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.35 + 0.75 + 0.2, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(2.2, () -> {
                     intake.stop();
                 })
                 .waitSeconds(0.75)
@@ -178,10 +174,10 @@ public class RedNear2_0 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                     scorer.take();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.35 + 0.75, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(2, () -> {
                     intake.eject();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.35 + 0.75 + 0.2, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(2.2, () -> {
                     intake.stop();
                 })
                 .waitSeconds(0.75)
@@ -195,7 +191,7 @@ public class RedNear2_0 extends LinearOpMode {
 
     private void move_right() {
         TrajectorySequence traj = drive.trajectorySequenceBuilder(NEAR_START_POSE)
-                .setConstraints(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5),
+                .setConstraints(SampleMecanumDrive.getVelocityConstraint(40, 3.5, 6.5),
                         SampleMecanumDrive.getAccelerationConstraint(50))
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     scorer.closeLower();
@@ -224,10 +220,10 @@ public class RedNear2_0 extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.35, () -> {
                     scorer.take();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.35 + 0.75, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(2, () -> {
                     intake.eject();
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.35 + 0.75 + 0.2, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(2.2, () -> {
                     intake.stop();
                 })
                 .waitSeconds(0.75)

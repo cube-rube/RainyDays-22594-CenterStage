@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_CENTER_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_LEFT_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.BACKDROP_RIGHT_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DOOR_DOWN_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DOOR_UP_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.END_NEAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.FIRST_PIXEL_STACK_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.NEAR_START_COORDS;
@@ -15,7 +13,6 @@ import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionCo
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_DOWN_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.RIGGING_UP_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.START_HEADING;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.THIRD_PIXEL_STACK_COORDS;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -115,7 +112,7 @@ public class BlueNearRig2_2 extends LinearOpMode {
                 }
                 ejectTimer.reset();
             } else if (intake.intakeState == Intake.IntakeState.EJECT) {
-                if (ejectTimer.seconds() >= 1) {
+                if (ejectTimer.seconds() >= 1.4) {
                     intake.stop();
                 }
                 intakeTimer.reset();
@@ -199,7 +196,7 @@ public class BlueNearRig2_2 extends LinearOpMode {
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(15, 3.5, 6.5),
                         SampleMecanumDrive.getAccelerationConstraint(10))
                 .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 3, FIRST_PIXEL_STACK_COORDS[1] - 9.5), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 3, FIRST_PIXEL_STACK_COORDS[1] + 7.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 3, FIRST_PIXEL_STACK_COORDS[1] + 5.5), Math.toRadians(90))
                 .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 3, FIRST_PIXEL_STACK_COORDS[1] - 7.5), Math.toRadians(90))
                 .setReversed(false)
                 .waitSeconds(0.1)
@@ -310,9 +307,9 @@ public class BlueNearRig2_2 extends LinearOpMode {
                 })
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(15, 3.5, 6.5),
                         SampleMecanumDrive.getAccelerationConstraint(10))
-                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 3, FIRST_PIXEL_STACK_COORDS[1] - 9.5), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 3, FIRST_PIXEL_STACK_COORDS[1] + 5.5), Math.toRadians(90))
-                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 3, FIRST_PIXEL_STACK_COORDS[1] - 7.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 2.7, FIRST_PIXEL_STACK_COORDS[1] - 9.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 2.7, FIRST_PIXEL_STACK_COORDS[1] + 5.5), Math.toRadians(90))
+                .splineToConstantHeading(new Vector2d(FIRST_PIXEL_STACK_COORDS[0] - 2.7, FIRST_PIXEL_STACK_COORDS[1] - 7.5), Math.toRadians(90))
                 .setReversed(false)
                 .waitSeconds(0.1)
                 .setConstraints(SampleMecanumDrive.getVelocityConstraint(30, 3.5, 6.5),

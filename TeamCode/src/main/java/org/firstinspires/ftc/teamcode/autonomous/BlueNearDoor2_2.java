@@ -12,8 +12,6 @@ import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionCo
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_CENTER_NEAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_LEFT_NEAR;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.PURPLE_RIGHT_NEAR;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DOOR_DOWN_COORDS;
-import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.DOOR_UP_COORDS;
 import static org.firstinspires.ftc.teamcode.autonomous.constants.BluePositionConstants.START_HEADING;
 
 import com.acmerobotics.dashboard.FtcDashboard;

@@ -21,10 +21,10 @@ public class RedPositionConstants {
 
     public static double[] BACKDROP_LEFT_COORDS = {50, -29.3};
     public static double[] BACKDROP_CENTER_COORDS = {50, -33.6}; // 36.2
-    public static double[] BACKDROP_RIGHT_COORDS = {50, -41.5};
+    public static double[] BACKDROP_RIGHT_COORDS = {50, -40};
 
-    public static double[] RIGGING_UP_COORDS = {5, -59 + 0.3};
-    public static double[] RIGGING_DOWN_COORDS = {-40, -59 + 0.3};
+    public static double[] RIGGING_UP_COORDS = {5, -59 + 0.22};
+    public static double[] RIGGING_DOWN_COORDS = {-40, -59 + 0.22};
 
     public static double[] DOOR_UP_COORDS = {24, -8};
     public static double[] DOOR_DOWN_COORDS = {-40, -8};

@@ -36,6 +36,7 @@ public class Intake {
     private Direction direction = Direction.F_STOP;
     public enum IntakeState {
         EJECT,
+        EJECT_BOX,
         INTAKE,
         BREAK,
         STOP
@@ -43,7 +44,7 @@ public class Intake {
     public IntakeState intakeState = IntakeState.STOP;
     public static double STOP_POWER = 0.15;
     public static double INTAKE_POWER = -1;
-    public static double OUT_POWER = 0.6;
+    public static double OUT_POWER = 0.75;
     public static double OPEN_LEFT_POS = 0.07;
     public static double OPEN_RIGHT_POS = 0.95;
     public static double CLOSE_LEFT_POS = 0.7;
